@@ -1,6 +1,6 @@
 {
   "name": "Vibe Code Checklist",
-  "version": 1,
+  "version": 2,
   "categories": [
     {
       "id": "pages",
@@ -25,7 +25,7 @@
     {
       "id": "legal",
       "title": "Legal and consent",
-      "summary": "Privacy, terms, and cookie choices exist before a stranger has to ask."
+      "summary": "Privacy, terms, payments, and public claims are written down before someone has to ask."
     },
     {
       "id": "identity",
@@ -40,12 +40,12 @@
     {
       "id": "performance",
       "title": "Performance",
-      "summary": "Images and layout do not punish the first visit."
+      "summary": "Images, fonts, and the first download do not punish the visit."
     },
     {
       "id": "security",
       "title": "Security",
-      "summary": "Secrets stay out of the repo, private pages stay private, and the public host is locked down."
+      "summary": "Secrets stay private, visitor input cannot take over the page, and private screens stay private."
     },
     {
       "id": "forms",
@@ -60,7 +60,7 @@
     {
       "id": "hygiene",
       "title": "Project hygiene",
-      "summary": "The next person, or the next agent, can run the app without guessing."
+      "summary": "Someone else can run the app, and the packages and data it depends on are looked after."
     }
   ],
   "items": [
@@ -71,7 +71,8 @@
       "severity": "required",
       "appliesWhen": "always",
       "why": "A missing route should still feel like the product and offer a way onward.",
-      "howToVerify": "Open a URL that does not exist. Pass only if the app renders its own 404 with a way home. A framework default such as the plain Next.js, Vite, or host 404 does not pass."
+      "howToVerify": "Open a URL that does not exist. Pass only if the app renders its own 404 with a way home. A framework default such as the plain Next.js, Vite, or host 404 does not pass.",
+      "howToFix": "Add your own 404 page in the router or pages folder, with a link back home. A framework default page does not count."
     },
     {
       "id": "error-state",
@@ -80,7 +81,8 @@
       "severity": "required",
       "appliesWhen": "always",
       "why": "A crash or a failed request should explain what happened instead of a blank screen or a stack trace.",
-      "howToVerify": "Find the production error UI, error boundary, or failed-request state. Pass if a person sees a designed message and a next step. Development overlays and raw stack traces do not pass."
+      "howToVerify": "Find the production error UI, error boundary, or failed-request state. Pass if a person sees a designed message and a next step. Development overlays and raw stack traces do not pass.",
+      "howToFix": "Add an error page or error boundary that says what happened and what to do next."
     },
     {
       "id": "loading-states",
@@ -89,7 +91,8 @@
       "severity": "required",
       "appliesWhen": "always",
       "why": "Waits should look intentional, so people do not click twice or assume the app froze.",
-      "howToVerify": "Find views that wait on a network or computation. Pass if they show a skeleton, spinner, or progress text. A blank region or a control with no feedback does not pass."
+      "howToVerify": "Find views that wait on a network or computation. Pass if they show a skeleton, spinner, or progress text. A blank region or a control with no feedback does not pass.",
+      "howToFix": "Wherever the screen waits on data, show a skeleton, a spinner, or the words Loading."
     },
     {
       "id": "empty-states",
@@ -98,7 +101,8 @@
       "severity": "recommended",
       "appliesWhen": "always",
       "why": "A list, search, or dashboard with nothing in it still needs a sentence and a next step.",
-      "howToVerify": "Find a collection, search result, or inbox that can be empty. Pass if that state explains itself. If the app has no collection that can be empty, mark not applicable and say why."
+      "howToVerify": "Find a collection, search result, or inbox that can be empty. Pass if that state explains itself. If the app has no collection that can be empty, mark not applicable and say why.",
+      "howToFix": "When a list or search is empty, show a sentence and the next action, such as a button to create the first item."
     },
     {
       "id": "thank-you",
@@ -107,7 +111,8 @@
       "severity": "required",
       "appliesWhen": "forms",
       "why": "After a signup, checkout, or important form, people need a clear end to the flow.",
-      "howToVerify": "Submit the primary form, checkout, or signup. Pass if it lands on a confirmation screen or thank-you page. Mark not applicable only when the app has no form, checkout, or signup."
+      "howToVerify": "Submit the primary form, checkout, or signup. Pass if it lands on a confirmation screen or thank-you page. Mark not applicable only when the app has no form, checkout, or signup.",
+      "howToFix": "After the main form, checkout, or signup succeeds, send the person to a page that says it worked."
     },
     {
       "id": "payment-confirmation",
@@ -116,7 +121,8 @@
       "severity": "required",
       "appliesWhen": "payments",
       "why": "A charge needs a receipt the person can recognize, with the amount and what they bought.",
-      "howToVerify": "Trace the success path after payment. Pass if a confirmation shows what was purchased and that payment succeeded. Mark not applicable when the app never takes payment."
+      "howToVerify": "Trace the success path after payment. Pass if a confirmation shows what was purchased and that payment succeeded. Mark not applicable when the app never takes payment.",
+      "howToFix": "After payment, show a confirmation with the amount and what they bought."
     },
     {
       "id": "unique-title",
@@ -125,7 +131,8 @@
       "severity": "required",
       "appliesWhen": "always",
       "why": "Tabs, search results, and shares all use the title. One reused title makes every page look unfinished.",
-      "howToVerify": "Compare document titles across public routes. Pass only if each public page has its own specific title. Titles that are only Home, a file name, or a framework default such as Vite + React do not pass."
+      "howToVerify": "Compare document titles across public routes. Pass only if each public page has its own specific title. Titles that are only Home, a file name, or a framework default such as Vite + React do not pass.",
+      "howToFix": "Give every public page its own title. Replace leftover titles such as Vite + React."
     },
     {
       "id": "unique-description",
@@ -134,7 +141,8 @@
       "severity": "required",
       "appliesWhen": "always",
       "why": "The description is the sentence search engines and previews show under the title.",
-      "howToVerify": "Check the meta description on each public page. Pass if each one is unique and describes that page. A missing, empty, or site-wide identical description does not pass."
+      "howToVerify": "Check the meta description on each public page. Pass if each one is unique and describes that page. A missing, empty, or site-wide identical description does not pass.",
+      "howToFix": "Add a meta description on each public page that describes that page only."
     },
     {
       "id": "canonical",
@@ -143,7 +151,8 @@
       "severity": "recommended",
       "appliesWhen": "always",
       "why": "A canonical link tells search engines which URL is the one to keep when the same page has aliases.",
-      "howToVerify": "Look for a rel=canonical link on public pages, pointed at the preferred absolute URL. Pass if it is present and matches the real public URL."
+      "howToVerify": "Look for a rel=canonical link on public pages, pointed at the preferred absolute URL. Pass if it is present and matches the real public URL.",
+      "howToFix": "Add a canonical link on public pages that points at the preferred https URL."
     },
     {
       "id": "social-cards",
@@ -152,7 +161,8 @@
       "severity": "recommended",
       "appliesWhen": "always",
       "why": "Shared links should show the right title, description, and image instead of a random scrape.",
-      "howToVerify": "Look for og:title, og:description, og:type, and a Twitter card title. Pass if the public pages set them. An og:image is part of a full pass when the page is meant to be shared."
+      "howToVerify": "Look for og:title, og:description, og:type, and a Twitter card title. Pass if the public pages set them. An og:image is part of a full pass when the page is meant to be shared.",
+      "howToFix": "Add og:title, og:description, and a Twitter card title on pages people will share."
     },
     {
       "id": "sitemap",
@@ -161,7 +171,8 @@
       "severity": "recommended",
       "appliesWhen": "always",
       "why": "A sitemap lists the public URLs you actually want discovered.",
-      "howToVerify": "Find sitemap.xml, or the generator that publishes it, and confirm it lists real public routes. A sitemap full of drafts, admin URLs, or only the homepage is not a pass."
+      "howToVerify": "Find sitemap.xml, or the generator that publishes it, and confirm it lists real public routes. A sitemap full of drafts, admin URLs, or only the homepage is not a pass.",
+      "howToFix": "Publish a sitemap.xml of the real public URLs. Leave admin and draft URLs out."
     },
     {
       "id": "robots",
@@ -170,7 +181,8 @@
       "severity": "recommended",
       "appliesWhen": "always",
       "why": "Crawlers need an explicit allow or disallow, plus a pointer to the sitemap when one exists.",
-      "howToVerify": "Open robots.txt. Pass if it is intentional for this app and references the sitemap when a sitemap exists. A file that accidentally disallows the whole site does not pass."
+      "howToVerify": "Open robots.txt. Pass if it is intentional for this app and references the sitemap when a sitemap exists. A file that accidentally disallows the whole site does not pass.",
+      "howToFix": "Add a robots.txt that allows the public site and points at the sitemap."
     },
     {
       "id": "single-h1",
@@ -179,7 +191,8 @@
       "severity": "required",
       "appliesWhen": "always",
       "why": "The h1 is the page's title for people and for parsers. Competing h1s blur what the page is.",
-      "howToVerify": "Inspect each public page's headings. Pass if there is one descriptive h1 and the lower headings nest in order."
+      "howToVerify": "Inspect each public page's headings. Pass if there is one descriptive h1 and the lower headings nest in order.",
+      "howToFix": "Keep one descriptive h1 on each page. Change extra h1s to h2s."
     },
     {
       "id": "alt-text",
@@ -188,7 +201,8 @@
       "severity": "required",
       "appliesWhen": "always",
       "why": "Images that carry meaning need a text equivalent. Decorative images need an empty alt.",
-      "howToVerify": "Review img elements and image components. Pass if meaningful images have specific alt text and decorative ones use alt=\"\". Filenames, \"image\", or missing alt attributes do not pass. If the app has no images, say so and mark not applicable."
+      "howToVerify": "Review img elements and image components. Pass if meaningful images have specific alt text and decorative ones use alt=\"\". Filenames, \"image\", or missing alt attributes do not pass. If the app has no images, say so and mark not applicable.",
+      "howToFix": "Describe meaningful images in the alt text. Use an empty alt for decorative images."
     },
     {
       "id": "viewport",
@@ -197,7 +211,8 @@
       "severity": "required",
       "appliesWhen": "always",
       "why": "Without a viewport tag, phones scale the desktop layout and the app feels broken.",
-      "howToVerify": "Find the viewport meta in the document head or the shared layout. Pass if width=device-width is set."
+      "howToVerify": "Find the viewport meta in the document head or the shared layout. Pass if width=device-width is set.",
+      "howToFix": "Add the viewport meta tag with width=device-width in the shared head."
     },
     {
       "id": "blog-dates",
@@ -206,7 +221,8 @@
       "severity": "recommended",
       "appliesWhen": "blog",
       "why": "A published or updated date tells readers and citation systems whether a post is current.",
-      "howToVerify": "Open an article. Pass if a visible published or updated date is in the page. Mark not applicable when the app does not publish articles or posts."
+      "howToVerify": "Open an article. Pass if a visible published or updated date is in the page. Mark not applicable when the app does not publish articles or posts.",
+      "howToFix": "Show a published or updated date on each article."
     },
     {
       "id": "llms-txt",
@@ -215,7 +231,8 @@
       "severity": "recommended",
       "appliesWhen": "always",
       "why": "A short llms.txt file gives assistants a map of what the site is and which pages to trust.",
-      "howToVerify": "Look for llms.txt at the site root, or the file that deploys there. Pass if it names the product and points to the canonical pages. A file that only exists in a draft, and is not served, does not pass."
+      "howToVerify": "Look for llms.txt at the site root, or the file that deploys there. Pass if it names the product and points to the canonical pages. A file that only exists in a draft, and is not served, does not pass.",
+      "howToFix": "Add llms.txt at the site root with the product name and links to the main pages."
     },
     {
       "id": "about-entity",
@@ -224,7 +241,8 @@
       "severity": "required",
       "appliesWhen": "always",
       "why": "Generative engines quote a clear entity. A homepage that never says who operates it is easy to misidentify.",
-      "howToVerify": "Read the homepage or about page. Pass if a person can state the name, what the product does, and who it is for without guessing."
+      "howToVerify": "Read the homepage or about page. Pass if a person can state the name, what the product does, and who it is for without guessing.",
+      "howToFix": "On the homepage or about page, say the name, what it does, and who it is for."
     },
     {
       "id": "quotable-facts",
@@ -233,7 +251,8 @@
       "severity": "recommended",
       "appliesWhen": "always",
       "why": "Specific facts are what assistants can cite. Vague slogans get paraphrased into something you did not say.",
-      "howToVerify": "Read the main marketing or about copy. Pass if concrete facts (what it does, who it serves, where it applies) are written in sentences a citation could lift. Slogans alone do not pass."
+      "howToVerify": "Read the main marketing or about copy. Pass if concrete facts (what it does, who it serves, where it applies) are written in sentences a citation could lift. Slogans alone do not pass.",
+      "howToFix": "Add a few concrete sentences about what the product does and who it serves."
     },
     {
       "id": "attribution",
@@ -242,7 +261,8 @@
       "severity": "recommended",
       "appliesWhen": "always",
       "why": "Named authorship or a named organization is how engines attach claims to a real entity.",
-      "howToVerify": "Find a visible author, organization, or footer credit on public pages. Pass if the responsible party is named. An anonymous template with no operator does not pass."
+      "howToVerify": "Find a visible author, organization, or footer credit on public pages. Pass if the responsible party is named. An anonymous template with no operator does not pass.",
+      "howToFix": "Name the person or company responsible in the footer or on the about page."
     },
     {
       "id": "structured-data",
@@ -251,7 +271,8 @@
       "severity": "recommended",
       "appliesWhen": "always",
       "why": "JSON-LD lets search and answer engines read the product, organization, or articles as data.",
-      "howToVerify": "Look for JSON-LD that matches a real entity on the site, such as Organization, WebSite, Product, or Article. Pass if it agrees with the visible page. Placeholder schema with fake ratings does not pass."
+      "howToVerify": "Look for JSON-LD that matches a real entity on the site, such as Organization, WebSite, Product, or Article. Pass if it agrees with the visible page. Placeholder schema with fake ratings does not pass.",
+      "howToFix": "Add JSON-LD for the real organization or product, and make it match the visible page."
     },
     {
       "id": "direct-answers",
@@ -260,7 +281,8 @@
       "severity": "recommended",
       "appliesWhen": "always",
       "why": "Chat engines lift the opening of a page. If the answer is below a long animation, they miss it.",
-      "howToVerify": "Read each important public page from the top. Pass if the first screen states what the page is offering in plain language."
+      "howToVerify": "Read each important public page from the top. Pass if the first screen states what the page is offering in plain language.",
+      "howToFix": "Put a plain sentence at the top of each important page that says what that page is."
     },
     {
       "id": "faq",
@@ -269,7 +291,8 @@
       "severity": "recommended",
       "appliesWhen": "always",
       "why": "Questions with direct answers are the unit chat engines prefer to quote.",
-      "howToVerify": "Look for an FAQ or headings phrased as real questions, each followed by a direct answer. Pass if at least the main objections or common questions are answered that way. Skip marketing headings that only sound like questions."
+      "howToVerify": "Look for an FAQ or headings phrased as real questions, each followed by a direct answer. Pass if at least the main objections or common questions are answered that way. Skip marketing headings that only sound like questions.",
+      "howToFix": "Add a short FAQ, with a direct answer under each question."
     },
     {
       "id": "consistent-facts",
@@ -278,7 +301,8 @@
       "severity": "required",
       "appliesWhen": "always",
       "why": "If the name, price, or promise changes from page to page, both people and chat engines will mix them up.",
-      "howToVerify": "Compare the product name, offer, and key facts across the homepage, metadata, and footer. Pass if they agree. Leftover template names do not pass."
+      "howToVerify": "Compare the product name, offer, and key facts across the homepage, metadata, and footer. Pass if they agree. Leftover template names do not pass.",
+      "howToFix": "Use one product name and one offer in the page, the title, and the footer."
     },
     {
       "id": "privacy",
@@ -287,7 +311,8 @@
       "severity": "required",
       "appliesWhen": "always",
       "why": "People should be able to read what the app collects, why, and who receives it.",
-      "howToVerify": "Open the privacy policy from a public footer or equivalent. Pass if it describes this app's actual data practices. A lorem ipsum policy, a policy for a different product, or a link that 404s does not pass."
+      "howToVerify": "Open the privacy policy from a public footer or equivalent. Pass if it describes this app's actual data practices. A lorem ipsum policy, a policy for a different product, or a link that 404s does not pass.",
+      "howToFix": "Publish a privacy policy for this app that says what you collect, why, and who receives it. Link it in the footer."
     },
     {
       "id": "terms",
@@ -296,7 +321,8 @@
       "severity": "required",
       "appliesWhen": "always",
       "why": "Terms set the rules of use before someone creates an account, pays, or relies on the app.",
-      "howToVerify": "Open the terms from a public footer or equivalent. Pass if they belong to this product and are reachable. Placeholder terms do not pass."
+      "howToVerify": "Open the terms from a public footer or equivalent. Pass if they belong to this product and are reachable. Placeholder terms do not pass.",
+      "howToFix": "Publish terms for this product and link them in the footer. Remove placeholder terms."
     },
     {
       "id": "cookie-banner",
@@ -305,7 +331,8 @@
       "severity": "required",
       "appliesWhen": "analytics",
       "why": "Non-essential cookies and analytics need a choice, including the choice to refuse them.",
-      "howToVerify": "Load the app as a new visitor. Pass if a banner explains non-essential cookies and lets someone refuse them before they are set. Mark not applicable when the app sets no non-essential cookies and uses no analytics. A banner with only Accept does not pass."
+      "howToVerify": "Load the app as a new visitor. Pass if a banner explains non-essential cookies and lets someone refuse them before they are set. Mark not applicable when the app sets no non-essential cookies and uses no analytics. A banner with only Accept does not pass.",
+      "howToFix": "Ask before you set analytics or other non-essential cookies, and include a way to refuse."
     },
     {
       "id": "contact",
@@ -314,7 +341,8 @@
       "severity": "recommended",
       "appliesWhen": "always",
       "why": "Privacy questions and support need a real contact path, not only a social icon.",
-      "howToVerify": "Find a contact page, email, or support form from the public site. Pass if a person could use it to reach the operator."
+      "howToVerify": "Find a contact page, email, or support form from the public site. Pass if a person could use it to reach the operator.",
+      "howToFix": "Add a contact page, email, or form that reaches the person who runs the app."
     },
     {
       "id": "favicon-set",
@@ -323,7 +351,8 @@
       "severity": "required",
       "appliesWhen": "always",
       "why": "Tabs, bookmarks, and home-screen icons should show this product, not the framework logo.",
-      "howToVerify": "Check the head for an icon, an apple touch icon, and a web manifest. Pass if those files exist and are not the default framework icon."
+      "howToVerify": "Check the head for an icon, an apple touch icon, and a web manifest. Pass if those files exist and are not the default framework icon.",
+      "howToFix": "Add your own icon, an apple touch icon, and a web manifest. Remove the default framework icon."
     },
     {
       "id": "theme-color",
@@ -332,7 +361,8 @@
       "severity": "recommended",
       "appliesWhen": "always",
       "why": "The browser chrome should pick up the product color instead of a default gray or white strip.",
-      "howToVerify": "Find a theme-color meta tag, and a matching color in the web manifest if a manifest exists. Pass if it is set on purpose."
+      "howToVerify": "Find a theme-color meta tag, and a matching color in the web manifest if a manifest exists. Pass if it is set on purpose.",
+      "howToFix": "Add a theme-color meta tag in your brand color."
     },
     {
       "id": "responsive",
@@ -341,7 +371,8 @@
       "severity": "required",
       "appliesWhen": "always",
       "why": "A phone and a desktop should both be able to read and use the app without horizontal chaos.",
-      "howToVerify": "Review the layout at a narrow width and a wide width, or inspect the CSS that does that work. Pass if primary tasks fit and text is readable. A desktop page that only shrinks via the browser zoom does not pass."
+      "howToVerify": "Review the layout at a narrow width and a wide width, or inspect the CSS that does that work. Pass if primary tasks fit and text is readable. A desktop page that only shrinks via the browser zoom does not pass.",
+      "howToFix": "Make the main tasks fit a phone width so the page does not scroll sideways."
     },
     {
       "id": "contrast",
@@ -350,7 +381,8 @@
       "severity": "required",
       "appliesWhen": "always",
       "why": "Low-contrast gray on a tinted background looks designed and then fails in daylight.",
-      "howToVerify": "Check body text, labels, and buttons against their backgrounds. Pass if ordinary text is clearly readable, roughly a 4.5:1 contrast for normal text. Placeholder gray-on-gray does not pass."
+      "howToVerify": "Check body text, labels, and buttons against their backgrounds. Pass if ordinary text is clearly readable, roughly a 4.5:1 contrast for normal text. Placeholder gray-on-gray does not pass.",
+      "howToFix": "Darken light gray text until ordinary text is easy to read on its background."
     },
     {
       "id": "focus-visible",
@@ -359,7 +391,8 @@
       "severity": "required",
       "appliesWhen": "always",
       "why": "If focus is removed, keyboard users cannot see where they are.",
-      "howToVerify": "Look for :focus-visible or an equivalent that stays visible. Pass if focus is obvious. A global outline: none with no replacement does not pass."
+      "howToVerify": "Look for :focus-visible or an equivalent that stays visible. Pass if focus is obvious. A global outline: none with no replacement does not pass.",
+      "howToFix": "Keep a visible focus outline. If outlines were removed, put a clear replacement back."
     },
     {
       "id": "reduced-motion",
@@ -368,7 +401,8 @@
       "severity": "recommended",
       "appliesWhen": "always",
       "why": "People who ask the system for less motion should not get large looping animations.",
-      "howToVerify": "Search for prefers-reduced-motion, or confirm the app has no non-essential motion. Pass if motion is toned down or absent. Essential state changes can remain."
+      "howToVerify": "Search for prefers-reduced-motion, or confirm the app has no non-essential motion. Pass if motion is toned down or absent. Essential state changes can remain.",
+      "howToFix": "Turn off non-essential animation when the system asks for reduced motion."
     },
     {
       "id": "html-lang",
@@ -377,7 +411,8 @@
       "severity": "required",
       "appliesWhen": "always",
       "why": "Screen readers pronounce the page with the lang attribute. A missing lang is announced as the wrong language.",
-      "howToVerify": "Find the html element. Pass if lang is set to the language the page is actually written in."
+      "howToVerify": "Find the html element. Pass if lang is set to the language the page is actually written in.",
+      "howToFix": "Set the html lang attribute to the language of the page, such as en."
     },
     {
       "id": "keyboard",
@@ -386,7 +421,8 @@
       "severity": "required",
       "appliesWhen": "always",
       "why": "Every control that a pointer can use needs a keyboard path.",
-      "howToVerify": "Check menus, dialogs, and custom controls. Pass if they are real buttons or links, or have a key handler and a sensible role. A clickable div with no keyboard support does not pass."
+      "howToVerify": "Check menus, dialogs, and custom controls. Pass if they are real buttons or links, or have a key handler and a sensible role. A clickable div with no keyboard support does not pass.",
+      "howToFix": "Use real buttons and links. Anything you can click should also work from the keyboard."
     },
     {
       "id": "skip-link",
@@ -395,7 +431,8 @@
       "severity": "recommended",
       "appliesWhen": "always",
       "why": "A skip link lets keyboard users jump past a repeated header to the main content.",
-      "howToVerify": "Look for a skip link that targets the main content and becomes available at the start of the tab order. Pass if it works. On a tiny single-screen page with no repeated nav, mark not applicable and say so."
+      "howToVerify": "Look for a skip link that targets the main content and becomes available at the start of the tab order. Pass if it works. On a tiny single-screen page with no repeated nav, mark not applicable and say so.",
+      "howToFix": "Add a Skip to content link as the first item in the tab order."
     },
     {
       "id": "not-color-only",
@@ -404,7 +441,8 @@
       "severity": "required",
       "appliesWhen": "always",
       "why": "Errors, success, and status that are only a color disappear for some people.",
-      "howToVerify": "Review errors, badges, and charts. Pass if status also uses text, an icon, or a pattern. A red border alone does not pass."
+      "howToVerify": "Review errors, badges, and charts. Pass if status also uses text, an icon, or a pattern. A red border alone does not pass.",
+      "howToFix": "Add words or an icon next to any status that is currently only a color."
     },
     {
       "id": "descriptive-links",
@@ -413,7 +451,8 @@
       "severity": "recommended",
       "appliesWhen": "always",
       "why": "\"Click here\" and \"Read more\" repeated ten times are useless out of context.",
-      "howToVerify": "Read link text across the main pages. Pass if the text names the destination or action. Identical \"Learn more\" links with no surrounding context do not pass."
+      "howToVerify": "Read link text across the main pages. Pass if the text names the destination or action. Identical \"Learn more\" links with no surrounding context do not pass.",
+      "howToFix": "Rename Click here and repeated Learn more links so each one says where it goes."
     },
     {
       "id": "compressed-images",
@@ -422,7 +461,8 @@
       "severity": "required",
       "appliesWhen": "always",
       "why": "Uncompressed screenshots and camera files dominate the page weight of a vibe-coded app.",
-      "howToVerify": "Inspect image files and image URLs. Pass if large images are compressed and use a sensible format such as WebP, AVIF, or an optimized JPEG or PNG. Multi-megabyte source exports do not pass. If the app has no content images, mark not applicable and say so."
+      "howToVerify": "Inspect image files and image URLs. Pass if large images are compressed and use a sensible format such as WebP, AVIF, or an optimized JPEG or PNG. Multi-megabyte source exports do not pass. If the app has no content images, mark not applicable and say so.",
+      "howToFix": "Replace large originals with compressed WebP, AVIF, or an optimized JPEG or PNG."
     },
     {
       "id": "image-dimensions",
@@ -431,7 +471,8 @@
       "severity": "recommended",
       "appliesWhen": "always",
       "why": "Width and height, or a reserved aspect ratio, keep the page from jumping when images arrive.",
-      "howToVerify": "Check content images for width and height attributes or CSS that reserves the box. Pass if layout shift from images is prevented. If there are no content images, mark not applicable and say so."
+      "howToVerify": "Check content images for width and height attributes or CSS that reserves the box. Pass if layout shift from images is prevented. If there are no content images, mark not applicable and say so.",
+      "howToFix": "Set width and height, or a fixed aspect ratio, on content images so the layout does not jump."
     },
     {
       "id": "lazy-images",
@@ -440,7 +481,8 @@
       "severity": "recommended",
       "appliesWhen": "always",
       "why": "Images a person has not reached yet should not compete with the first screen.",
-      "howToVerify": "Check images below the first screen for loading=lazy or an equivalent. The hero image should not be lazy. If there are no below-the-fold images, mark not applicable and say so."
+      "howToVerify": "Check images below the first screen for loading=lazy or an equivalent. The hero image should not be lazy. If there are no below-the-fold images, mark not applicable and say so.",
+      "howToFix": "Add loading=lazy to images below the first screen. Leave the hero image eager."
     },
     {
       "id": "no-secrets",
@@ -449,7 +491,8 @@
       "severity": "required",
       "appliesWhen": "always",
       "why": "A service key in the client, or in git history people can clone, is already public.",
-      "howToVerify": "Search tracked files and client source for private keys, service-role tokens, and secret API keys. Pass if none are present. A publishable client key that is designed to be public is not a secret. Do not copy any secret you find into the report; name the file and the kind of secret only."
+      "howToVerify": "Search tracked files and client source for private keys, service-role tokens, and secret API keys. Pass if none are present. A publishable client key that is designed to be public is not a secret. Do not copy any secret you find into the report; name the file and the kind of secret only.",
+      "howToFix": "Remove private keys and secret tokens from the repo and the client code. Rotate any secret that was committed."
     },
     {
       "id": "env-gitignored",
@@ -458,7 +501,8 @@
       "severity": "required",
       "appliesWhen": "always",
       "why": "Environment files are where local secrets land. If git can see them, they will be committed.",
-      "howToVerify": "Read .gitignore and see whether .env files are ignored. Fail if a real .env is tracked. Pass if ignore rules cover .env, or if the project has no env file and no server secret at all."
+      "howToVerify": "Read .gitignore and see whether .env files are ignored. Fail if a real .env is tracked. Pass if ignore rules cover .env, or if the project has no env file and no server secret at all.",
+      "howToFix": "Add .env to .gitignore. If a real env file was committed, stop tracking it and rotate the values."
     },
     {
       "id": "https",
@@ -467,7 +511,8 @@
       "severity": "required",
       "appliesWhen": "always",
       "why": "A shipped app on plain HTTP leaks sessions and looks unfinished.",
-      "howToVerify": "Find the public URL. Pass if it is served over HTTPS. Localhost alone does not pass this check for a finished app. If there is no deployment, mark it missing and say that no production URL was found."
+      "howToVerify": "Find the public URL. Pass if it is served over HTTPS. Localhost alone does not pass this check for a finished app. If there is no deployment, mark it missing and say that no production URL was found.",
+      "howToFix": "Serve the public site on https and redirect plain http to it."
     },
     {
       "id": "security-headers",
@@ -476,7 +521,8 @@
       "severity": "recommended",
       "appliesWhen": "always",
       "why": "Headers such as Content-Security-Policy, nosniff, Referrer-Policy, and a frame policy close common browser abuses.",
-      "howToVerify": "Check the deployed response headers, or the host config that sets them. Pass if a content security policy, X-Content-Type-Options: nosniff, a Referrer-Policy, and a framing control are set. Say if the app is not deployed yet."
+      "howToVerify": "Check the deployed response headers, or the host config that sets them. Pass if a content security policy, X-Content-Type-Options: nosniff, a Referrer-Policy, and a framing control are set. Say if the app is not deployed yet.",
+      "howToFix": "On the host, set Content-Security-Policy, X-Content-Type-Options: nosniff, a Referrer-Policy, and a frame rule."
     },
     {
       "id": "protected-routes",
@@ -485,7 +531,8 @@
       "severity": "required",
       "appliesWhen": "accounts",
       "why": "Account data and settings must not render for a signed-out visitor.",
-      "howToVerify": "Open a private route while signed out. Pass if the app redirects or refuses before private data is shown. Mark not applicable when the app has no accounts or private areas."
+      "howToVerify": "Open a private route while signed out. Pass if the app redirects or refuses before private data is shown. Mark not applicable when the app has no accounts or private areas.",
+      "howToFix": "Send signed-out visitors away from private pages before any private data is shown."
     },
     {
       "id": "noindex-private",
@@ -494,7 +541,8 @@
       "severity": "recommended",
       "appliesWhen": "accounts",
       "why": "Inbox, settings, and admin URLs should not be indexed.",
-      "howToVerify": "Check robots rules or a noindex tag on private routes. Pass if those routes are excluded. Mark not applicable when nothing is private."
+      "howToVerify": "Check robots rules or a noindex tag on private routes. Pass if those routes are excluded. Mark not applicable when nothing is private.",
+      "howToFix": "Add noindex on private pages, or disallow those paths in robots.txt."
     },
     {
       "id": "session-cookies",
@@ -503,7 +551,8 @@
       "severity": "recommended",
       "appliesWhen": "accounts",
       "why": "A session cookie should be HttpOnly and Secure, with SameSite set, so scripts and stray requests have a harder time carrying it.",
-      "howToVerify": "Find where the session cookie is set. Pass if HttpOnly, Secure, and SameSite are set for production. Mark not applicable if the app does not use a session cookie."
+      "howToVerify": "Find where the session cookie is set. Pass if HttpOnly, Secure, and SameSite are set for production. Mark not applicable if the app does not use a session cookie.",
+      "howToFix": "Set the session cookie to HttpOnly, Secure, and SameSite in production."
     },
     {
       "id": "server-validation",
@@ -512,7 +561,8 @@
       "severity": "required",
       "appliesWhen": "forms",
       "why": "Browser checks are a convenience. The server still has to reject bad or hostile input.",
-      "howToVerify": "Find the handler that receives each public form. Pass if it validates and rejects invalid input on the server. Client-only checks do not pass. Mark not applicable when there is no form."
+      "howToVerify": "Find the handler that receives each public form. Pass if it validates and rejects invalid input on the server. Client-only checks do not pass. Mark not applicable when there is no form.",
+      "howToFix": "Check every public form on the server and reject bad input there."
     },
     {
       "id": "form-labels",
@@ -521,7 +571,8 @@
       "severity": "required",
       "appliesWhen": "forms",
       "why": "Placeholder text disappears while typing and is not a name for the field.",
-      "howToVerify": "Review each input, select, and textarea. Pass if each has a visible label tied to it. Placeholder-only fields do not pass."
+      "howToVerify": "Review each input, select, and textarea. Pass if each has a visible label tied to it. Placeholder-only fields do not pass.",
+      "howToFix": "Add a visible label for every field and connect it with for and id."
     },
     {
       "id": "inline-errors",
@@ -530,7 +581,8 @@
       "severity": "required",
       "appliesWhen": "forms",
       "why": "An error has to say which field failed and how to fix it.",
-      "howToVerify": "Submit a form with a bad value. Pass if the message sits with the field and is text, not color alone."
+      "howToVerify": "Submit a form with a bad value. Pass if the message sits with the field and is text, not color alone.",
+      "howToFix": "Show the error in words next to the field, and say how to correct it."
     },
     {
       "id": "pending-submit",
@@ -539,7 +591,8 @@
       "severity": "recommended",
       "appliesWhen": "forms",
       "why": "A slow submit without a pending state gets clicked again.",
-      "howToVerify": "Submit a form. Pass if the button shows a pending state and cannot send a duplicate while the request is in flight."
+      "howToVerify": "Submit a form. Pass if the button shows a pending state and cannot send a duplicate while the request is in flight.",
+      "howToFix": "Disable the submit button and show a pending label while the request runs."
     },
     {
       "id": "form-success",
@@ -548,7 +601,8 @@
       "severity": "required",
       "appliesWhen": "forms",
       "why": "Silence after submit looks like a failure.",
-      "howToVerify": "Complete a valid submit. Pass if the form confirms success in text on the page or by moving to a confirmation screen. A cleared form with no message does not pass."
+      "howToVerify": "Complete a valid submit. Pass if the form confirms success in text on the page or by moving to a confirmation screen. A cleared form with no message does not pass.",
+      "howToFix": "After a valid submit, show a success message or move to the confirmation page."
     },
     {
       "id": "account-settings",
@@ -557,7 +611,8 @@
       "severity": "required",
       "appliesWhen": "accounts",
       "why": "People who can sign in need a place to see and change the account.",
-      "howToVerify": "Find the settings view for a signed-in person. Pass if they can review the account details the app stores. Mark not applicable when the app has no accounts."
+      "howToVerify": "Find the settings view for a signed-in person. Pass if they can review the account details the app stores. Mark not applicable when the app has no accounts.",
+      "howToFix": "Add a settings page where a signed-in person can see and change the account."
     },
     {
       "id": "password-reset",
@@ -566,7 +621,8 @@
       "severity": "required",
       "appliesWhen": "accounts",
       "why": "Password accounts need a recovery path. Passwordless accounts need a way back in if the email or device changes.",
-      "howToVerify": "Find the reset, magic-link, or recovery flow. Pass if a locked-out person has a real way back. Mark not applicable when there are no accounts."
+      "howToVerify": "Find the reset, magic-link, or recovery flow. Pass if a locked-out person has a real way back. Mark not applicable when there are no accounts.",
+      "howToFix": "Add a reset link, magic link, or another real way back in."
     },
     {
       "id": "data-rights",
@@ -575,7 +631,8 @@
       "severity": "recommended",
       "appliesWhen": "accounts",
       "why": "If the app stores personal data, people need a way to take it with them or delete it.",
-      "howToVerify": "Look in settings or the privacy policy for export and deletion. Pass if at least one of those paths exists and is real. Mark not applicable when the app stores no personal data."
+      "howToVerify": "Look in settings or the privacy policy for export and deletion. Pass if at least one of those paths exists and is real. Mark not applicable when the app stores no personal data.",
+      "howToFix": "Add a way to export or delete the personal data you store, and mention it in the privacy policy."
     },
     {
       "id": "autocomplete-auth",
@@ -584,7 +641,8 @@
       "severity": "recommended",
       "appliesWhen": "accounts",
       "why": "Password managers need autocomplete hints such as username, current-password, and new-password.",
-      "howToVerify": "Inspect the sign-in and sign-up fields. Pass if autocomplete is set to the right token. Mark not applicable when the app has no auth fields."
+      "howToVerify": "Inspect the sign-in and sign-up fields. Pass if autocomplete is set to the right token. Mark not applicable when the app has no auth fields.",
+      "howToFix": "Set autocomplete on sign-in fields to username, current-password, or new-password."
     },
     {
       "id": "readme-run",
@@ -593,7 +651,8 @@
       "severity": "required",
       "appliesWhen": "always",
       "why": "A vibe-coded repo that only runs inside one chat session is not finished.",
-      "howToVerify": "Read the README. Pass if a newcomer can install, configure, and run the app from what it says. A title with no steps does not pass."
+      "howToVerify": "Read the README. Pass if a newcomer can install, configure, and run the app from what it says. A title with no steps does not pass.",
+      "howToFix": "Write the install, setup, and run commands in the README."
     },
     {
       "id": "env-example",
@@ -602,7 +661,198 @@
       "severity": "recommended",
       "appliesWhen": "always",
       "why": "People need the variable names. They should never receive a real secret in the example file.",
-      "howToVerify": "If the app needs environment variables, find .env.example or the documented list. Pass if names are listed and values are blank or fake. Fail if a real secret is in the example. Mark not applicable when the app needs no environment variables."
+      "howToVerify": "If the app needs environment variables, find .env.example or the documented list. Pass if names are listed and values are blank or fake. Fail if a real secret is in the example. Mark not applicable when the app needs no environment variables.",
+      "howToFix": "Add .env.example with the variable names and blank or fake values. Remove any real secret."
+    },
+    {
+      "id": "known-vulnerabilities",
+      "category": "hygiene",
+      "title": "No known high-severity holes in dependencies",
+      "severity": "required",
+      "appliesWhen": "dependencies",
+      "why": "A vibe-coded app often installs packages and never checks them. A published hole in a dependency is already public.",
+      "howToVerify": "Look for a lockfile and an audit setup such as npm audit, pnpm audit, pip-audit, or Dependabot. Pass if no high or critical advisory is still open. Mark not applicable when the app installs no packages. Name the package and the severity only.",
+      "howToFix": "Run the project's audit command. Update or replace each package with a high or critical advisory, then commit the lockfile."
+    },
+    {
+      "id": "lockfile",
+      "category": "hygiene",
+      "title": "Lockfile committed",
+      "severity": "recommended",
+      "appliesWhen": "dependencies",
+      "why": "Without a lockfile, the next install can pull different versions than the ones you shipped.",
+      "howToVerify": "Find a committed lockfile such as package-lock.json, pnpm-lock.yaml, yarn.lock, poetry.lock, or Cargo.lock. Mark not applicable when there are no dependencies.",
+      "howToFix": "Generate the lockfile with the project's install command and commit it. Do not commit installed package folders."
+    },
+    {
+      "id": "dependencies-current",
+      "category": "hygiene",
+      "title": "Supported framework and runtime",
+      "severity": "recommended",
+      "appliesWhen": "dependencies",
+      "why": "Unsupported frameworks and runtimes stop receiving security fixes.",
+      "howToVerify": "Compare the framework and runtime versions in the manifest, engines field, Dockerfile, or README with a release that still receives fixes. Pass if they are on a supported line. Mark not applicable when the app installs nothing and names no runtime.",
+      "howToFix": "Upgrade the framework and runtime to a supported version, follow that project's upgrade notes, and reinstall from the lockfile."
+    },
+    {
+      "id": "database-backups",
+      "category": "hygiene",
+      "title": "Database backups",
+      "severity": "recommended",
+      "appliesWhen": "database",
+      "why": "A database with no backup can lose people's data from one bad command.",
+      "howToVerify": "Find a backup schedule, a host backup setting, or a documented restore step. Mark not applicable when the app has no database.",
+      "howToFix": "Turn on automatic backups at the host, or schedule a dump, and write down how to restore one."
+    },
+    {
+      "id": "escaped-output",
+      "category": "security",
+      "title": "Visitor text is escaped",
+      "severity": "required",
+      "appliesWhen": "forms",
+      "why": "Text a visitor typed, dropped straight into the page as HTML, lets them run script in someone else's browser.",
+      "howToVerify": "Find where visitor text is shown. Pass if the framework renders it as text or it is escaped. Fail on raw HTML insertion of that text. Mark not applicable when the app never shows text a visitor submitted.",
+      "howToFix": "Render that text as text. Remove raw HTML insertion, or sanitize with a maintained library only if rich text is required."
+    },
+    {
+      "id": "hashed-passwords",
+      "category": "security",
+      "title": "Passwords are hashed",
+      "severity": "required",
+      "appliesWhen": "accounts",
+      "why": "A database of readable passwords is a breach the moment it leaks.",
+      "howToVerify": "Find where passwords are saved. Pass if a password hashing function is used. Fail if passwords are stored or logged in plain text. Mark not applicable when the app never handles passwords.",
+      "howToFix": "Hash passwords with the platform's password hasher before saving them. Stop logging password fields. If readable passwords were stored, make people set new ones."
+    },
+    {
+      "id": "hide-internals",
+      "category": "security",
+      "title": "Production hides internal errors",
+      "severity": "required",
+      "appliesWhen": "always",
+      "why": "A stack trace, SQL error, or debug screen tells a stranger your paths, versions, and queries.",
+      "howToVerify": "Find the production error response. Pass if visitors see a generic message. Fail if production can render a stack trace, SQL error, or framework debug page.",
+      "howToFix": "Turn off debug mode in production and show the friendly error page instead."
+    },
+    {
+      "id": "rate-limit",
+      "category": "security",
+      "title": "Login and public forms are rate-limited",
+      "severity": "recommended",
+      "appliesWhen": "forms",
+      "why": "Login and public forms with no limit are easy to hammer with a script.",
+      "howToVerify": "Find the handler for login or a public form. Pass if repeated attempts are limited. Mark not applicable when there is no public form or login.",
+      "howToFix": "Limit how often those endpoints can be called, and show a try-again message when the limit is hit."
+    },
+    {
+      "id": "cors-locked",
+      "category": "security",
+      "title": "API origins are limited",
+      "severity": "recommended",
+      "appliesWhen": "api",
+      "why": "An API that trusts every website can let another site act as a signed-in person.",
+      "howToVerify": "Find the allowed-origins setting. Pass if credentialed calls are limited to your own sites. Mark not applicable when there is no API. A public API that does not use cookies can pass if that is stated.",
+      "howToFix": "Allow only your real site origins. Do not use a wildcard origin together with credentials."
+    },
+    {
+      "id": "upload-limits",
+      "category": "security",
+      "title": "Uploads are limited",
+      "severity": "required",
+      "appliesWhen": "uploads",
+      "why": "An upload with no type or size limit is how untrusted files land on the server.",
+      "howToVerify": "Find the upload handler. Pass if it caps size and allows only expected types. Mark not applicable when nobody can upload a file.",
+      "howToFix": "Reject oversized files and types you do not expect. Keep uploads that should not run out of the public web folder."
+    },
+    {
+      "id": "csrf-or-origin",
+      "category": "security",
+      "title": "Cookie actions check the sender",
+      "severity": "recommended",
+      "appliesWhen": "accounts",
+      "why": "A cookie session that accepts a request from any site can be triggered by another page.",
+      "howToVerify": "Find requests that change data and rely on the session cookie. Pass if they check a CSRF token or the origin. Mark not applicable when there is no cookie session.",
+      "howToFix": "Require a CSRF token or a same-origin check on those requests."
+    },
+    {
+      "id": "open-redirect",
+      "category": "security",
+      "title": "Redirects stay on your site",
+      "severity": "recommended",
+      "appliesWhen": "always",
+      "why": "A redirect that trusts a URL from the query string can send people to a lookalike site.",
+      "howToVerify": "Search for redirects built from a query parameter or form field. Pass if those targets stay on your own paths, or if no such redirect exists.",
+      "howToFix": "Redirect only to relative paths you control. Ignore a full URL supplied by the visitor."
+    },
+    {
+      "id": "refund-policy",
+      "category": "legal",
+      "title": "Refund or cancellation policy",
+      "severity": "required",
+      "appliesWhen": "payments",
+      "why": "Charging people with no written refund or cancellation rule is how a small app ends up in a dispute.",
+      "howToVerify": "Find a refund, cancellation, or billing policy linked from checkout or the terms. Pass if it says what happens after someone pays. Mark not applicable when the app does not take payment.",
+      "howToFix": "Write a short refund or cancellation policy for this product and link it from checkout and the footer."
+    },
+    {
+      "id": "marketing-consent",
+      "category": "legal",
+      "title": "Marketing email is opt-in",
+      "severity": "required",
+      "appliesWhen": "email",
+      "why": "Marketing email without consent, and with no way to stop, is a legal problem in many places.",
+      "howToVerify": "Find newsletter or other marketing mail. Pass if people opt in and each marketing message can be unsubscribed. Mark not applicable when the app sends no marketing email. A receipt or password reset does not by itself make this apply.",
+      "howToFix": "Make the marketing list opt-in, and put a working unsubscribe link in those emails."
+    },
+    {
+      "id": "owned-assets",
+      "category": "legal",
+      "title": "Images, fonts, and code are licensed",
+      "severity": "required",
+      "appliesWhen": "always",
+      "why": "Shipping someone else's photo, font, icon set, or code without a license is a copyright problem.",
+      "howToVerify": "Check images, fonts, and copied code for a license or a source you control. Pass if they are original or the license allows this use. Fail if a stock file, logo, or template is present with no license.",
+      "howToFix": "Replace unlicensed files with ones you made or ones the license allows. Note the license in the repo."
+    },
+    {
+      "id": "no-fake-claims",
+      "category": "legal",
+      "title": "Reviews and stats are real",
+      "severity": "required",
+      "appliesWhen": "claims",
+      "why": "Invented reviews, user counts, or awards are a deception problem.",
+      "howToVerify": "Look for testimonials, star ratings, and statistics. Pass if they come from real use or are clearly labeled as examples. Mark not applicable when the app shows none of these.",
+      "howToFix": "Remove invented reviews and numbers, or replace them with ones you can stand behind."
+    },
+    {
+      "id": "text-compression",
+      "category": "performance",
+      "title": "Text responses are compressed",
+      "severity": "recommended",
+      "appliesWhen": "always",
+      "why": "Uncompressed HTML, CSS, and JavaScript make the first visit slower than it looks.",
+      "howToVerify": "Check the production host for gzip or brotli on text responses. Pass if compression is on. If the app is not deployed, mark it missing and say that no host config was found.",
+      "howToFix": "Turn on gzip or brotli for HTML, CSS, and JavaScript on the host."
+    },
+    {
+      "id": "bundle-weight",
+      "category": "performance",
+      "title": "The first page is not a huge script",
+      "severity": "recommended",
+      "appliesWhen": "always",
+      "why": "A vibe-coded app often sends every library on the first page.",
+      "howToVerify": "Look at the scripts on the first page or the main bundle. Pass if unused libraries are not in that first load. A mostly static page with little script passes.",
+      "howToFix": "Remove libraries the first page does not use, and load the rest only on the screens that need them."
+    },
+    {
+      "id": "font-loading",
+      "category": "performance",
+      "title": "Text stays visible while fonts load",
+      "severity": "recommended",
+      "appliesWhen": "always",
+      "why": "A custom font that blocks rendering leaves the page blank on a slow connection.",
+      "howToVerify": "Pass if the app uses system fonts, or custom fonts set font-display to swap or optional so fallback text stays visible.",
+      "howToFix": "Add font-display: swap to each custom font, or use a system font for interface text."
     }
   ]
 }

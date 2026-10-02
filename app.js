@@ -6,7 +6,13 @@
     accounts: "If the app has accounts",
     analytics: "If the app uses analytics or non-essential cookies",
     payments: "If the app takes payment",
-    blog: "If the app publishes articles"
+    blog: "If the app publishes articles",
+    dependencies: "If the app installs packages",
+    database: "If the app stores data in a database",
+    email: "If the app sends marketing email",
+    api: "If the app has an API",
+    uploads: "If people can upload files",
+    claims: "If the app shows reviews, testimonials, or statistics"
   };
 
   var REPORT_CSS = [
@@ -14,7 +20,7 @@
     "*{box-sizing:border-box}",
     "body{margin:0;background:var(--paper);color:var(--ink);font-family:\"Iowan Old Style\",\"Palatino Linotype\",Palatino,Georgia,serif;font-size:1.05rem;line-height:1.5}",
     "main{width:min(820px,calc(100% - 2rem));margin:2rem auto 4rem}",
-    ".kicker,.status,.meta dt,table,.evidence span,footer,.cat{font-family:ui-monospace,\"Cascadia Mono\",\"Segoe UI Mono\",Consolas,monospace}",
+    ".kicker,.status,.meta dt,table,.evidence span,.fix span,footer,.cat{font-family:ui-monospace,\"Cascadia Mono\",\"Segoe UI Mono\",Consolas,monospace}",
     ".kicker{letter-spacing:.12em;text-transform:uppercase;font-size:.72rem;margin:0 0 .5rem}",
     "h1{font-size:2.6rem;line-height:1;font-weight:560;margin:0 0 1rem}",
     ".sample-banner{border:1px solid var(--ink);padding:.7rem .8rem}",
@@ -39,9 +45,12 @@
     ".finding.pass .status{color:var(--pass)}",
     ".finding.miss .status{color:var(--miss)}",
     ".finding.na .status{color:var(--na)}",
-    ".why,.evidence{margin:.35rem 0 0}",
-    ".evidence span{font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;display:block;color:var(--muted)}",
-    ".evidence{overflow-wrap:anywhere}",
+    ".why,.evidence,.fix{margin:.35rem 0 0}",
+    ".evidence span,.fix span{font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;display:block;color:var(--muted)}",
+    ".evidence,.fix{overflow-wrap:anywhere}",
+    ".verdict-label{font-size:1.7rem;line-height:1.1;margin:0 0 .4rem}",
+    ".fix-list{margin:.2rem 0 0;padding-left:1.2rem}",
+    ".fix-list li{margin:.45rem 0}",
     "footer{margin-top:2rem;color:var(--muted);font-size:.85rem}",
     "@media(max-width:640px){.meta,.score,.finding header{display:flex;flex-direction:column;align-items:flex-start}h1{font-size:2.1rem}.status{text-align:left}}",
     "@media print{body{background:#fff}main{width:auto;margin:0}}"
@@ -65,6 +74,37 @@
     if (status === "pass") return "pass";
     if (status === "not_applicable") return "na";
     return "miss";
+  }
+
+  function overallVerdict(requiredOpen, recommendedOpen, applicable) {
+    if (!applicable) {
+      return { label: "Nothing to score", detail: "No checks apply to this app." };
+    }
+    if (requiredOpen === 0 && recommendedOpen === 0) {
+      return { label: "Ready to ship", detail: "Every check that applies is in place." };
+    }
+    if (requiredOpen === 0) {
+      return {
+        label: "Required checks are in place",
+        detail: recommendedOpen + " recommended " + (recommendedOpen === 1 ? "improvement is" : "improvements are") + " still open. The required work is done."
+      };
+    }
+    return {
+      label: "Not ready to ship",
+      detail: requiredOpen + " required " + (requiredOpen === 1 ? "check is" : "checks are") + " still open. Fix those before you call the app done."
+        + (recommendedOpen ? " " + recommendedOpen + " recommended " + (recommendedOpen === 1 ? "item is" : "items are") + " also open." : "")
+    };
+  }
+
+  function fixFirstHtml(findings, counts) {
+    var required = findings.filter(function (finding) {
+      return finding.severity === "required" && finding.status !== "pass" && finding.status !== "not_applicable";
+    });
+    if (!required.length) return "<p>None. No required item is open.</p>";
+    return "<ol class=\"fix-list\">" + required.map(function (finding) {
+      var categoryTitle = (counts[finding.category] && counts[finding.category].title) || finding.category;
+      return "<li><strong>" + escapeHtml(finding.title) + ".</strong> " + escapeHtml(finding.howToFix || "See the missing item below.") + " <span class=\"cat\">" + escapeHtml(categoryTitle) + "</span></li>";
+    }).join("") + "</ol>";
   }
 
   function buildReportHtml(options) {
@@ -96,17 +136,10 @@
     });
     var applicable = pass + fail;
     var percent = applicable ? Math.round((pass / applicable) * 100) : 0;
+    var verdict = overallVerdict(requiredOpen, recommendedOpen, applicable);
     var summary = applicable
-      ? percent + "% of the checks that apply are in place."
-      : "No checks apply.";
-    if (applicable) {
-      summary += requiredOpen
-        ? " " + requiredOpen + " required " + (requiredOpen === 1 ? "item is" : "items are") + " still open."
-        : " Every required item that applies is in place.";
-      if (recommendedOpen) {
-        summary += " " + recommendedOpen + " recommended " + (recommendedOpen === 1 ? "item is" : "items are") + " still open.";
-      }
-    }
+      ? percent + "% of the checks that apply are in place. " + verdict.detail
+      : verdict.detail;
     var used = {};
     findings.forEach(function (finding) { used[finding.category] = true; });
     var categoryRows = categories.filter(function (category) { return used[category.id]; }).map(function (category) {
@@ -129,10 +162,14 @@
         ? items.map(function (finding) {
           var categoryTitle = (counts[finding.category] && counts[finding.category].title) || finding.category;
           var severity = finding.severity === "recommended" ? "Recommended" : "Required";
+          var failed = finding.status !== "pass" && finding.status !== "not_applicable";
+          var fix = failed && finding.howToFix
+            ? "<p class=\"fix\"><span>How to fix</span>" + escapeHtml(finding.howToFix) + "</p>"
+            : "";
           return "<article class=\"finding " + statusClass(finding.status) + "\"><header><div><p class=\"cat\">" +
             escapeHtml(categoryTitle) + "</p><h3>" + escapeHtml(finding.title) + "</h3></div><p class=\"status\">" +
             statusLabel(finding.status) + " · " + severity + "</p></header><p class=\"why\">" + escapeHtml(finding.why) +
-            "</p><p class=\"evidence\"><span>Evidence</span>" + escapeHtml(finding.evidence || "Not recorded") + "</p></article>";
+            "</p><p class=\"evidence\"><span>Evidence</span>" + escapeHtml(finding.evidence || "Not recorded") + "</p>" + fix + "</article>";
         }).join("")
         : "<p>None.</p>";
       return "<section><h2>" + group[1] + "</h2>" + body + "</section>";
@@ -145,6 +182,8 @@
       "<div><dt>Generated</dt><dd>" + escapeHtml(options.generatedOn || "") + "</dd></div>" +
       "<div><dt>Source</dt><dd>" + escapeHtml(options.source || "Workspace audit") + "</dd></div></dl>" +
       "<section class=\"score\"><p class=\"fraction\">" + pass + "<span>/" + applicable + "</span></p><p>" + escapeHtml(summary) + "</p></section>" +
+      "<section class=\"verdict\"><h2>Overall</h2><p class=\"verdict-label\">" + escapeHtml(verdict.label) + "</p><p>" + escapeHtml(verdict.detail) + "</p></section>" +
+      "<section><h2>Fix these first</h2>" + fixFirstHtml(findings, counts) + "</section>" +
       "<section><h2>By category</h2><table><caption>Results by category</caption><thead><tr><th>Category</th><th>In place</th><th>Missing</th><th>Does not apply</th></tr></thead><tbody>" +
       categoryRows + "</tbody></table></section>" + sections +
       "<footer>Score is items in place divided by items that apply. A pass needs evidence. This file is the report; it leaves the app as it is.</footer>" +
@@ -199,9 +238,9 @@
     document.getElementById("score-pass").textContent = String(score.pass);
     document.getElementById("score-of").textContent = "/" + score.applicable;
     document.getElementById("score-note").textContent = score.pass + " in place · " + score.open + " open · " + score.na + " set aside";
-    document.getElementById("score-required").textContent = score.requiredOpen
-      ? score.requiredOpen + " required " + (score.requiredOpen === 1 ? "check is" : "checks are") + " still open."
-      : "Every required check that applies is in place.";
+    var recommendedOpen = score.open - score.requiredOpen;
+    var verdict = overallVerdict(score.requiredOpen, recommendedOpen, score.applicable);
+    document.getElementById("score-required").textContent = verdict.label + ". " + verdict.detail;
   }
 
   function paintRow(row, item, state) {
@@ -247,8 +286,15 @@
         if (APPLIES[item.appliesWhen]) body.appendChild(el("p", "when", APPLIES[item.appliesWhen]));
         body.appendChild(el("p", "why", item.why));
         var details = el("details");
-        details.appendChild(el("summary", null, "How to verify"));
+        details.appendChild(el("summary", null, "How to check and fix"));
         details.appendChild(el("p", "how", item.howToVerify));
+        if (item.howToFix) {
+          var fix = el("p", "how");
+          var lead = el("strong", null, "Fix: ");
+          fix.appendChild(lead);
+          fix.appendChild(document.createTextNode(item.howToFix));
+          details.appendChild(fix);
+        }
         body.appendChild(details);
         if (item.appliesWhen !== "always") {
           var toggle = el("button", "na-toggle");
@@ -296,7 +342,8 @@
         severity: item.severity,
         why: item.why,
         status: reportStatus,
-        evidence: evidence
+        evidence: evidence,
+        howToFix: item.howToFix
       };
     });
   }

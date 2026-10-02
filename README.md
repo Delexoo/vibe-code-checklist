@@ -37,8 +37,10 @@ Follow PROMPT.md exactly. Inspect THIS workspace, not the checklist repo. Write 
 
 ## What the report shows
 
+- **Overall** — ready to ship, required checks in place, or not ready
+- **Fix these first** — the required gaps, each with a short instruction
 - **In place** — already done, with proof
-- **Missing** — still to do
+- **Missing** — still to do, with how to fix it
 - **Does not apply** — your app does not have that feature, so it is not a fail
 
 A real check lists every item. [This sample](https://delexoo.github.io/vibe-code-checklist/sample-report.html) only shows the shape. The results in it are made up.
@@ -51,10 +53,13 @@ A real check lists every item. [This sample](https://delexoo.github.io/vibe-code
 - Privacy policy, terms, and a cookie choice if you use analytics
 - Favicon, phone layout, contrast, and keyboard focus
 - Compressed images
-- No secrets in the repo, and private pages kept private
+- No secrets in the repo, visitor text that cannot inject script, and private pages kept private
+- Packages on a supported version, with no known high-severity holes
+- Images, fonts, and code you have the right to use, plus real reviews if you show any
+- A refund rule if you charge money, and opt-in marketing email if you send it
 - Forms that label fields, show errors, and confirm success
 - Account settings, only if people can sign in
-- A README that says how to run the app
+- A README that says how to run the app, and backups if you have a database
 
 The full list is in [checklist.json](checklist.json). The rules the editor must follow are in [PROMPT.md](PROMPT.md).
 

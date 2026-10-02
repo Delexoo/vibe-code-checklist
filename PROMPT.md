@@ -8,7 +8,7 @@ If the workspace root contains `checklist.json` whose `name` is `Vibe Code Check
 
 ## Read first
 
-Read every item in `checklist.json` before you judge anything. Each item has `id`, `category`, `title`, `why`, `howToVerify`, `severity` (`required` or `recommended`), and `appliesWhen` (`always`, `forms`, `accounts`, `analytics`, `payments`, or `blog`).
+Read every item in `checklist.json` before you judge anything. Each item has `id`, `category`, `title`, `why`, `howToVerify`, `howToFix`, `severity` (`required` or `recommended`), and `appliesWhen` (`always`, `forms`, `accounts`, `analytics`, `payments`, `blog`, `dependencies`, `database`, `email`, `api`, `uploads`, or `claims`).
 
 `sample-report.html` shows the report shape with fictional results. Do not copy those results.
 
@@ -32,6 +32,12 @@ Give every item exactly one status: `pass`, `fail`, or `not_applicable`.
 - `analytics`: `not_applicable` only when the app uses no analytics and sets no non-essential cookies.
 - `payments`: `not_applicable` only when the app does not take payment.
 - `blog`: `not_applicable` only when the app does not publish articles or posts.
+- `dependencies`: `not_applicable` only when the app installs no packages.
+- `database`: `not_applicable` only when the app has no database.
+- `email`: `not_applicable` only when the app sends no marketing email. A receipt or password reset does not make this apply.
+- `api`: `not_applicable` only when the app has no API.
+- `uploads`: `not_applicable` only when nobody can upload a file.
+- `claims`: `not_applicable` only when the app shows no reviews, testimonials, or statistics.
 
 Severity changes the label, not the status. A recommended item can fail.
 
@@ -44,6 +50,18 @@ Never invent a file. Never paste a secret value into the report. Name the file a
 Applicable items are `pass` plus `fail`. `not_applicable` items are left out.
 
 The score is the count of passes divided by the count of applicable items. Also count how many failed items are `required`.
+
+The overall line is exactly one of these:
+
+- `Ready to ship` when every applicable item passes.
+- `Required checks are in place` when no required item fails and at least one recommended item fails.
+- `Not ready to ship` when any required item fails.
+
+## How to fix
+
+For every failed item, write one or two sentences in **How to fix**. Start from that item's `howToFix` and name the file or page in this workspace. A person who has not read the checklist should be able to follow it. Do not paste exploit steps, secret values, or a patch that changes the app. Do not put a fix on items that pass or do not apply.
+
+**Fix these first** lists only failed required items, in the same words. If none failed, that section is the sentence `None. No required item is open.` and has no list.
 
 ## Report file
 
@@ -63,7 +81,7 @@ Use this document. Replace the bracketed fields. Repeat one `article` per item. 
     * { box-sizing: border-box; }
     body { margin: 0; background: var(--paper); color: var(--ink); font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif; font-size: 1.05rem; line-height: 1.5; }
     main { width: min(820px, calc(100% - 2rem)); margin: 2rem auto 4rem; }
-    .kicker, .status, .meta dt, table, .evidence span, footer, .cat { font-family: ui-monospace, "Cascadia Mono", "Segoe UI Mono", Consolas, monospace; }
+    .kicker, .status, .meta dt, table, .evidence span, .fix span, footer, .cat { font-family: ui-monospace, "Cascadia Mono", "Segoe UI Mono", Consolas, monospace; }
     .kicker { letter-spacing: .12em; text-transform: uppercase; font-size: .72rem; margin: 0 0 .5rem; }
     h1 { font-size: 2.6rem; line-height: 1; font-weight: 560; margin: 0 0 1rem; }
     .meta { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1.5rem 0; }
@@ -87,9 +105,12 @@ Use this document. Replace the bracketed fields. Repeat one `article` per item. 
     .finding.pass .status { color: var(--pass); }
     .finding.miss .status { color: var(--miss); }
     .finding.na .status { color: var(--na); }
-    .why, .evidence { margin: .35rem 0 0; }
-    .evidence span { font-size: .68rem; letter-spacing: .08em; text-transform: uppercase; display: block; color: var(--muted); }
-    .evidence { overflow-wrap: anywhere; }
+    .why, .evidence, .fix { margin: .35rem 0 0; }
+    .evidence span, .fix span { font-size: .68rem; letter-spacing: .08em; text-transform: uppercase; display: block; color: var(--muted); }
+    .evidence, .fix { overflow-wrap: anywhere; }
+    .verdict-label { font-size: 1.7rem; line-height: 1.1; margin: 0 0 .4rem; }
+    .fix-list { margin: .2rem 0 0; padding-left: 1.2rem; }
+    .fix-list li { margin: .45rem 0; }
     footer { margin-top: 2rem; color: var(--muted); font-size: .85rem; }
     @media (max-width: 640px) {
       .meta, .score, .finding header { display: flex; flex-direction: column; align-items: flex-start; }
@@ -110,7 +131,18 @@ Use this document. Replace the bracketed fields. Repeat one `article` per item. 
     </dl>
     <section class="score">
       <p class="fraction">[passes]<span>/[applicable]</span></p>
-      <p>[Percent]% of the checks that apply are in place. [Required open count] required items are still open.</p>
+      <p>[Percent]% of the checks that apply are in place. [Same detail as the overall section.]</p>
+    </section>
+    <section class="verdict">
+      <h2>Overall</h2>
+      <p class="verdict-label">[Ready to ship, Required checks are in place, or Not ready to ship]</p>
+      <p>[How many required items are open, then how many recommended items are open.]</p>
+    </section>
+    <section>
+      <h2>Fix these first</h2>
+      <ol class="fix-list">
+        <li><strong>[Required item title].</strong> [Simple fix for this workspace.]</li>
+      </ol>
     </section>
     <section>
       <h2>By category</h2>
@@ -136,6 +168,7 @@ Use this document. Replace the bracketed fields. Repeat one `article` per item. 
         </header>
         <p class="why">[why from the checklist]</p>
         <p class="evidence"><span>Evidence</span>[Where you looked and what you found]</p>
+        <p class="fix"><span>How to fix</span>[One or two sentences for this workspace. Required on every missing item.]</p>
       </article>
     </section>
     <section>
@@ -176,4 +209,4 @@ Escape any HTML characters that came from the workspace so the report stays a do
 
 ## When you finish
 
-Reply with the score, the required items still open, and the path `vibe-audit.html`. Do not start fixing the app.
+Reply with the overall result, the required items still open, and the path `vibe-audit.html`. Do not start fixing the app.
