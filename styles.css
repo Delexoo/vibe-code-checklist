@@ -635,22 +635,6 @@ nav a[aria-current="page"] {
   color: var(--paper);
 }
 
-.steps {
-  margin: 0.5rem 0 2.5rem;
-  padding-left: 1.25rem;
-  max-width: 36rem;
-}
-
-.steps li {
-  margin: 0.55rem 0;
-}
-
-.after {
-  margin: 1.5rem 0 0;
-  max-width: 36rem;
-  color: var(--muted);
-}
-
 @media (max-width: 700px) {
   .choices {
     grid-template-columns: 1fr;
