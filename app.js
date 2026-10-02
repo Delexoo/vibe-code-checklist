@@ -12,6 +12,8 @@
     email: "If the app sends marketing email",
     api: "If the app has an API",
     uploads: "If people can upload files",
+    ugc: "If people can post, or upload a file the app keeps",
+    outbound: "If the app sends email, calls a paid API, or accepts uploads",
     claims: "If the app shows reviews, testimonials, or statistics"
   };
 
@@ -413,10 +415,13 @@
   }
 
   function applySurvey(items, state, answers) {
-    var managed = ["accounts", "forms", "payments", "blog", "analytics", "uploads", "email", "claims"];
+    var managed = ["accounts", "forms", "payments", "blog", "analytics", "uploads", "email", "ugc", "outbound", "claims"];
     items.forEach(function (item) {
       if (managed.indexOf(item.appliesWhen) === -1) return;
-      var active = item.appliesWhen === "forms" ? !!(answers.forms || answers.accounts) : !!answers[item.appliesWhen];
+      var active = !!answers[item.appliesWhen];
+      if (item.appliesWhen === "forms") active = !!(answers.forms || answers.accounts);
+      if (item.appliesWhen === "ugc") active = !!(answers.ugc || answers.uploads);
+      if (item.appliesWhen === "outbound") active = !!(answers.outbound || answers.email || answers.uploads);
       if (active) {
         if (state[item.id] === "na") delete state[item.id];
       } else {
@@ -434,6 +439,8 @@
       analytics: "analytics",
       uploads: "uploads",
       email: "email updates",
+      ugc: "posts",
+      outbound: "a paid API",
       claims: "reviews or stats"
     };
     var audience = {

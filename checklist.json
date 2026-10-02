@@ -1,6 +1,6 @@
 {
   "name": "Vibe Code Checklist",
-  "version": 2,
+  "version": 9,
   "categories": [
     {
       "id": "pages",
@@ -25,7 +25,7 @@
     {
       "id": "legal",
       "title": "Legal and consent",
-      "summary": "Privacy, terms, payments, and public claims are written down before someone has to ask."
+      "summary": "Privacy, terms, payments, user content, and public claims are written down before someone has to ask."
     },
     {
       "id": "identity",
@@ -123,6 +123,16 @@
       "why": "A charge needs a receipt the person can recognize, with the amount and what they bought.",
       "howToVerify": "Trace the success path after payment. Pass if a confirmation shows what was purchased and that payment succeeded. Mark not applicable when the app never takes payment.",
       "howToFix": "After payment, show a confirmation with the amount and what they bought."
+    },
+    {
+      "id": "price-before-charge",
+      "category": "pages",
+      "title": "The price is shown before the charge",
+      "severity": "required",
+      "appliesWhen": "payments",
+      "why": "A person who never saw the amount, what it buys, or that a free trial becomes a paid plan can dispute the charge.",
+      "howToVerify": "Find the step where they confirm payment. Pass if it shows the amount, what it is for, and when money will be taken, before they pay. If there is a free trial, that step says when the trial ends and what they will be charged then. Mark not applicable when the app does not take payment.",
+      "howToFix": "Before payment, show the amount, what it buys, and the date of the charge. If a trial converts to paid, say so on that same step."
     },
     {
       "id": "unique-title",
@@ -335,6 +345,16 @@
       "howToFix": "Ask before you set analytics or other non-essential cookies, and include a way to refuse."
     },
     {
+      "id": "session-replay",
+      "category": "legal",
+      "title": "Session replay is off or inputs are masked",
+      "severity": "required",
+      "appliesWhen": "analytics",
+      "why": "A recording tool that catches passwords, cards, or messages stores more than a page view.",
+      "howToVerify": "Search for a session replay tool such as Hotjar, FullStory, LogRocket, Clarity, or PostHog session recording. Pass if none is installed, or it stays off until the visitor opts in and password, payment, and message fields are masked. Mark not applicable when the app uses no analytics and no replay tool.",
+      "howToFix": "Leave session replay off unless someone opts in, and mask password, payment, and message fields."
+    },
+    {
       "id": "contact",
       "category": "legal",
       "title": "A way to reach a person",
@@ -530,9 +550,19 @@
       "title": "Protected routes",
       "severity": "required",
       "appliesWhen": "accounts",
-      "why": "Account data and settings must not render for a signed-out visitor.",
-      "howToVerify": "Open a private route while signed out. Pass if the app redirects or refuses before private data is shown. Mark not applicable when the app has no accounts or private areas.",
-      "howToFix": "Send signed-out visitors away from private pages before any private data is shown."
+      "why": "Account data, settings, and admin tools must not render for a signed-out visitor.",
+      "howToVerify": "Open a private route, including any admin path, while signed out. Pass if the app redirects or refuses before private data is shown. A page that is only hidden by an unlisted URL does not pass. Mark not applicable when the app has no accounts or private areas.",
+      "howToFix": "Send signed-out visitors away from private pages, including admin pages, before any private data is shown."
+    },
+    {
+      "id": "ownership-check",
+      "category": "security",
+      "title": "Each person can only reach their own data",
+      "severity": "required",
+      "appliesWhen": "accounts",
+      "why": "A signed-in person who changes an id in the URL or the request can read, edit, or delete someone else's data.",
+      "howToVerify": "Find reads, updates, and deletes of stored records. Pass if each one checks that the signed-in person owns that record, or is allowed to act on it. A private page that only checks that someone is signed in does not pass. A check that only hides a button in the browser does not pass. If the browser talks to the database directly, row policies have to enforce that ownership. A guessable id still has to fail for someone else's record. Mark not applicable when the app has no accounts or stores no per-person data.",
+      "howToFix": "On every read, update, and delete, check that the record belongs to the signed-in person before you touch it. If the client queries the database, turn on row policies that do the same check."
     },
     {
       "id": "noindex-private",
@@ -555,6 +585,26 @@
       "howToFix": "Set the session cookie to HttpOnly, Secure, and SameSite in production."
     },
     {
+      "id": "session-not-in-web-storage",
+      "category": "security",
+      "title": "The session is not in local storage",
+      "severity": "required",
+      "appliesWhen": "accounts",
+      "why": "A token in local storage can be read by any script on the page. An HttpOnly cookie cannot.",
+      "howToVerify": "Find where the session or access token is kept. Pass if it is an HttpOnly cookie, kept only in memory, or the auth provider stores it that way. Fail if the access token is written to localStorage or sessionStorage. Mark not applicable when the app has no accounts.",
+      "howToFix": "Keep the session in an HttpOnly cookie. Remove access tokens from localStorage and sessionStorage."
+    },
+    {
+      "id": "session-expiry",
+      "category": "security",
+      "title": "Sessions expire",
+      "severity": "required",
+      "appliesWhen": "accounts",
+      "why": "A login that never ends means the next person on a shared computer is still signed in.",
+      "howToVerify": "Find the session. Pass if it ends after a set period of inactivity or a set lifetime. A sign-out button alone does not pass. The auth provider's lifetime counts. Mark not applicable when the app has no accounts.",
+      "howToFix": "End the session after a period of inactivity. A day is a reasonable starting point."
+    },
+    {
       "id": "server-validation",
       "category": "security",
       "title": "Server-side validation on public forms",
@@ -563,6 +613,36 @@
       "why": "Browser checks are a convenience. The server still has to reject bad or hostile input.",
       "howToVerify": "Find the handler that receives each public form. Pass if it validates and rejects invalid input on the server. Client-only checks do not pass. Mark not applicable when there is no form.",
       "howToFix": "Check every public form on the server and reject bad input there."
+    },
+    {
+      "id": "api-validation",
+      "category": "security",
+      "title": "API input is checked on the server",
+      "severity": "required",
+      "appliesWhen": "api",
+      "why": "A route that trusts the body or the query string can be talked into work you did not mean to do.",
+      "howToVerify": "Find routes that read a body or query string from the caller. Pass if the server checks the type and rejects invalid input. Client checks do not pass. Mark not applicable when there is no API.",
+      "howToFix": "Validate every API body and query parameter on the server, and reject what you do not expect."
+    },
+    {
+      "id": "parameterized-queries",
+      "category": "security",
+      "title": "Visitor input is not glued into a query or command",
+      "severity": "required",
+      "appliesWhen": "database",
+      "why": "Text from a visitor, pasted into SQL or a shell command, lets them change what the server runs.",
+      "howToVerify": "Find database queries and shell commands that include visitor input. Pass if queries use parameters or a query builder, and commands do not insert that text. Mark not applicable when the app has no database and builds no command from visitor input.",
+      "howToFix": "Pass visitor values as parameters. Do not concatenate them into SQL or a shell command."
+    },
+    {
+      "id": "explicit-fields",
+      "category": "security",
+      "title": "The server chooses which fields are saved",
+      "severity": "required",
+      "appliesWhen": "database",
+      "why": "Saving the whole request body lets a person set their own role, price, or admin flag.",
+      "howToVerify": "Find writes that take visitor input. Pass if the code lists the fields it saves. Writing the raw body onto a row does not pass. Mark not applicable when the app has no database.",
+      "howToFix": "Copy only the fields you meant to store. Ignore role, price, and ownership fields sent by the visitor."
     },
     {
       "id": "form-labels",
@@ -615,24 +695,74 @@
       "howToFix": "Add a settings page where a signed-in person can see and change the account."
     },
     {
+      "id": "sign-out",
+      "category": "accounts",
+      "title": "A signed-in person can sign out",
+      "severity": "required",
+      "appliesWhen": "accounts",
+      "why": "Sign-up, sign-in, and a reset path still leave someone stuck in the account on a shared computer if they cannot sign out.",
+      "howToVerify": "Find a sign-out control. Pass if it ends the session. Mark not applicable when the app has no accounts.",
+      "howToFix": "Add a sign-out control that ends the session."
+    },
+    {
+      "id": "age-check",
+      "category": "accounts",
+      "title": "Signup confirms the person is old enough",
+      "severity": "required",
+      "appliesWhen": "accounts",
+      "why": "An account that collects an email from a child under 13, with no parent involved, is a COPPA problem.",
+      "howToVerify": "Find the signup flow. Pass if it asks the person to confirm they are 13 or older, or it collects a birthdate and refuses younger signups. A product aimed at children passes only if a parent consents before any personal data is collected. Mark not applicable when the app has no signup.",
+      "howToFix": "Add an age confirmation to signup. If the product is for children, collect the parent's consent before you ask the child for anything."
+    },
+    {
+      "id": "email-verified",
+      "category": "accounts",
+      "title": "Email is verified before the account is active",
+      "severity": "required",
+      "appliesWhen": "accounts",
+      "why": "A signup that trusts a typed email can lock a real person out, or open an account they never asked for.",
+      "howToVerify": "Find signup. Pass if the person proves they control the email, with a link or code, before the account can be used. A magic link, a provider sign-in, or an auth setting that confirms email first also passes. Mark not applicable when the app has no accounts, or the account has no email.",
+      "howToFix": "Send a verification link or code and wait for it before the account is active. A magic link or provider sign-in can be the proof."
+    },
+    {
       "id": "password-reset",
       "category": "accounts",
       "title": "Password reset or equivalent",
       "severity": "required",
       "appliesWhen": "accounts",
       "why": "Password accounts need a recovery path. Passwordless accounts need a way back in if the email or device changes.",
-      "howToVerify": "Find the reset, magic-link, or recovery flow. Pass if a locked-out person has a real way back. Mark not applicable when there are no accounts.",
-      "howToFix": "Add a reset link, magic link, or another real way back in."
+      "howToVerify": "Find the reset, magic-link, or recovery flow. Pass if a locked-out person has a real way back. A reset link or code expires and stops working after it is used. A provider-owned magic link passes when that provider expires it. Mark not applicable when there are no accounts.",
+      "howToFix": "Add a reset link, magic link, or another real way back in. Make a reset link or code expire, and accept it only once."
     },
     {
       "id": "data-rights",
       "category": "accounts",
-      "title": "Delete or export personal data",
+      "title": "People can delete their personal data",
+      "severity": "required",
+      "appliesWhen": "accounts",
+      "why": "If the app stores personal data, people need a way to delete it. Keeping it with no way out is a problem in a lot of places, including Europe, even when you are based somewhere else.",
+      "howToVerify": "Look in settings or the privacy policy for deletion. Pass if a person can actually delete the personal data you store. A way to export it as well belongs in a full pass. Export alone does not pass. Mark not applicable when the app stores no personal data.",
+      "howToFix": "Add a way to delete the personal data you store, mention it in the privacy policy, and offer an export if you can."
+    },
+    {
+      "id": "collect-little",
+      "category": "legal",
+      "title": "Forms ask only for data the app uses",
+      "severity": "recommended",
+      "appliesWhen": "forms",
+      "why": "A phone number, birthday, or address the product never uses is data you cannot justify keeping.",
+      "howToVerify": "Read signup and other forms. Pass if each required field is one the product actually uses. Mark not applicable when there is no form.",
+      "howToFix": "Remove required fields the app does not use."
+    },
+    {
+      "id": "breach-plan",
+      "category": "legal",
+      "title": "A plan for telling people about a breach",
       "severity": "recommended",
       "appliesWhen": "accounts",
-      "why": "If the app stores personal data, people need a way to take it with them or delete it.",
-      "howToVerify": "Look in settings or the privacy policy for export and deletion. Pass if at least one of those paths exists and is real. Mark not applicable when the app stores no personal data.",
-      "howToFix": "Add a way to export or delete the personal data you store, and mention it in the privacy policy."
+      "why": "If account data leaks, you are expected to tell the people affected. A plan written after the breach is late.",
+      "howToVerify": "Pass if the project has a short note of how you would tell affected people, and a way you would notice, such as an error monitor or the sign-in and error log. Mark not applicable when the app stores no personal data.",
+      "howToFix": "Write down who you contact and how if account data leaks. Use an error monitor, or the log you already keep, so you notice."
     },
     {
       "id": "autocomplete-auth",
@@ -725,6 +855,16 @@
       "howToFix": "Hash passwords with the platform's password hasher before saving them. Stop logging password fields. If readable passwords were stored, make people set new ones."
     },
     {
+      "id": "password-length",
+      "category": "accounts",
+      "title": "Passwords have a minimum length",
+      "severity": "recommended",
+      "appliesWhen": "accounts",
+      "why": "A very short password is easy to guess. Requiring a symbol does not fix a password that can be one character long.",
+      "howToVerify": "Find where a password is chosen. Pass if new passwords must be at least 8 characters, or the auth provider enforces its own minimum length. A symbol rule with no minimum length does not pass. Mark not applicable when the app never handles passwords.",
+      "howToFix": "Require at least 8 characters on new passwords, or turn on the auth provider's length rule."
+    },
+    {
       "id": "hide-internals",
       "category": "security",
       "title": "Production hides internal errors",
@@ -735,14 +875,54 @@
       "howToFix": "Turn off debug mode in production and show the friendly error page instead."
     },
     {
+      "id": "database-private",
+      "category": "security",
+      "title": "The database is not open to the internet",
+      "severity": "recommended",
+      "appliesWhen": "database",
+      "why": "A database that accepts connections from any address can be guessed at by the whole internet.",
+      "howToVerify": "Find the database host settings. Pass if only the app can connect, or the host limits which addresses are allowed. A port open to every address does not pass. Mark not applicable when the app has no database.",
+      "howToFix": "Turn on the host's network allow-list or private networking so only the app can reach the database."
+    },
+    {
+      "id": "security-logs",
+      "category": "security",
+      "title": "Sign-in failures and server errors are logged",
+      "severity": "recommended",
+      "appliesWhen": "accounts",
+      "why": "Without a log, a burst of failed sign-ins or bad requests is invisible until something breaks.",
+      "howToVerify": "Pass if failed sign-in attempts and server errors are written where the operator can read them. Passwords and session tokens are not in that log. If the app has an API, its errors are included. Mark not applicable when the app has no accounts.",
+      "howToFix": "Log failed sign-ins and server errors. Leave passwords and session tokens out of the log."
+    },
+    {
       "id": "rate-limit",
       "category": "security",
-      "title": "Login and public forms are rate-limited",
+      "title": "Public forms are rate-limited",
       "severity": "recommended",
       "appliesWhen": "forms",
-      "why": "Login and public forms with no limit are easy to hammer with a script.",
-      "howToVerify": "Find the handler for login or a public form. Pass if repeated attempts are limited. Mark not applicable when there is no public form or login.",
+      "why": "A public form with no limit is easy to hammer with a script.",
+      "howToVerify": "Find the handler for a public form. Pass if repeated attempts are limited. Mark not applicable when there is no public form. Sign-in limits are a separate check.",
       "howToFix": "Limit how often those endpoints can be called, and show a try-again message when the limit is hit."
+    },
+    {
+      "id": "login-limit",
+      "category": "security",
+      "title": "Failed sign-ins get slowed or blocked",
+      "severity": "required",
+      "appliesWhen": "accounts",
+      "why": "Unlimited password guesses are how accounts get broken into.",
+      "howToVerify": "Find the sign-in handler. Pass if a run of failed attempts is delayed or blocked for a while, for that account or that client. The auth provider's own limit counts. Mark not applicable when the app has no accounts.",
+      "howToFix": "After repeated failed sign-ins, block or delay further tries for a while, and tell the person to try again later."
+    },
+    {
+      "id": "request-ceiling",
+      "category": "security",
+      "title": "Each person has a request ceiling",
+      "severity": "recommended",
+      "appliesWhen": "api",
+      "why": "A route a script can call with no per-person limit is how a host decides the app is abuse and suspends it.",
+      "howToVerify": "Find route handlers and server actions a person or a script can call repeatedly. Pass if each has a per-person or per-minute cap, or the host already enforces one. Sign-in limits and public-form limits count for those routes. Mark not applicable when there is no API or server action.",
+      "howToFix": "Cap how often each person can call those routes, and return a try-again response when the cap is hit."
     },
     {
       "id": "cors-locked",
@@ -765,6 +945,16 @@
       "howToFix": "Reject oversized files and types you do not expect. Keep uploads that should not run out of the public web folder."
     },
     {
+      "id": "outbound-limits",
+      "category": "security",
+      "title": "Email, paid APIs, and uploads have a ceiling",
+      "severity": "recommended",
+      "appliesWhen": "outbound",
+      "why": "Hosts suspend apps that send unlimited email, call a paid API with no cap, or accept unlimited uploads.",
+      "howToVerify": "Find email sending, paid API calls, and uploads. Pass if each one that exists has a per-user or per-day cap, or the provider already enforces a quota. Mark not applicable when the app sends no email, calls no paid API, and nobody can upload a file.",
+      "howToFix": "Cap emails per day, paid API calls per user, and uploads per account. A quota from the email, AI, or host provider counts."
+    },
+    {
       "id": "csrf-or-origin",
       "category": "security",
       "title": "Cookie actions check the sender",
@@ -785,14 +975,34 @@
       "howToFix": "Redirect only to relative paths you control. Ignore a full URL supplied by the visitor."
     },
     {
+      "id": "webhook-signature",
+      "category": "security",
+      "title": "Payment webhooks check the signature",
+      "severity": "required",
+      "appliesWhen": "payments",
+      "why": "A webhook that trusts the body can be told a payment succeeded when nobody paid.",
+      "howToVerify": "Find the route that receives payment events. Pass if it verifies the processor's signature and rejects a request without one. Mark not applicable when the app does not take payment, or it never receives webhooks.",
+      "howToFix": "Verify the webhook signature with the processor's signing secret before you fulfill an order. Reject anything that does not match."
+    },
+    {
       "id": "refund-policy",
       "category": "legal",
       "title": "Refund or cancellation policy",
       "severity": "required",
       "appliesWhen": "payments",
-      "why": "Charging people with no written refund or cancellation rule is how a small app ends up in a dispute.",
-      "howToVerify": "Find a refund, cancellation, or billing policy linked from checkout or the terms. Pass if it says what happens after someone pays. Mark not applicable when the app does not take payment.",
-      "howToFix": "Write a short refund or cancellation policy for this product and link it from checkout and the footer."
+      "why": "Charging people with no written refund or cancellation rule is how a small app ends up in a dispute. A subscription has to say when it renews and how to cancel, next to the button that starts it.",
+      "howToVerify": "Find a refund, cancellation, or billing policy linked from checkout or the terms. Pass if it says what happens after someone pays. If the charge renews, the subscribe button also shows the renewal price or period and how to cancel. Mark not applicable when the app does not take payment.",
+      "howToFix": "Write a short refund or cancellation policy for this product and link it from checkout and the footer. Next to a subscribe button, state when it renews and how to cancel."
+    },
+    {
+      "id": "processor-allowed",
+      "category": "legal",
+      "title": "The payment processor allows this business",
+      "severity": "required",
+      "appliesWhen": "payments",
+      "why": "Stripe and PayPal freeze the account and hold the money when a product sits on their restricted list.",
+      "howToVerify": "Read what the app sells and which processor it uses. Pass if it is an ordinary product, or the project shows that processor already approved a restricted category. Fail if it takes live card payments for adult content, gambling, weapons, drugs, crypto, file-sharing lockers, or money transmission with no sign of approval. Mark not applicable when the app does not take payment.",
+      "howToFix": "Read the restricted-business list for the processor you use before you take a live payment. If the product is on that list, get their approval first or leave live charges off."
     },
     {
       "id": "marketing-consent",
@@ -800,9 +1010,9 @@
       "title": "Marketing email is opt-in",
       "severity": "required",
       "appliesWhen": "email",
-      "why": "Marketing email without consent, and with no way to stop, is a legal problem in many places.",
-      "howToVerify": "Find newsletter or other marketing mail. Pass if people opt in and each marketing message can be unsubscribed. Mark not applicable when the app sends no marketing email. A receipt or password reset does not by itself make this apply.",
-      "howToFix": "Make the marketing list opt-in, and put a working unsubscribe link in those emails."
+      "why": "Marketing email without consent, with no way to stop, or with no postal address, is a legal problem in many places.",
+      "howToVerify": "Find newsletter or other marketing mail. Pass if people opt in, each marketing message has a working unsubscribe link, and the message shows a physical postal address. Mark not applicable when the app sends no marketing email. A receipt or password reset does not by itself make this apply.",
+      "howToFix": "Make the marketing list opt-in. Put a working unsubscribe link and your physical postal address in those emails."
     },
     {
       "id": "owned-assets",
@@ -813,6 +1023,26 @@
       "why": "Shipping someone else's photo, font, icon set, or code without a license is a copyright problem.",
       "howToVerify": "Check images, fonts, and copied code for a license or a source you control. Pass if they are original or the license allows this use. Fail if a stock file, logo, or template is present with no license.",
       "howToFix": "Replace unlicensed files with ones you made or ones the license allows. Note the license in the repo."
+    },
+    {
+      "id": "self-hosted-fonts",
+      "category": "legal",
+      "title": "Fonts load from your own site",
+      "severity": "recommended",
+      "appliesWhen": "always",
+      "why": "A font file loaded from Google or another company sends the visitor's address to that company.",
+      "howToVerify": "Pass if the app uses system fonts or serves font files from its own host. Fail if a page loads fonts from fonts.googleapis.com, fonts.gstatic.com, or another font host you do not control.",
+      "howToFix": "Serve the font files from your own site, or use a system font. Remove the Google Fonts link."
+    },
+    {
+      "id": "report-remove",
+      "category": "legal",
+      "title": "A way to report and remove user content",
+      "severity": "required",
+      "appliesWhen": "ugc",
+      "why": "If visitors can post or upload, a host or a copyright owner will contact you. One illegal or copyrighted file with nobody to reach is how the app gets suspended. Hosting that content for people in the United States also needs a DMCA designated agent on file with the Copyright Office.",
+      "howToVerify": "Pass if a public page or footer gives an email or form for content and copyright complaints, the app has a way to remove that post or file, and the terms or that page say what people are not allowed to post. If the product is offered to people in the United States, the page names a designated agent and points to the Copyright Office registration. Mark not applicable when visitors cannot publish text, images, or files that the app stores or shows. A contact form, login, or checkout does not count. A file the app keeps does count.",
+      "howToFix": "Add a short page with an email for content and copyright complaints, say what content is not allowed, link it in the footer, and make sure you can delete what was posted or uploaded. If you offer this to people in the United States, name a designated agent and register that agent with the Copyright Office."
     },
     {
       "id": "no-fake-claims",

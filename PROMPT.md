@@ -8,7 +8,7 @@ If the workspace root contains `checklist.json` whose `name` is `Vibe Code Check
 
 ## Read first
 
-Read every item in `checklist.json` before you judge anything. Each item has `id`, `category`, `title`, `why`, `howToVerify`, `howToFix`, `severity` (`required` or `recommended`), and `appliesWhen` (`always`, `forms`, `accounts`, `analytics`, `payments`, `blog`, `dependencies`, `database`, `email`, `api`, `uploads`, or `claims`).
+Read every item in `checklist.json` before you judge anything. Each item has `id`, `category`, `title`, `why`, `howToVerify`, `howToFix`, `severity` (`required` or `recommended`), and `appliesWhen` (`always`, `forms`, `accounts`, `analytics`, `payments`, `blog`, `dependencies`, `database`, `email`, `api`, `uploads`, `ugc`, `outbound`, or `claims`).
 
 `sample-report.html` shows the report shape with fictional results. Do not copy those results.
 
@@ -20,7 +20,7 @@ Read the README, the app name, the homepage or main screen, the routes, and any 
 
 1. **Goal.** What the person is trying to ship, in one or two sentences. If the README and the screens disagree, say so.
 2. **Who it is for.**
-3. **What this product includes.** Say which of these are present, started, or clearly promised by the UI, routes, or copy: public pages, forms, accounts, payments, analytics or non-essential cookies, articles, installed packages, a database, marketing email, an API, file uploads, reviews or statistics. A library that is installed and never used is not a feature.
+3. **What this product includes.** Say which of these are present, started, or clearly promised by the UI, routes, or copy: public pages, forms, accounts, payments, analytics or non-essential cookies, articles, installed packages, a database, marketing email, an API, file uploads, posts or other content visitors publish, outbound email or a paid API, reviews or statistics. A library that is installed and never used is not a feature.
 4. **What this product will not need.** Name the checklist areas that do not fit the goal.
 
 Put that picture in the report under **What this app is**, with the file paths you used. Do not invent a business the files do not support. If the goal is unclear, say what you found and what is still unclear.
@@ -44,15 +44,18 @@ Use `appliesWhen` as the usual signal, then check it against the product:
 - `dependencies`: `not_applicable` only when this app installs no packages.
 - `database`: `not_applicable` only when this app has no database.
 - `email`: `not_applicable` only when this app sends no marketing email. A receipt or password reset does not make this apply.
-- `api`: `not_applicable` only when this app has no API.
+- `api`: `not_applicable` only when this app has no API. Server actions and route handlers count as an API.
 - `uploads`: `not_applicable` only when nobody can upload a file.
+- `ugc`: `not_applicable` only when visitors cannot publish text, images, or files that the app stores or shows. A contact form, login, or checkout does not count. A file the app keeps does count.
+- `outbound`: `not_applicable` only when the app sends no email, a visitor action calls no paid third-party API, and nobody can upload a file. A receipt or password reset does count. The provider's own quota can pass the ceiling check. Marketing consent stays on `email`.
 - `claims`: `not_applicable` only when this app shows no reviews, testimonials, or statistics.
 
 Do not drop a security check that matches a feature the app has. A small app with accounts still needs protected routes. A form that shows visitor text still needs that text escaped. A public page still needs its own title.
 
 Examples:
 
-- A brochure site with a contact form needs the form checks and a privacy policy. It does not need accounts or payments.
+- A brochure site with a contact form needs the form checks and a privacy policy. It does not need accounts, payments, or a way to remove user posts.
+- An app where people post or upload needs a way to report and remove that content. Email, a paid API, or uploads need a ceiling, and the provider's own quota can satisfy it.
 - A members' app needs the account checks. It does not need article dates unless it has posts.
 - An internal dashboard that is not meant to be found in search does not need a sitemap, `llms.txt`, or social cards. It does need login and private routes if people sign in.
 - A script or library with no website does not need page, search, or favicon checks. Secrets and dependency checks still apply when it holds keys or installs packages.

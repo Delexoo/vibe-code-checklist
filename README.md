@@ -53,16 +53,18 @@ A real check lists every item. [This sample](https://delexoo.github.io/vibe-code
 - Pages people hit when something is missing, empty, or still loading
 - A title and description on each page, plus the usual search files
 - A clear explanation of who you are, for assistants and chat tools
-- Privacy policy, terms, and a cookie choice if you use analytics
+- Privacy policy, terms, and a cookie choice if you use analytics. Fonts come from your own site. Session replay stays off, or it masks what people type.
 - Favicon, phone layout, contrast, and keyboard focus
 - Compressed images
-- No secrets in the repo, visitor text that cannot inject script, and private pages kept private
+- No secrets in the repo, visitor text that cannot inject script, private pages and admin tools kept private, sessions kept out of local storage, and one person cannot open another's data by changing an id
 - Packages on a supported version, with no known high-severity holes
 - Images, fonts, and code you have the right to use, plus real reviews if you show any
-- A refund rule if you charge money, and opt-in marketing email if you send it
+- A refund rule if you charge money, the amount and charge date before they pay, renewal terms beside a subscribe button, a signed payment webhook, a check that the processor allows what you sell, and opt-in marketing email with a postal address
+- A way to report and remove posts or uploads, the rules for what people may post, and a DMCA agent when that content is for people in the United States
+- A cap on outbound email, paid API calls, uploads per account, and requests per person
 - Forms that label fields, show errors, and confirm success
-- Account settings, only if people can sign in
-- A README that says how to run the app, and backups if you have a database
+- Account settings, a way to sign out, a minimum password length, an age check at signup, a verified email before the account is active, and a way to delete personal data, only if people can sign in
+- A README that says how to run the app, and, if you have a database, backups, parameterized queries, saved fields the server chose, and no port open to the whole internet
 
 The full list is in [checklist.json](checklist.json). The rules the editor must follow are in [PROMPT.md](PROMPT.md).
 
