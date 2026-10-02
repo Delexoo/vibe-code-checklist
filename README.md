@@ -1,20 +1,31 @@
 # Vibe Code Checklist
 
-A preflight list for a vibe-coded web app. Use it to see what is already in place, and what is still missing, before you call the app finished.
+**Is the app actually finished?**
 
-The site: [https://delexoo.github.io/vibe-code-checklist/](https://delexoo.github.io/vibe-code-checklist/)
+A vibe-coded demo can look done and still be missing a real 404 page, its own page titles, a privacy policy, or a loading state. This list catches that before you ship.
 
-The machine-readable list: [checklist.json](checklist.json)
+**[Open the checklist](https://delexoo.github.io/vibe-code-checklist/)**
 
-## Check it by hand
+## Pick one
 
-Open the site, tick what is true, and set conditional items aside when the app does not have that feature. Ticks stay in your browser. Download `vibe-audit.html` when you want a record.
+### 1. Check it yourself
 
-## Hand it to your editor
+1. Open the site.
+2. Tick what your app already has.
+3. If a row is only for forms, accounts, cookies, payments, or a blog, and your app does not have that, press **Doesn't apply**.
+4. Press **Download HTML report**.
 
-Open the app in an AI code editor and paste:
+Your ticks stay in this browser. The report is a file on your computer named `vibe-audit.html`.
 
-```
+### 2. Let your editor check the app
+
+1. Open **your app** in Cursor or another AI editor. Leave this repo closed.
+2. Paste the prompt below into the chat.
+3. Open `vibe-audit.html` in your project folder.
+
+The editor writes that report and leaves the rest of your app alone.
+
+```text
 Audit this workspace against the Vibe Code Checklist.
 
 Source of truth (read these before judging anything):
@@ -24,25 +35,29 @@ https://github.com/Delexoo/vibe-code-checklist/blob/main/checklist.json
 Follow PROMPT.md exactly. Inspect THIS workspace, not the checklist repo. Write a self-contained vanilla HTML report at vibe-audit.html showing what passed, what is missing, and what does not apply. Do not change application code.
 ```
 
-[PROMPT.md](PROMPT.md) is the procedure. A pass needs a file path or an explicit gap. The editor writes `vibe-audit.html` and leaves the application code as it is. [sample-report.html](sample-report.html) is a short fictional example of that scorecard.
+## What the report shows
 
-## What the list covers
+- **In place** — already done, with proof
+- **Missing** — still to do
+- **Does not apply** — your app does not have that feature, so it is not a fail
 
-- **Pages and flows.** Custom 404, error and loading states, empty states, thank-you and payment confirmation when those flows exist.
-- **Search engine optimization.** Unique titles and descriptions, canonical URLs, social cards, sitemap, robots.txt, one h1, alt text, viewport, article dates.
-- **Generative engine optimization.** `llms.txt`, a clear who / what / who-for, quotable facts, attribution, structured data.
-- **Answer and chat engine optimization.** A direct opening, FAQ or question headings, consistent facts.
-- **Legal and consent.** Privacy policy, terms of service, a cookie refusal path when analytics exist, a way to make contact.
-- **Identity and appearance.** Favicon set, theme color, responsive layout, contrast, visible focus, reduced motion.
-- **Accessibility.** Page language, keyboard access, skip link, status beyond color, descriptive links.
-- **Performance.** Compressed images, reserved image space, lazy loading below the fold.
-- **Security.** No secrets in the repo or client, `.env` ignored, HTTPS, security headers, protected routes, private pages kept out of search, session cookie flags, server-side form validation.
-- **Forms.** Labels, inline errors, a pending submit state, a success confirmation.
-- **Accounts and settings.** Settings, password reset or an equivalent, export or deletion, autocomplete on auth fields.
-- **Project hygiene.** A README that explains how to run the app, and an example env file with no secrets.
+A real check lists every item. [This sample](https://delexoo.github.io/vibe-code-checklist/sample-report.html) only shows the shape. The results in it are made up.
 
-Conditional checks are marked not applicable when the app has no forms, accounts, analytics, payments, or articles. They are not failed for a feature the app does not have.
+## What the list looks for
+
+- Pages people hit when something is missing, empty, or still loading
+- A title and description on each page, plus the usual search files
+- A clear explanation of who you are, for assistants and chat tools
+- Privacy policy, terms, and a cookie choice if you use analytics
+- Favicon, phone layout, contrast, and keyboard focus
+- Compressed images
+- No secrets in the repo, and private pages kept private
+- Forms that label fields, show errors, and confirm success
+- Account settings, only if people can sign in
+- A README that says how to run the app
+
+The full list is in [checklist.json](checklist.json). The rules the editor must follow are in [PROMPT.md](PROMPT.md).
 
 ## License
 
-The checklist text and site are released under the [MIT License](LICENSE).
+[MIT](LICENSE)
