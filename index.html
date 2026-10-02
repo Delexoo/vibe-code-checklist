@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Vibe Code Checklist — Is the app actually finished?</title>
+  <meta name="description" content="A preflight checklist for vibe-coded web apps. Check every shipping detail yourself, or paste one prompt into your editor and get a vanilla HTML scorecard.">
+  <link rel="canonical" href="https://delexoo.github.io/vibe-code-checklist/">
+  <meta property="og:title" content="Vibe Code Checklist — Is the app actually finished?">
+  <meta property="og:description" content="Check a vibe-coded web app by hand, or paste one prompt into your editor and get a vanilla HTML scorecard.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://delexoo.github.io/vibe-code-checklist/">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Vibe Code Checklist — Is the app actually finished?">
+  <meta name="twitter:description" content="A preflight checklist and a strict editor prompt that writes a vanilla HTML scorecard.">
+  <meta name="theme-color" content="#1b1612">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="stylesheet" href="styles.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Vibe Code Checklist",
+    "url": "https://delexoo.github.io/vibe-code-checklist/",
+    "description": "A preflight checklist for vibe-coded web apps, with a prompt that writes a vanilla HTML scorecard."
+  }
+  </script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="wrap bar">
+      <a class="brand" href="index.html">Vibe Code Checklist</a>
+      <nav aria-label="On this page">
+        <a href="#audit">Audit prompt</a>
+        <a href="#checklist">Checklist</a>
+        <a href="https://github.com/Delexoo/vibe-code-checklist">Source</a>
+      </nav>
+    </div>
+  </header>
+  <main id="main">
+    <div class="wrap">
+      <section class="hero">
+        <div>
+          <p class="kicker">Preflight for vibe-coded web apps</p>
+          <h1>Is the app actually finished?</h1>
+          <p class="lede">A demo can look done and still ship the framework 404, a shared page title, and a wait with no feedback. This list is the preflight. Walk it yourself, or hand your editor one prompt and get a scorecard.</p>
+        </div>
+        <div class="paths">
+          <article class="path">
+            <p class="num">01 — By hand</p>
+            <h2>Check the list</h2>
+            <p>Tick what is already true. Conditional items can be set aside. The ticks stay in this browser, and you can download the same HTML report the editor would write.</p>
+          </article>
+          <article class="path">
+            <p class="num">02 — In the editor</p>
+            <h2>Paste the prompt</h2>
+            <p>Copy the block below into the AI editor that has your app open. It reads the procedure, inspects that workspace, and writes vibe-audit.html.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="audit" id="audit" aria-labelledby="audit-title">
+        <div class="audit-head">
+          <h2 id="audit-title">Paste this into the editor that has the app open</h2>
+          <button type="button" class="primary" id="copy" aria-live="polite">Copy prompt</button>
+        </div>
+        <pre id="prompt-text">Audit this workspace against the Vibe Code Checklist.
+
+Source of truth (read these before judging anything):
+https://github.com/Delexoo/vibe-code-checklist/blob/main/PROMPT.md
+https://github.com/Delexoo/vibe-code-checklist/blob/main/checklist.json
+
+Follow PROMPT.md exactly. Inspect THIS workspace, not the checklist repo. Write a self-contained vanilla HTML report at vibe-audit.html showing what passed, what is missing, and what does not apply. Do not change application code.</pre>
+        <p class="fine">The procedure writes one file, vibe-audit.html, and leaves application code as it is. A pass requires evidence from the workspace.</p>
+      </section>
+
+      <section id="checklist" aria-labelledby="checklist-title">
+        <h2 id="checklist-title" class="sr-only">Checklist</h2>
+        <div class="scorebar">
+          <div>
+            <p class="kicker">Score</p>
+            <p class="score-line"><strong id="score-pass">0</strong><span id="score-of">/0</span></p>
+            <p id="score-note">Loading the checklist…</p>
+            <p id="score-required"></p>
+          </div>
+          <div class="actions">
+            <label class="project-label" for="project-name">Project name
+              <input id="project-name" type="text" maxlength="80" placeholder="Manual review" autocomplete="off">
+            </label>
+            <button type="button" class="primary" id="download" disabled>Download HTML report</button>
+            <button type="button" class="ghost" id="reset" disabled>Clear checks</button>
+            <a class="button ghost" href="sample-report.html">Sample report</a>
+          </div>
+        </div>
+        <p class="legend">A tick means in place. An open item counts as missing on the report. “Doesn’t apply” drops a conditional item from the score. Progress stays in this browser.</p>
+        <div id="list">
+          <p id="loading">Loading the checklist…</p>
+        </div>
+        <noscript>
+          <p class="load-error">Ticking items needs JavaScript. The audit prompt above is plain text, so you can still select it and copy it.</p>
+        </noscript>
+      </section>
+
+      <section class="faq" aria-labelledby="faq-title">
+        <h2 id="faq-title">Questions people ask first</h2>
+        <article>
+          <h3>What is the Vibe Code Checklist?</h3>
+          <p>It is a public preflight list for a vibe-coded web app: pages, search, generative and chat discovery, legal pages, appearance, accessibility, performance, security, forms, accounts, and the README.</p>
+        </article>
+        <article>
+          <h3>What does the prompt change in my app?</h3>
+          <p>It writes one file, vibe-audit.html, at the workspace root. Application code stays as it is. You read the scorecard and decide what to fix.</p>
+        </article>
+        <article>
+          <h3>Where do my checks go?</h3>
+          <p>Ticks stay in local storage in this browser. The site does not receive them. Download the HTML report when you want a file.</p>
+        </article>
+        <article>
+          <h3>What does a real report show?</h3>
+          <p>A score of items in place over items that apply, then every check with a status, the reason it matters, and the evidence. The sample report shows the shape with fictional results.</p>
+        </article>
+      </section>
+    </div>
+  </main>
+  <footer class="site-footer">
+    <div class="wrap foot">
+      <p>Vibe Code Checklist is a shipping guide. It is not a legal opinion or a security guarantee.</p>
+      <nav aria-label="Site">
+        <a href="privacy.html">Privacy policy</a>
+        <a href="terms.html">Terms of service</a>
+        <a href="sample-report.html">Sample report</a>
+        <a href="checklist.json">Raw checklist</a>
+        <a href="https://github.com/Delexoo/vibe-code-checklist/issues">Contact</a>
+      </nav>
+    </div>
+  </footer>
+  <script src="app.js"></script>
+</body>
+</html>

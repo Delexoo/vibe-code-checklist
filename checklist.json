@@ -1,0 +1,608 @@
+{
+  "name": "Vibe Code Checklist",
+  "version": 1,
+  "categories": [
+    {
+      "id": "pages",
+      "title": "Pages and flows",
+      "summary": "The screens people hit when a route is missing, data is empty, or the app is still working."
+    },
+    {
+      "id": "seo",
+      "title": "Search engine optimization",
+      "summary": "Each public page tells a search engine what it is, in the page itself."
+    },
+    {
+      "id": "geo",
+      "title": "Generative engine optimization",
+      "summary": "Assistants can tell who this is, what it does, and which facts are safe to quote."
+    },
+    {
+      "id": "aeo",
+      "title": "Answer and chat engine optimization",
+      "summary": "A person, or a chat engine, can answer the page's question without hunting."
+    },
+    {
+      "id": "legal",
+      "title": "Legal and consent",
+      "summary": "Privacy, terms, and cookie choices exist before a stranger has to ask."
+    },
+    {
+      "id": "identity",
+      "title": "Identity and appearance",
+      "summary": "The app looks intentional on a phone, a desktop, and a browser tab."
+    },
+    {
+      "id": "a11y",
+      "title": "Accessibility",
+      "summary": "People can reach, read, and operate the interface without a perfect setup."
+    },
+    {
+      "id": "performance",
+      "title": "Performance",
+      "summary": "Images and layout do not punish the first visit."
+    },
+    {
+      "id": "security",
+      "title": "Security",
+      "summary": "Secrets stay out of the repo, private pages stay private, and the public host is locked down."
+    },
+    {
+      "id": "forms",
+      "title": "Forms",
+      "summary": "A form says what it wants, what went wrong, and when it succeeded."
+    },
+    {
+      "id": "accounts",
+      "title": "Accounts and settings",
+      "summary": "If people have an account, they can manage it and recover access."
+    },
+    {
+      "id": "hygiene",
+      "title": "Project hygiene",
+      "summary": "The next person, or the next agent, can run the app without guessing."
+    }
+  ],
+  "items": [
+    {
+      "id": "custom-404",
+      "category": "pages",
+      "title": "Custom 404 page",
+      "severity": "required",
+      "appliesWhen": "always",
+      "why": "A missing route should still feel like the product and offer a way onward.",
+      "howToVerify": "Open a URL that does not exist. Pass only if the app renders its own 404 with a way home. A framework default such as the plain Next.js, Vite, or host 404 does not pass."
+    },
+    {
+      "id": "error-state",
+      "category": "pages",
+      "title": "Friendly error state",
+      "severity": "required",
+      "appliesWhen": "always",
+      "why": "A crash or a failed request should explain what happened instead of a blank screen or a stack trace.",
+      "howToVerify": "Find the production error UI, error boundary, or failed-request state. Pass if a person sees a designed message and a next step. Development overlays and raw stack traces do not pass."
+    },
+    {
+      "id": "loading-states",
+      "category": "pages",
+      "title": "Loading states",
+      "severity": "required",
+      "appliesWhen": "always",
+      "why": "Waits should look intentional, so people do not click twice or assume the app froze.",
+      "howToVerify": "Find views that wait on a network or computation. Pass if they show a skeleton, spinner, or progress text. A blank region or a control with no feedback does not pass."
+    },
+    {
+      "id": "empty-states",
+      "category": "pages",
+      "title": "Empty states",
+      "severity": "recommended",
+      "appliesWhen": "always",
+      "why": "A list, search, or dashboard with nothing in it still needs a sentence and a next step.",
+      "howToVerify": "Find a collection, search result, or inbox that can be empty. Pass if that state explains itself. If the app has no collection that can be empty, mark not applicable and say why."
+    },
+    {
+      "id": "thank-you",
+      "category": "pages",
+      "title": "Thank-you or confirmation page",
+      "severity": "required",
+      "appliesWhen": "forms",
+      "why": "After a signup, checkout, or important form, people need a clear end to the flow.",
+      "howToVerify": "Submit the primary form, checkout, or signup. Pass if it lands on a confirmation screen or thank-you page. Mark not applicable only when the app has no form, checkout, or signup."
+    },
+    {
+      "id": "payment-confirmation",
+      "category": "pages",
+      "title": "Payment receipt or confirmation",
+      "severity": "required",
+      "appliesWhen": "payments",
+      "why": "A charge needs a receipt the person can recognize, with the amount and what they bought.",
+      "howToVerify": "Trace the success path after payment. Pass if a confirmation shows what was purchased and that payment succeeded. Mark not applicable when the app never takes payment."
+    },
+    {
+      "id": "unique-title",
+      "category": "seo",
+      "title": "Unique meta title per page",
+      "severity": "required",
+      "appliesWhen": "always",
+      "why": "Tabs, search results, and shares all use the title. One reused title makes every page look unfinished.",
+      "howToVerify": "Compare document titles across public routes. Pass only if each public page has its own specific title. Titles that are only Home, a file name, or a framework default such as Vite + React do not pass."
+    },
+    {
+      "id": "unique-description",
+      "category": "seo",
+      "title": "Unique meta description per page",
+      "severity": "required",
+      "appliesWhen": "always",
+      "why": "The description is the sentence search engines and previews show under the title.",
+      "howToVerify": "Check the meta description on each public page. Pass if each one is unique and describes that page. A missing, empty, or site-wide identical description does not pass."
+    },
+    {
+      "id": "canonical",
+      "category": "seo",
+      "title": "Canonical URL",
+      "severity": "recommended",
+      "appliesWhen": "always",
+      "why": "A canonical link tells search engines which URL is the one to keep when the same page has aliases.",
+      "howToVerify": "Look for a rel=canonical link on public pages, pointed at the preferred absolute URL. Pass if it is present and matches the real public URL."
+    },
+    {
+      "id": "social-cards",
+      "category": "seo",
+      "title": "Open Graph and Twitter cards",
+      "severity": "recommended",
+      "appliesWhen": "always",
+      "why": "Shared links should show the right title, description, and image instead of a random scrape.",
+      "howToVerify": "Look for og:title, og:description, og:type, and a Twitter card title. Pass if the public pages set them. An og:image is part of a full pass when the page is meant to be shared."
+    },
+    {
+      "id": "sitemap",
+      "category": "seo",
+      "title": "Sitemap",
+      "severity": "recommended",
+      "appliesWhen": "always",
+      "why": "A sitemap lists the public URLs you actually want discovered.",
+      "howToVerify": "Find sitemap.xml, or the generator that publishes it, and confirm it lists real public routes. A sitemap full of drafts, admin URLs, or only the homepage is not a pass."
+    },
+    {
+      "id": "robots",
+      "category": "seo",
+      "title": "robots.txt",
+      "severity": "recommended",
+      "appliesWhen": "always",
+      "why": "Crawlers need an explicit allow or disallow, plus a pointer to the sitemap when one exists.",
+      "howToVerify": "Open robots.txt. Pass if it is intentional for this app and references the sitemap when a sitemap exists. A file that accidentally disallows the whole site does not pass."
+    },
+    {
+      "id": "single-h1",
+      "category": "seo",
+      "title": "One clear h1 per page",
+      "severity": "required",
+      "appliesWhen": "always",
+      "why": "The h1 is the page's title for people and for parsers. Competing h1s blur what the page is.",
+      "howToVerify": "Inspect each public page's headings. Pass if there is one descriptive h1 and the lower headings nest in order."
+    },
+    {
+      "id": "alt-text",
+      "category": "seo",
+      "title": "Descriptive alt text",
+      "severity": "required",
+      "appliesWhen": "always",
+      "why": "Images that carry meaning need a text equivalent. Decorative images need an empty alt.",
+      "howToVerify": "Review img elements and image components. Pass if meaningful images have specific alt text and decorative ones use alt=\"\". Filenames, \"image\", or missing alt attributes do not pass. If the app has no images, say so and mark not applicable."
+    },
+    {
+      "id": "viewport",
+      "category": "seo",
+      "title": "Viewport meta tag",
+      "severity": "required",
+      "appliesWhen": "always",
+      "why": "Without a viewport tag, phones scale the desktop layout and the app feels broken.",
+      "howToVerify": "Find the viewport meta in the document head or the shared layout. Pass if width=device-width is set."
+    },
+    {
+      "id": "blog-dates",
+      "category": "seo",
+      "title": "Dates on articles",
+      "severity": "recommended",
+      "appliesWhen": "blog",
+      "why": "A published or updated date tells readers and citation systems whether a post is current.",
+      "howToVerify": "Open an article. Pass if a visible published or updated date is in the page. Mark not applicable when the app does not publish articles or posts."
+    },
+    {
+      "id": "llms-txt",
+      "category": "geo",
+      "title": "llms.txt",
+      "severity": "recommended",
+      "appliesWhen": "always",
+      "why": "A short llms.txt file gives assistants a map of what the site is and which pages to trust.",
+      "howToVerify": "Look for llms.txt at the site root, or the file that deploys there. Pass if it names the product and points to the canonical pages. A file that only exists in a draft, and is not served, does not pass."
+    },
+    {
+      "id": "about-entity",
+      "category": "geo",
+      "title": "Who, what, and who it is for",
+      "severity": "required",
+      "appliesWhen": "always",
+      "why": "Generative engines quote a clear entity. A homepage that never says who operates it is easy to misidentify.",
+      "howToVerify": "Read the homepage or about page. Pass if a person can state the name, what the product does, and who it is for without guessing."
+    },
+    {
+      "id": "quotable-facts",
+      "category": "geo",
+      "title": "Quotable facts",
+      "severity": "recommended",
+      "appliesWhen": "always",
+      "why": "Specific facts are what assistants can cite. Vague slogans get paraphrased into something you did not say.",
+      "howToVerify": "Read the main marketing or about copy. Pass if concrete facts (what it does, who it serves, where it applies) are written in sentences a citation could lift. Slogans alone do not pass."
+    },
+    {
+      "id": "attribution",
+      "category": "geo",
+      "title": "Organization or author attribution",
+      "severity": "recommended",
+      "appliesWhen": "always",
+      "why": "Named authorship or a named organization is how engines attach claims to a real entity.",
+      "howToVerify": "Find a visible author, organization, or footer credit on public pages. Pass if the responsible party is named. An anonymous template with no operator does not pass."
+    },
+    {
+      "id": "structured-data",
+      "category": "geo",
+      "title": "Structured data for the main entity",
+      "severity": "recommended",
+      "appliesWhen": "always",
+      "why": "JSON-LD lets search and answer engines read the product, organization, or articles as data.",
+      "howToVerify": "Look for JSON-LD that matches a real entity on the site, such as Organization, WebSite, Product, or Article. Pass if it agrees with the visible page. Placeholder schema with fake ratings does not pass."
+    },
+    {
+      "id": "direct-answers",
+      "category": "aeo",
+      "title": "The first screen answers what this is",
+      "severity": "recommended",
+      "appliesWhen": "always",
+      "why": "Chat engines lift the opening of a page. If the answer is below a long animation, they miss it.",
+      "howToVerify": "Read each important public page from the top. Pass if the first screen states what the page is offering in plain language."
+    },
+    {
+      "id": "faq",
+      "category": "aeo",
+      "title": "FAQ or question-style headings",
+      "severity": "recommended",
+      "appliesWhen": "always",
+      "why": "Questions with direct answers are the unit chat engines prefer to quote.",
+      "howToVerify": "Look for an FAQ or headings phrased as real questions, each followed by a direct answer. Pass if at least the main objections or common questions are answered that way. Skip marketing headings that only sound like questions."
+    },
+    {
+      "id": "consistent-facts",
+      "category": "aeo",
+      "title": "Consistent name and facts",
+      "severity": "required",
+      "appliesWhen": "always",
+      "why": "If the name, price, or promise changes from page to page, both people and chat engines will mix them up.",
+      "howToVerify": "Compare the product name, offer, and key facts across the homepage, metadata, and footer. Pass if they agree. Leftover template names do not pass."
+    },
+    {
+      "id": "privacy",
+      "category": "legal",
+      "title": "Privacy policy",
+      "severity": "required",
+      "appliesWhen": "always",
+      "why": "People should be able to read what the app collects, why, and who receives it.",
+      "howToVerify": "Open the privacy policy from a public footer or equivalent. Pass if it describes this app's actual data practices. A lorem ipsum policy, a policy for a different product, or a link that 404s does not pass."
+    },
+    {
+      "id": "terms",
+      "category": "legal",
+      "title": "Terms of service",
+      "severity": "required",
+      "appliesWhen": "always",
+      "why": "Terms set the rules of use before someone creates an account, pays, or relies on the app.",
+      "howToVerify": "Open the terms from a public footer or equivalent. Pass if they belong to this product and are reachable. Placeholder terms do not pass."
+    },
+    {
+      "id": "cookie-banner",
+      "category": "legal",
+      "title": "Cookie banner and a refusal path",
+      "severity": "required",
+      "appliesWhen": "analytics",
+      "why": "Non-essential cookies and analytics need a choice, including the choice to refuse them.",
+      "howToVerify": "Load the app as a new visitor. Pass if a banner explains non-essential cookies and lets someone refuse them before they are set. Mark not applicable when the app sets no non-essential cookies and uses no analytics. A banner with only Accept does not pass."
+    },
+    {
+      "id": "contact",
+      "category": "legal",
+      "title": "A way to reach a person",
+      "severity": "recommended",
+      "appliesWhen": "always",
+      "why": "Privacy questions and support need a real contact path, not only a social icon.",
+      "howToVerify": "Find a contact page, email, or support form from the public site. Pass if a person could use it to reach the operator."
+    },
+    {
+      "id": "favicon-set",
+      "category": "identity",
+      "title": "Favicon set",
+      "severity": "required",
+      "appliesWhen": "always",
+      "why": "Tabs, bookmarks, and home-screen icons should show this product, not the framework logo.",
+      "howToVerify": "Check the head for an icon, an apple touch icon, and a web manifest. Pass if those files exist and are not the default framework icon."
+    },
+    {
+      "id": "theme-color",
+      "category": "identity",
+      "title": "Theme color",
+      "severity": "recommended",
+      "appliesWhen": "always",
+      "why": "The browser chrome should pick up the product color instead of a default gray or white strip.",
+      "howToVerify": "Find a theme-color meta tag, and a matching color in the web manifest if a manifest exists. Pass if it is set on purpose."
+    },
+    {
+      "id": "responsive",
+      "category": "identity",
+      "title": "Responsive layout",
+      "severity": "required",
+      "appliesWhen": "always",
+      "why": "A phone and a desktop should both be able to read and use the app without horizontal chaos.",
+      "howToVerify": "Review the layout at a narrow width and a wide width, or inspect the CSS that does that work. Pass if primary tasks fit and text is readable. A desktop page that only shrinks via the browser zoom does not pass."
+    },
+    {
+      "id": "contrast",
+      "category": "identity",
+      "title": "Readable contrast",
+      "severity": "required",
+      "appliesWhen": "always",
+      "why": "Low-contrast gray on a tinted background looks designed and then fails in daylight.",
+      "howToVerify": "Check body text, labels, and buttons against their backgrounds. Pass if ordinary text is clearly readable, roughly a 4.5:1 contrast for normal text. Placeholder gray-on-gray does not pass."
+    },
+    {
+      "id": "focus-visible",
+      "category": "identity",
+      "title": "Visible keyboard focus",
+      "severity": "required",
+      "appliesWhen": "always",
+      "why": "If focus is removed, keyboard users cannot see where they are.",
+      "howToVerify": "Look for :focus-visible or an equivalent that stays visible. Pass if focus is obvious. A global outline: none with no replacement does not pass."
+    },
+    {
+      "id": "reduced-motion",
+      "category": "identity",
+      "title": "Reduced motion",
+      "severity": "recommended",
+      "appliesWhen": "always",
+      "why": "People who ask the system for less motion should not get large looping animations.",
+      "howToVerify": "Search for prefers-reduced-motion, or confirm the app has no non-essential motion. Pass if motion is toned down or absent. Essential state changes can remain."
+    },
+    {
+      "id": "html-lang",
+      "category": "a11y",
+      "title": "Language of the page",
+      "severity": "required",
+      "appliesWhen": "always",
+      "why": "Screen readers pronounce the page with the lang attribute. A missing lang is announced as the wrong language.",
+      "howToVerify": "Find the html element. Pass if lang is set to the language the page is actually written in."
+    },
+    {
+      "id": "keyboard",
+      "category": "a11y",
+      "title": "Keyboard access",
+      "severity": "required",
+      "appliesWhen": "always",
+      "why": "Every control that a pointer can use needs a keyboard path.",
+      "howToVerify": "Check menus, dialogs, and custom controls. Pass if they are real buttons or links, or have a key handler and a sensible role. A clickable div with no keyboard support does not pass."
+    },
+    {
+      "id": "skip-link",
+      "category": "a11y",
+      "title": "Skip link",
+      "severity": "recommended",
+      "appliesWhen": "always",
+      "why": "A skip link lets keyboard users jump past a repeated header to the main content.",
+      "howToVerify": "Look for a skip link that targets the main content and becomes available at the start of the tab order. Pass if it works. On a tiny single-screen page with no repeated nav, mark not applicable and say so."
+    },
+    {
+      "id": "not-color-only",
+      "category": "a11y",
+      "title": "Color is not the only signal",
+      "severity": "required",
+      "appliesWhen": "always",
+      "why": "Errors, success, and status that are only a color disappear for some people.",
+      "howToVerify": "Review errors, badges, and charts. Pass if status also uses text, an icon, or a pattern. A red border alone does not pass."
+    },
+    {
+      "id": "descriptive-links",
+      "category": "a11y",
+      "title": "Links say where they go",
+      "severity": "recommended",
+      "appliesWhen": "always",
+      "why": "\"Click here\" and \"Read more\" repeated ten times are useless out of context.",
+      "howToVerify": "Read link text across the main pages. Pass if the text names the destination or action. Identical \"Learn more\" links with no surrounding context do not pass."
+    },
+    {
+      "id": "compressed-images",
+      "category": "performance",
+      "title": "Compressed images",
+      "severity": "required",
+      "appliesWhen": "always",
+      "why": "Uncompressed screenshots and camera files dominate the page weight of a vibe-coded app.",
+      "howToVerify": "Inspect image files and image URLs. Pass if large images are compressed and use a sensible format such as WebP, AVIF, or an optimized JPEG or PNG. Multi-megabyte source exports do not pass. If the app has no content images, mark not applicable and say so."
+    },
+    {
+      "id": "image-dimensions",
+      "category": "performance",
+      "title": "Images reserve their space",
+      "severity": "recommended",
+      "appliesWhen": "always",
+      "why": "Width and height, or a reserved aspect ratio, keep the page from jumping when images arrive.",
+      "howToVerify": "Check content images for width and height attributes or CSS that reserves the box. Pass if layout shift from images is prevented. If there are no content images, mark not applicable and say so."
+    },
+    {
+      "id": "lazy-images",
+      "category": "performance",
+      "title": "Below-the-fold images lazy load",
+      "severity": "recommended",
+      "appliesWhen": "always",
+      "why": "Images a person has not reached yet should not compete with the first screen.",
+      "howToVerify": "Check images below the first screen for loading=lazy or an equivalent. The hero image should not be lazy. If there are no below-the-fold images, mark not applicable and say so."
+    },
+    {
+      "id": "no-secrets",
+      "category": "security",
+      "title": "No secrets in the repo or client bundle",
+      "severity": "required",
+      "appliesWhen": "always",
+      "why": "A service key in the client, or in git history people can clone, is already public.",
+      "howToVerify": "Search tracked files and client source for private keys, service-role tokens, and secret API keys. Pass if none are present. A publishable client key that is designed to be public is not a secret. Do not copy any secret you find into the report; name the file and the kind of secret only."
+    },
+    {
+      "id": "env-gitignored",
+      "category": "security",
+      "title": ".env is gitignored",
+      "severity": "required",
+      "appliesWhen": "always",
+      "why": "Environment files are where local secrets land. If git can see them, they will be committed.",
+      "howToVerify": "Read .gitignore and see whether .env files are ignored. Fail if a real .env is tracked. Pass if ignore rules cover .env, or if the project has no env file and no server secret at all."
+    },
+    {
+      "id": "https",
+      "category": "security",
+      "title": "HTTPS in production",
+      "severity": "required",
+      "appliesWhen": "always",
+      "why": "A shipped app on plain HTTP leaks sessions and looks unfinished.",
+      "howToVerify": "Find the public URL. Pass if it is served over HTTPS. Localhost alone does not pass this check for a finished app. If there is no deployment, mark it missing and say that no production URL was found."
+    },
+    {
+      "id": "security-headers",
+      "category": "security",
+      "title": "Security headers",
+      "severity": "recommended",
+      "appliesWhen": "always",
+      "why": "Headers such as Content-Security-Policy, nosniff, Referrer-Policy, and a frame policy close common browser abuses.",
+      "howToVerify": "Check the deployed response headers, or the host config that sets them. Pass if a content security policy, X-Content-Type-Options: nosniff, a Referrer-Policy, and a framing control are set. Say if the app is not deployed yet."
+    },
+    {
+      "id": "protected-routes",
+      "category": "security",
+      "title": "Protected routes",
+      "severity": "required",
+      "appliesWhen": "accounts",
+      "why": "Account data and settings must not render for a signed-out visitor.",
+      "howToVerify": "Open a private route while signed out. Pass if the app redirects or refuses before private data is shown. Mark not applicable when the app has no accounts or private areas."
+    },
+    {
+      "id": "noindex-private",
+      "category": "security",
+      "title": "Private pages stay out of search",
+      "severity": "recommended",
+      "appliesWhen": "accounts",
+      "why": "Inbox, settings, and admin URLs should not be indexed.",
+      "howToVerify": "Check robots rules or a noindex tag on private routes. Pass if those routes are excluded. Mark not applicable when nothing is private."
+    },
+    {
+      "id": "session-cookies",
+      "category": "security",
+      "title": "Session cookie flags",
+      "severity": "recommended",
+      "appliesWhen": "accounts",
+      "why": "A session cookie should be HttpOnly and Secure, with SameSite set, so scripts and stray requests have a harder time carrying it.",
+      "howToVerify": "Find where the session cookie is set. Pass if HttpOnly, Secure, and SameSite are set for production. Mark not applicable if the app does not use a session cookie."
+    },
+    {
+      "id": "server-validation",
+      "category": "security",
+      "title": "Server-side validation on public forms",
+      "severity": "required",
+      "appliesWhen": "forms",
+      "why": "Browser checks are a convenience. The server still has to reject bad or hostile input.",
+      "howToVerify": "Find the handler that receives each public form. Pass if it validates and rejects invalid input on the server. Client-only checks do not pass. Mark not applicable when there is no form."
+    },
+    {
+      "id": "form-labels",
+      "category": "forms",
+      "title": "Every input has a label",
+      "severity": "required",
+      "appliesWhen": "forms",
+      "why": "Placeholder text disappears while typing and is not a name for the field.",
+      "howToVerify": "Review each input, select, and textarea. Pass if each has a visible label tied to it. Placeholder-only fields do not pass."
+    },
+    {
+      "id": "inline-errors",
+      "category": "forms",
+      "title": "Inline errors",
+      "severity": "required",
+      "appliesWhen": "forms",
+      "why": "An error has to say which field failed and how to fix it.",
+      "howToVerify": "Submit a form with a bad value. Pass if the message sits with the field and is text, not color alone."
+    },
+    {
+      "id": "pending-submit",
+      "category": "forms",
+      "title": "Pending submit state",
+      "severity": "recommended",
+      "appliesWhen": "forms",
+      "why": "A slow submit without a pending state gets clicked again.",
+      "howToVerify": "Submit a form. Pass if the button shows a pending state and cannot send a duplicate while the request is in flight."
+    },
+    {
+      "id": "form-success",
+      "category": "forms",
+      "title": "Success confirmation",
+      "severity": "required",
+      "appliesWhen": "forms",
+      "why": "Silence after submit looks like a failure.",
+      "howToVerify": "Complete a valid submit. Pass if the form confirms success in text on the page or by moving to a confirmation screen. A cleared form with no message does not pass."
+    },
+    {
+      "id": "account-settings",
+      "category": "accounts",
+      "title": "Account settings",
+      "severity": "required",
+      "appliesWhen": "accounts",
+      "why": "People who can sign in need a place to see and change the account.",
+      "howToVerify": "Find the settings view for a signed-in person. Pass if they can review the account details the app stores. Mark not applicable when the app has no accounts."
+    },
+    {
+      "id": "password-reset",
+      "category": "accounts",
+      "title": "Password reset or equivalent",
+      "severity": "required",
+      "appliesWhen": "accounts",
+      "why": "Password accounts need a recovery path. Passwordless accounts need a way back in if the email or device changes.",
+      "howToVerify": "Find the reset, magic-link, or recovery flow. Pass if a locked-out person has a real way back. Mark not applicable when there are no accounts."
+    },
+    {
+      "id": "data-rights",
+      "category": "accounts",
+      "title": "Delete or export personal data",
+      "severity": "recommended",
+      "appliesWhen": "accounts",
+      "why": "If the app stores personal data, people need a way to take it with them or delete it.",
+      "howToVerify": "Look in settings or the privacy policy for export and deletion. Pass if at least one of those paths exists and is real. Mark not applicable when the app stores no personal data."
+    },
+    {
+      "id": "autocomplete-auth",
+      "category": "accounts",
+      "title": "Autocomplete on auth fields",
+      "severity": "recommended",
+      "appliesWhen": "accounts",
+      "why": "Password managers need autocomplete hints such as username, current-password, and new-password.",
+      "howToVerify": "Inspect the sign-in and sign-up fields. Pass if autocomplete is set to the right token. Mark not applicable when the app has no auth fields."
+    },
+    {
+      "id": "readme-run",
+      "category": "hygiene",
+      "title": "README explains how to run the app",
+      "severity": "required",
+      "appliesWhen": "always",
+      "why": "A vibe-coded repo that only runs inside one chat session is not finished.",
+      "howToVerify": "Read the README. Pass if a newcomer can install, configure, and run the app from what it says. A title with no steps does not pass."
+    },
+    {
+      "id": "env-example",
+      "category": "hygiene",
+      "title": ".env.example without secrets",
+      "severity": "recommended",
+      "appliesWhen": "always",
+      "why": "People need the variable names. They should never receive a real secret in the example file.",
+      "howToVerify": "If the app needs environment variables, find .env.example or the documented list. Pass if names are listed and values are blank or fake. Fail if a real secret is in the example. Mark not applicable when the app needs no environment variables."
+    }
+  ]
+}

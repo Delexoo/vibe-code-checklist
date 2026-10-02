@@ -1,0 +1,17 @@
+# Vibe Code Checklist
+
+> A preflight checklist for vibe-coded web apps. People can tick it by hand or paste one prompt into an AI editor. The editor writes vibe-audit.html and leaves application code as it is.
+
+The site is a static guide maintained in a public repository. Checklist progress stays in the visitor's browser. The site sets no cookies and runs no analytics.
+
+## Start here
+
+- [Checklist site](https://delexoo.github.io/vibe-code-checklist/): the human list, the copy-paste prompt, and the report download
+- [Checklist data](https://github.com/Delexoo/vibe-code-checklist/blob/main/checklist.json): every check, with why it matters and how to verify it
+- [Audit procedure](https://github.com/Delexoo/vibe-code-checklist/blob/main/PROMPT.md): the rules an editor must follow
+- [Readme](https://github.com/Delexoo/vibe-code-checklist/blob/main/README.md): both ways to use the list
+- [Sample report](https://delexoo.github.io/vibe-code-checklist/sample-report.html): a short fictional scorecard
+
+## Notes
+
+A pass needs evidence from the workspace being audited. Conditional checks cover forms, accounts, analytics, payments, and articles, and they are not applicable when that feature is absent.
