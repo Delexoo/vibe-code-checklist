@@ -12,38 +12,60 @@ Read every item in `checklist.json` before you judge anything. Each item has `id
 
 `sample-report.html` shows the report shape with fictional results. Do not copy those results.
 
-## What you may change
+## Learn what they are building
 
-Create or overwrite `vibe-audit.html` at the workspace root. Do not create, edit, or delete any other file. Do not install packages. Do not change application data. Read-only inspection plus that one report is the whole job.
+Do this before you mark any item. The score is about this product, not a generic website.
+
+Read the README, the app name, the homepage or main screen, the routes, and any copy that says what the product does. From those files, write four things:
+
+1. **Goal.** What the person is trying to ship, in one or two sentences. If the README and the screens disagree, say so.
+2. **Who it is for.**
+3. **What this product includes.** Say which of these are present, started, or clearly promised by the UI, routes, or copy: public pages, forms, accounts, payments, analytics or non-essential cookies, articles, installed packages, a database, marketing email, an API, file uploads, reviews or statistics. A library that is installed and never used is not a feature.
+4. **What this product will not need.** Name the checklist areas that do not fit the goal.
+
+Put that picture in the report under **What this app is**, with the file paths you used. Do not invent a business the files do not support. If the goal is unclear, say what you found and what is still unclear.
 
 ## How to judge
 
 Give every item exactly one status: `pass`, `fail`, or `not_applicable`.
 
-- `pass` means you saw the requirement in this workspace. Cite a file path and what you found. A README promise is not evidence. A framework default is not a custom page.
-- `fail` means you looked and the requirement is missing, placeholder, or only a default. Name the paths you checked and say what is missing. Use the words `not found` when nothing is there.
-- `not_applicable` means the condition is absent. Say why in the evidence.
+- `pass` means you saw the requirement in this workspace. Cite a file path and what you found. A README promise is not evidence that a page exists. A framework default is not a custom page.
+- `fail` means this app needs the check and it is missing, placeholder, or only a default. Name the paths you checked. Use the words `not found` when nothing is there.
+- `not_applicable` means this app does not need the check. Say why, using the picture of the product. Unfinished work the app does need is a fail, not a skip.
 
-`appliesWhen` rules:
+Use `appliesWhen` as the usual signal, then check it against the product:
 
-- `always`: judge it. Use `not_applicable` only when `howToVerify` itself allows that, such as an app with no images.
-- `forms`: `not_applicable` only when there is no form, checkout, or signup.
-- `accounts`: `not_applicable` only when there are no accounts or private areas.
-- `analytics`: `not_applicable` only when the app uses no analytics and sets no non-essential cookies.
-- `payments`: `not_applicable` only when the app does not take payment.
-- `blog`: `not_applicable` only when the app does not publish articles or posts.
-- `dependencies`: `not_applicable` only when the app installs no packages.
-- `database`: `not_applicable` only when the app has no database.
-- `email`: `not_applicable` only when the app sends no marketing email. A receipt or password reset does not make this apply.
-- `api`: `not_applicable` only when the app has no API.
+- `always`: judge it for a website or web app people open. Use `not_applicable` when `howToVerify` allows that, or when the workspace is a different kind of product and the check would not serve the goal. A private tool that should not be indexed does not fail for a missing sitemap. A library with no pages does not fail for a missing favicon. Say what the workspace is instead.
+- `forms`: `not_applicable` only when this app has no form, checkout, or signup.
+- `accounts`: `not_applicable` only when this app has no accounts or private areas.
+- `analytics`: `not_applicable` only when this app uses no analytics and sets no non-essential cookies.
+- `payments`: `not_applicable` only when this app does not take payment.
+- `blog`: `not_applicable` only when this app does not publish articles or posts.
+- `dependencies`: `not_applicable` only when this app installs no packages.
+- `database`: `not_applicable` only when this app has no database.
+- `email`: `not_applicable` only when this app sends no marketing email. A receipt or password reset does not make this apply.
+- `api`: `not_applicable` only when this app has no API.
 - `uploads`: `not_applicable` only when nobody can upload a file.
-- `claims`: `not_applicable` only when the app shows no reviews, testimonials, or statistics.
+- `claims`: `not_applicable` only when this app shows no reviews, testimonials, or statistics.
+
+Do not drop a security check that matches a feature the app has. A small app with accounts still needs protected routes. A form that shows visitor text still needs that text escaped. A public page still needs its own title.
+
+Examples:
+
+- A brochure site with a contact form needs the form checks and a privacy policy. It does not need accounts or payments.
+- A members' app needs the account checks. It does not need article dates unless it has posts.
+- An internal dashboard that is not meant to be found in search does not need a sitemap, `llms.txt`, or social cards. It does need login and private routes if people sign in.
+- A script or library with no website does not need page, search, or favicon checks. Secrets and dependency checks still apply when it holds keys or installs packages.
 
 Severity changes the label, not the status. A recommended item can fail.
 
 If the dev server is off, judge the source. Say that the evidence is from source. Do not fail a check only because you did not click a running page when the source implements it. HTTPS and security headers need a deployment or host config; if neither exists, mark them missing and say that no production URL or header config was found.
 
 Never invent a file. Never paste a secret value into the report. Name the file and the kind of secret only.
+
+## What you may change
+
+Create or overwrite `vibe-audit.html` at the workspace root. Do not create, edit, or delete any other file. Do not install packages. Do not change application data. Read-only inspection plus that one report is the whole job.
 
 ## Score
 
@@ -105,6 +127,7 @@ Use this document. Replace the bracketed fields. Repeat one `article` per item. 
     .finding.pass .status { color: var(--pass); }
     .finding.miss .status { color: var(--miss); }
     .finding.na .status { color: var(--na); }
+    .context p { margin: .45rem 0; }
     .why, .evidence, .fix { margin: .35rem 0 0; }
     .evidence span, .fix span { font-size: .68rem; letter-spacing: .08em; text-transform: uppercase; display: block; color: var(--muted); }
     .evidence, .fix { overflow-wrap: anywhere; }
@@ -129,6 +152,13 @@ Use this document. Replace the bracketed fields. Repeat one `article` per item. 
       <div><dt>Generated</dt><dd>[Date]</dd></div>
       <div><dt>Source</dt><dd>Workspace audit</dd></div>
     </dl>
+    <section class="context">
+      <h2>What this app is</h2>
+      <p><strong>Goal.</strong> [What they are trying to ship, from the files.]</p>
+      <p><strong>Who it is for.</strong> [Audience, or say it is not stated.]</p>
+      <p><strong>Checks that fit.</strong> [Which features this product has, and which checklist areas do not apply.]</p>
+      <p class="evidence"><span>Based on</span>[File paths you actually read.]</p>
+    </section>
     <section class="score">
       <p class="fraction">[passes]<span>/[applicable]</span></p>
       <p>[Percent]% of the checks that apply are in place. [Same detail as the overall section.]</p>
@@ -209,4 +239,4 @@ Escape any HTML characters that came from the workspace so the report stays a do
 
 ## When you finish
 
-Reply with the overall result, the required items still open, and the path `vibe-audit.html`. Do not start fixing the app.
+Reply with what the app is, the overall result, the required items still open, and the path `vibe-audit.html`. Do not start fixing the app.

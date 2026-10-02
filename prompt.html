@@ -34,7 +34,7 @@
       <h1>Paste the prompt</h1>
       <ol class="steps">
         <li>Open your app in your editor. Leave this repo closed.</li>
-        <li>Copy the prompt and paste it into the chat.</li>
+        <li>Copy the prompt and paste it into the chat. The editor reads what you are building, then skips checks that app does not need.</li>
         <li>Open <code>vibe-audit.html</code> in your project when it finishes.</li>
       </ol>
       <section class="audit" id="audit" aria-labelledby="audit-title">
@@ -43,6 +43,8 @@
           <button type="button" class="primary" id="copy" aria-live="polite">Copy prompt</button>
         </div>
         <pre id="prompt-text">Audit this workspace against the Vibe Code Checklist.
+
+First read this workspace and say what the app is for: the end goal, who it is for, and which features it actually has. Then judge only the checks that fit that app. A check the product does not need is not a failure.
 
 Source of truth (read these before judging anything):
 https://github.com/Delexoo/vibe-code-checklist/blob/main/PROMPT.md

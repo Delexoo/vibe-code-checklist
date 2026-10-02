@@ -28,6 +28,8 @@ The editor writes that report and leaves the rest of your app alone.
 ```text
 Audit this workspace against the Vibe Code Checklist.
 
+First read this workspace and say what the app is for: the end goal, who it is for, and which features it actually has. Then judge only the checks that fit that app. A check the product does not need is not a failure.
+
 Source of truth (read these before judging anything):
 https://github.com/Delexoo/vibe-code-checklist/blob/main/PROMPT.md
 https://github.com/Delexoo/vibe-code-checklist/blob/main/checklist.json

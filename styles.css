@@ -289,6 +289,14 @@ input[type="text"] {
   border-radius: 0;
 }
 
+.goal-label {
+  margin: 1.5rem 0 0;
+}
+
+.goal-label input {
+  width: min(36rem, 100%);
+}
+
 .actions {
   display: flex;
   flex-wrap: wrap;

@@ -1,6 +1,7 @@
 (function () {
   var STORAGE_KEY = "vibe-code-checklist-v1";
   var PROJECT_KEY = "vibe-code-checklist-project";
+  var GOAL_KEY = "vibe-code-checklist-goal";
   var APPLIES = {
     forms: "If the app has a form, checkout, or signup",
     accounts: "If the app has accounts",
@@ -45,6 +46,7 @@
     ".finding.pass .status{color:var(--pass)}",
     ".finding.miss .status{color:var(--miss)}",
     ".finding.na .status{color:var(--na)}",
+    ".context p{margin:.45rem 0}",
     ".why,.evidence,.fix{margin:.35rem 0 0}",
     ".evidence span,.fix span{font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;display:block;color:var(--muted)}",
     ".evidence,.fix{overflow-wrap:anywhere}",
@@ -105,6 +107,15 @@
       var categoryTitle = (counts[finding.category] && counts[finding.category].title) || finding.category;
       return "<li><strong>" + escapeHtml(finding.title) + ".</strong> " + escapeHtml(finding.howToFix || "See the missing item below.") + " <span class=\"cat\">" + escapeHtml(categoryTitle) + "</span></li>";
     }).join("") + "</ol>";
+  }
+
+  function contextHtml(context) {
+    var picture = context || {};
+    return "<section class=\"context\"><h2>What this app is</h2>" +
+      "<p><strong>Goal.</strong> " + escapeHtml(picture.goal || "Not stated.") + "</p>" +
+      "<p><strong>Who it is for.</strong> " + escapeHtml(picture.audience || "Not stated.") + "</p>" +
+      "<p><strong>Checks that fit.</strong> " + escapeHtml(picture.needed || "Not stated.") + "</p>" +
+      "<p class=\"evidence\"><span>Based on</span>" + escapeHtml(picture.basis || "Not recorded") + "</p></section>";
   }
 
   function buildReportHtml(options) {
@@ -181,6 +192,7 @@
       "<dl class=\"meta\"><div><dt>Project</dt><dd>" + escapeHtml(options.projectName || "Workspace") + "</dd></div>" +
       "<div><dt>Generated</dt><dd>" + escapeHtml(options.generatedOn || "") + "</dd></div>" +
       "<div><dt>Source</dt><dd>" + escapeHtml(options.source || "Workspace audit") + "</dd></div></dl>" +
+      contextHtml(options.context) +
       "<section class=\"score\"><p class=\"fraction\">" + pass + "<span>/" + applicable + "</span></p><p>" + escapeHtml(summary) + "</p></section>" +
       "<section class=\"verdict\"><h2>Overall</h2><p class=\"verdict-label\">" + escapeHtml(verdict.label) + "</p><p>" + escapeHtml(verdict.detail) + "</p></section>" +
       "<section><h2>Fix these first</h2>" + fixFirstHtml(findings, counts) + "</section>" +
@@ -386,10 +398,17 @@
     if (copy) copy.addEventListener("click", onCopy);
     if (!document.getElementById("list")) return;
     var project = document.getElementById("project-name");
+    var goal = document.getElementById("app-goal");
     project.value = localStorage.getItem(PROJECT_KEY) || "";
     project.addEventListener("input", function () {
       localStorage.setItem(PROJECT_KEY, project.value);
     });
+    if (goal) {
+      goal.value = localStorage.getItem(GOAL_KEY) || "";
+      goal.addEventListener("input", function () {
+        localStorage.setItem(GOAL_KEY, goal.value);
+      });
+    }
     fetch("checklist.json")
       .then(function (response) {
         if (!response.ok) throw new Error(String(response.status));
@@ -403,10 +422,17 @@
         document.getElementById("reset").disabled = false;
         document.getElementById("download").addEventListener("click", function () {
           var name = project.value.trim() || "Manual review";
+          var described = goal && goal.value.trim();
           var html = buildReportHtml({
             projectName: name,
             generatedOn: formatDate(new Date()),
             source: "Marked by hand in the browser",
+            context: {
+              goal: described || "Not described. Rows were set aside by hand.",
+              audience: "Set by the person checking.",
+              needed: "Rows were included or set aside by hand for this app.",
+              basis: "A manual review in the browser, not a file inspection."
+            },
             categories: data.categories,
             findings: findingsFromState(data, state)
           });
