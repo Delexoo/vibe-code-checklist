@@ -65,7 +65,7 @@ Never invent a file. Never paste a secret value into the report. Name the file a
 
 ## What you may change
 
-Create or overwrite `vibe-audit.html` at the workspace root. Do not create, edit, or delete any other file. Do not install packages. Do not change application data. Read-only inspection plus that one report is the whole job.
+Create or overwrite `vibe-audit.html` at the workspace root. Do not create, edit, or delete any other file. Do not install packages. Do not change application data. Read-only inspection, that one report, and opening it is the whole job.
 
 ## Score
 
@@ -239,4 +239,12 @@ Escape any HTML characters that came from the workspace so the report stays a do
 
 ## When you finish
 
-Reply with what the app is, the overall result, the required items still open, and the path `vibe-audit.html`. Do not start fixing the app.
+Open `vibe-audit.html` in the default browser yourself, from the workspace root. The assessment results should appear on their own. Do not ask the person to find or open the file.
+
+Run the command for this operating system, and wait until it starts:
+
+- Windows PowerShell: `Start-Process (Resolve-Path .\vibe-audit.html)`
+- macOS: `open vibe-audit.html`
+- Linux: `xdg-open vibe-audit.html`
+
+If the command fails, say the full path and that the file is ready. Then reply with what the app is, the overall result, the required items still open, and the path `vibe-audit.html`. Do not start fixing the app.

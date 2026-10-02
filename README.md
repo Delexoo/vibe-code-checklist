@@ -21,9 +21,9 @@ Your ticks stay in this browser. The report is a file on your computer named `vi
 
 1. Open **your app** in Cursor or another AI editor. Leave this repo closed.
 2. On the site, choose **Paste the prompt**, or copy the prompt below.
-3. Open `vibe-audit.html` in your project folder.
+3. Wait. Your assessment results open for you when it finishes.
 
-The editor writes that report and leaves the rest of your app alone.
+The editor writes that report, opens it, and leaves the rest of your app alone.
 
 ```text
 Audit this workspace against the Vibe Code Checklist.
@@ -34,7 +34,7 @@ Source of truth (read these before judging anything):
 https://github.com/Delexoo/vibe-code-checklist/blob/main/PROMPT.md
 https://github.com/Delexoo/vibe-code-checklist/blob/main/checklist.json
 
-Follow PROMPT.md exactly. Inspect THIS workspace, not the checklist repo. Write a self-contained vanilla HTML report at vibe-audit.html showing what passed, what is missing, and what does not apply. Do not change application code.
+Follow PROMPT.md exactly. Inspect THIS workspace, not the checklist repo. Write a self-contained vanilla HTML report at vibe-audit.html showing what passed, what is missing, and what does not apply. When the file is written, open it in the default browser so the assessment results appear on their own. Do not change application code.
 ```
 
 ## What the report shows
