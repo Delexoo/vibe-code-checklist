@@ -107,11 +107,22 @@ input[type="text"] {
   font-size: 0.75rem;
 }
 
+.site-header .bar {
+  justify-content: center;
+}
+
 .site-header nav,
 .foot nav {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.35rem 1rem;
+  justify-content: center;
+  gap: 0.35rem 1.25rem;
+}
+
+.site-header nav a {
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
 }
 
 .site-header nav a,
