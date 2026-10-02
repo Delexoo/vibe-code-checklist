@@ -1,1 +1,170 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Sample preflight report — Vibe Code Checklist</title><style>:root{--paper:#f3eadc;--ink:#1b1612;--muted:#4a433b;--line:#d9cbb6;--pass:#145c38;--miss:#8e2f2a;--na:#5c564e}*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;font-size:1.05rem;line-height:1.5}main{width:min(820px,calc(100% - 2rem));margin:2rem auto 4rem}.kicker,.status,.meta dt,table,.evidence span,.fix span,footer,.cat{font-family:ui-monospace,"Cascadia Mono","Segoe UI Mono",Consolas,monospace}.kicker{letter-spacing:.12em;text-transform:uppercase;font-size:.72rem;margin:0 0 .5rem}h1{font-size:2.6rem;line-height:1;font-weight:560;margin:0 0 1rem}.sample-banner{border:1px solid var(--ink);padding:.7rem .8rem}.meta{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin:1.5rem 0}.meta div{border-top:1px solid var(--ink);padding-top:.4rem}.meta dt{font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}.meta dd{margin:.2rem 0 0}.score{border-top:1px solid var(--ink);border-bottom:1px solid var(--ink);padding:1rem 0;display:flex;gap:1.5rem;align-items:baseline}.fraction{font-size:3rem;line-height:1;margin:0;font-variant-numeric:tabular-nums}.fraction span{font-size:1.25rem;color:var(--muted)}.score p{margin:0}table{width:100%;border-collapse:collapse;font-size:.85rem}caption{text-align:left;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;margin:0 0 .4rem}th,td{text-align:left;padding:.45rem .5rem .45rem 0;border-bottom:1px solid var(--line);vertical-align:top}th:not(:first-child),td:not(:first-child){text-align:right;font-variant-numeric:tabular-nums}h2{font-size:1.5rem;margin:2rem 0 .6rem}.finding{border-top:1px solid var(--line);padding:.9rem 0}.finding header{display:flex;justify-content:space-between;gap:1rem;align-items:baseline}.finding h3{margin:0;font-size:1.15rem}.cat{margin:0 0 .15rem;font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}.status{margin:0;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;text-align:right}.finding.pass .status{color:var(--pass)}.finding.miss .status{color:var(--miss)}.finding.na .status{color:var(--na)}.context p{margin:.45rem 0}.why,.evidence,.fix{margin:.35rem 0 0}.evidence span,.fix span{font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;display:block;color:var(--muted)}.evidence,.fix{overflow-wrap:anywhere}.verdict-label{font-size:1.7rem;line-height:1.1;margin:0 0 .4rem}.fix-list{margin:.2rem 0 0;padding-left:1.2rem}.fix-list li{margin:.45rem 0}footer{margin-top:2rem;color:var(--muted);font-size:.85rem}@media(max-width:640px){.meta,.score,.finding header{display:flex;flex-direction:column;align-items:flex-start}h1{font-size:2.1rem}.status{text-align:left}}@media print{body{background:#fff}main{width:auto;margin:0}}</style></head><body><main><p class="kicker">Vibe Code Checklist</p><h1>Preflight report</h1><p class="sample-banner">Sample report. These results are fictional and only show the shape of a finished scorecard. A real audit lists every checklist item.</p><dl class="meta"><div><dt>Project</dt><dd>Northwind Studio</dd></div><div><dt>Generated</dt><dd>1 October 2026</dd></div><div><dt>Source</dt><dd>Sample</dd></div></dl><section class="context"><h2>What this app is</h2><p><strong>Goal.</strong> A small studio site that shows work and collects project inquiries.</p><p><strong>Who it is for.</strong> People looking to hire the studio.</p><p><strong>Checks that fit.</strong> Public pages and a contact form fit. Accounts, payments, articles, and uploads do not.</p><p class="evidence"><span>Based on</span>Fictional README.md and app/page.tsx. This sample is not a real workspace.</p></section><section class="score"><p class="fraction">1<span>/5</span></p><p>20% of the checks that apply are in place. 4 required checks are still open. Fix those before you call the app done.</p></section><section class="verdict"><h2>Overall</h2><p class="verdict-label">Not ready to ship</p><p>4 required checks are still open. Fix those before you call the app done.</p></section><section><h2>Fix these first</h2><ol class="fix-list"><li><strong>Custom 404 page.</strong> Add your own 404 page in the router or pages folder, with a link back home. A framework default page does not count. <span class="cat">Pages and flows</span></li><li><strong>Unique meta title per page.</strong> Give every public page its own title. Replace leftover titles such as Vite + React. <span class="cat">Search engine optimization</span></li><li><strong>Privacy policy.</strong> Publish a privacy policy for this app that says what you collect, why, and who receives it. Link it in the footer. <span class="cat">Legal and consent</span></li><li><strong>README explains how to run the app.</strong> Write the install, setup, and run commands in the README. <span class="cat">Project hygiene</span></li></ol></section><section><h2>By category</h2><table><caption>Results by category</caption><thead><tr><th>Category</th><th>In place</th><th>Missing</th><th>Does not apply</th></tr></thead><tbody><tr><td>Pages and flows</td><td>1</td><td>1</td><td>1</td></tr><tr><td>Search engine optimization</td><td>0</td><td>1</td><td>0</td></tr><tr><td>Legal and consent</td><td>0</td><td>1</td><td>0</td></tr><tr><td>Accounts and settings</td><td>0</td><td>0</td><td>1</td></tr><tr><td>Project hygiene</td><td>0</td><td>1</td><td>0</td></tr></tbody></table></section><section><h2>Missing</h2><article class="finding miss"><header><div><p class="cat">Pages and flows</p><h3>Custom 404 page</h3></div><p class="status">Missing · Required</p></header><p class="why">A missing route should still feel like the product and offer a way onward.</p><p class="evidence"><span>Evidence</span>Searched app/not-found.tsx and pages/404.js in the fictional Northwind Studio repo. Not found.</p><p class="fix"><span>How to fix</span>Add your own 404 page in the router or pages folder, with a link back home. A framework default page does not count.</p></article><article class="finding miss"><header><div><p class="cat">Search engine optimization</p><h3>Unique meta title per page</h3></div><p class="status">Missing · Required</p></header><p class="why">Tabs, search results, and shares all use the title. One reused title makes every page look unfinished.</p><p class="evidence"><span>Evidence</span>Every public route in the fictional app still uses the document title Vite + React.</p><p class="fix"><span>How to fix</span>Give every public page its own title. Replace leftover titles such as Vite + React.</p></article><article class="finding miss"><header><div><p class="cat">Legal and consent</p><h3>Privacy policy</h3></div><p class="status">Missing · Required</p></header><p class="why">People should be able to read what the app collects, why, and who receives it.</p><p class="evidence"><span>Evidence</span>Footer link /privacy in the fictional app returns the framework 404. The contact form collects a name and email, so a privacy policy fits this app.</p><p class="fix"><span>How to fix</span>Publish a privacy policy for this app that says what you collect, why, and who receives it. Link it in the footer.</p></article><article class="finding miss"><header><div><p class="cat">Project hygiene</p><h3>README explains how to run the app</h3></div><p class="status">Missing · Required</p></header><p class="why">A vibe-coded repo that only runs inside one chat session is not finished.</p><p class="evidence"><span>Evidence</span>The fictional README is a title only. Install and run steps were not found.</p><p class="fix"><span>How to fix</span>Write the install, setup, and run commands in the README.</p></article></section><section><h2>In place</h2><article class="finding pass"><header><div><p class="cat">Pages and flows</p><h3>Loading states</h3></div><p class="status">In place · Required</p></header><p class="why">Waits should look intentional, so people do not click twice or assume the app froze.</p><p class="evidence"><span>Evidence</span>components/Orders.tsx in the fictional repo renders a skeleton while orders are pending.</p></article></section><section><h2>Does not apply</h2><article class="finding na"><header><div><p class="cat">Pages and flows</p><h3>Thank-you or confirmation page</h3></div><p class="status">Does not apply · Required</p></header><p class="why">After a signup, checkout, or important form, people need a clear end to the flow.</p><p class="evidence"><span>Evidence</span>Northwind Studio is a brochure site. No form, checkout, or signup exists.</p></article><article class="finding na"><header><div><p class="cat">Accounts and settings</p><h3>Account settings</h3></div><p class="status">Does not apply · Required</p></header><p class="why">People who can sign in need a place to see and change the account.</p><p class="evidence"><span>Evidence</span>This brochure site has no accounts. Account settings do not fit the goal.</p></article></section><footer>Score is items in place divided by items that apply. A pass needs evidence. This file is the report; it leaves the app as it is.</footer></main></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sample preflight report — Vibe Code Checklist</title>
+  <style>
+    :root { --paper: #f3eadc; --ink: #1b1612; --muted: #4a433b; --line: #d9cbb6; --hl-pass: #b7ebc6; --hl-warn: #ffe56a; --hl-miss: #ffb4ae; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--paper); color: var(--ink); font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif; font-size: 1.05rem; line-height: 1.5; }
+    main { width: min(820px, calc(100% - 2rem)); margin: 2rem auto 4rem; }
+    .kicker, .status, .meta dt, table, .evidence span, .fix span, footer, .cat { font-family: ui-monospace, "Cascadia Mono", "Segoe UI Mono", Consolas, monospace; }
+    .kicker { letter-spacing: .12em; text-transform: uppercase; font-size: .72rem; margin: 0 0 .5rem; }
+    h1 { font-size: 2.6rem; line-height: 1; font-weight: 560; margin: 0 0 1rem; }
+    .sample-banner { border: 1px solid var(--ink); padding: .7rem .8rem; }
+    .meta { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1.5rem 0; }
+    .meta div { border-top: 1px solid var(--ink); padding-top: .4rem; }
+    .meta dt { font-size: .68rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+    .meta dd { margin: .2rem 0 0; }
+    .score { border-top: 1px solid var(--ink); border-bottom: 1px solid var(--ink); padding: 1rem 0; display: flex; gap: 1.5rem; align-items: baseline; }
+    .fraction { font-size: 3rem; line-height: 1; margin: 0; font-variant-numeric: tabular-nums; }
+    .fraction span { font-size: 1.25rem; color: var(--muted); }
+    .score p { margin: 0; }
+    table { width: 100%; border-collapse: collapse; font-size: .85rem; }
+    caption { text-align: left; font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; margin: 0 0 .4rem; }
+    th, td { text-align: left; padding: .45rem .5rem .45rem 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+    th:not(:first-child), td:not(:first-child) { text-align: right; font-variant-numeric: tabular-nums; }
+    h2 { font-size: 1.5rem; margin: 2rem 0 .6rem; }
+    .finding { border-top: 1px solid var(--line); padding: .9rem 0; }
+    .finding header { display: flex; justify-content: space-between; gap: 1rem; align-items: baseline; }
+    .finding h3 { margin: 0; font-size: 1.15rem; }
+    .cat { margin: 0 0 .15rem; font-size: .68rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+    .key { margin: 1rem 0 0; }
+    .mark, .status { color: var(--ink); background: transparent; padding: .08em .28em; box-decoration-break: clone; -webkit-box-decoration-break: clone; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .status { margin: 0; font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; text-align: right; display: inline-block; }
+    .mark.pass, .finding.pass .status { background: var(--hl-pass); }
+    .mark.warn, .finding.warn .status { background: var(--hl-warn); }
+    .mark.miss, .finding.miss .status { background: var(--hl-miss); }
+    .context p { margin: .45rem 0; }
+    .why, .evidence, .fix { margin: .35rem 0 0; }
+    .evidence span, .fix span { font-size: .68rem; letter-spacing: .08em; text-transform: uppercase; display: block; color: var(--muted); }
+    .evidence, .fix { overflow-wrap: anywhere; }
+    .verdict-label { font-size: 1.7rem; line-height: 1.2; margin: 0 0 .4rem; display: inline; }
+    .fix-list { margin: .2rem 0 0; padding-left: 1.2rem; }
+    .fix-list li { margin: .45rem 0; }
+    footer { margin-top: 2rem; color: var(--muted); font-size: .85rem; }
+    @media (max-width: 640px) {
+      .meta, .score, .finding header { display: flex; flex-direction: column; align-items: flex-start; }
+      h1 { font-size: 2.1rem; }
+      .status { text-align: left; }
+    }
+    @media print { body { background: #fff; } main { width: auto; margin: 0; } }
+  </style>
+</head>
+<body>
+  <main>
+    <p class="kicker">Vibe Code Checklist</p>
+    <h1>Preflight report</h1>
+    <p class="sample-banner">This example is made up. It shows how to read a report. A real check lists every item.</p>
+    <p class="key"><span class="mark pass">Done</span> already works. <span class="mark warn">Warning</span> can wait. <span class="mark miss">Missing</span> needs a fix before you ship.</p>
+    <dl class="meta">
+      <div><dt>Project</dt><dd>Northwind Studio</dd></div>
+      <div><dt>Generated</dt><dd>1 October 2026</dd></div>
+      <div><dt>Source</dt><dd>Sample</dd></div>
+    </dl>
+    <section class="context">
+      <h2>What this app is</h2>
+      <p><strong>Goal.</strong> A studio website that shows work and has a contact form.</p>
+      <p><strong>Who it is for.</strong> People who might hire the studio.</p>
+      <p><strong>Checks that fit.</strong> Public pages and the contact form count. Sign-in does not, because nobody creates an account.</p>
+    </section>
+    <section class="score">
+      <p class="fraction">1<span>/4</span></p>
+      <p>One of the four checks is done. Two are missing. One is a warning.</p>
+    </section>
+    <section class="verdict">
+      <h2>Overall</h2>
+      <p class="verdict-label mark miss">Not ready to ship</p>
+      <p>Fix the two missing checks before you call the app done. The warning can wait.</p>
+    </section>
+    <section>
+      <h2>Fix these first</h2>
+      <ol class="fix-list">
+        <li><strong>Custom 404 page.</strong> Add your own page for a bad link, with a way back home.</li>
+        <li><strong>Privacy policy.</strong> The contact form asks for a name and email. Say what you do with that, and link it in the footer.</li>
+      </ol>
+    </section>
+    <section>
+      <h2>By category</h2>
+      <table>
+        <caption>Results by category</caption>
+        <thead>
+          <tr><th>Category</th><th>Done</th><th>Missing</th><th>Warning</th><th>Does not apply</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Pages and flows</td><td>1</td><td>1</td><td>1</td><td>0</td></tr>
+          <tr><td>Legal and consent</td><td>0</td><td>1</td><td>0</td><td>0</td></tr>
+          <tr><td>Accounts and settings</td><td>0</td><td>0</td><td>0</td><td>1</td></tr>
+        </tbody>
+      </table>
+    </section>
+    <section>
+      <h2>Missing</h2>
+      <article class="finding miss">
+        <header>
+          <div>
+            <p class="cat">Pages and flows</p>
+            <h3>Custom 404 page</h3>
+          </div>
+          <p class="status">Missing</p>
+        </header>
+        <p class="why">A bad link should still look like the site and offer a way home.</p>
+        <p class="fix"><span>How to fix</span>Add your own 404 page, with a link back home. The plain framework page does not count.</p>
+      </article>
+      <article class="finding miss">
+        <header>
+          <div>
+            <p class="cat">Legal and consent</p>
+            <h3>Privacy policy</h3>
+          </div>
+          <p class="status">Missing</p>
+        </header>
+        <p class="why">The contact form collects a name and email. People should be able to read what happens to that.</p>
+        <p class="fix"><span>How to fix</span>Write a short privacy policy for this site and link it in the footer.</p>
+      </article>
+    </section>
+    <section>
+      <h2>Warnings</h2>
+      <article class="finding warn">
+        <header>
+          <div>
+            <p class="cat">Pages and flows</p>
+            <h3>Empty states</h3>
+          </div>
+          <p class="status">Warning</p>
+        </header>
+        <p class="why">A work grid with nothing in it still needs a sentence, so the page does not look broken.</p>
+        <p class="fix"><span>How to fix</span>When the work list is empty, show one sentence and a next step. This can wait until the missing checks are done.</p>
+      </article>
+    </section>
+    <section>
+      <h2>Done</h2>
+      <article class="finding pass">
+        <header>
+          <div>
+            <p class="cat">Pages and flows</p>
+            <h3>Loading states</h3>
+          </div>
+          <p class="status">Done</p>
+        </header>
+        <p class="why">The contact form shows “Sending…” while it waits, so people do not click twice.</p>
+      </article>
+    </section>
+    <section>
+      <h2>Does not apply</h2>
+      <article class="finding na">
+        <header>
+          <div>
+            <p class="cat">Accounts and settings</p>
+            <h3>Account settings</h3>
+          </div>
+          <p class="status">Does not apply</p>
+        </header>
+        <p class="why">Nobody signs in, so there is no account page to build. This is not a failure.</p>
+      </article>
+    </section>
+    <footer>The score counts checks that are done, out of the checks that apply. A warning still counts. Something that does not apply does not. This file is the report. It does not change the app.</footer>
+  </main>
+</body>
+</html>

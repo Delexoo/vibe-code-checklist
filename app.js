@@ -16,7 +16,7 @@
   };
 
   var REPORT_CSS = [
-    ":root{--paper:#f3eadc;--ink:#1b1612;--muted:#4a433b;--line:#d9cbb6;--pass:#145c38;--miss:#8e2f2a;--na:#5c564e}",
+    ":root{--paper:#f3eadc;--ink:#1b1612;--muted:#4a433b;--line:#d9cbb6;--hl-pass:#b7ebc6;--hl-warn:#ffe56a;--hl-miss:#ffb4ae}",
     "*{box-sizing:border-box}",
     "body{margin:0;background:var(--paper);color:var(--ink);font-family:\"Iowan Old Style\",\"Palatino Linotype\",Palatino,Georgia,serif;font-size:1.05rem;line-height:1.5}",
     "main{width:min(820px,calc(100% - 2rem));margin:2rem auto 4rem}",
@@ -41,15 +41,17 @@
     ".finding header{display:flex;justify-content:space-between;gap:1rem;align-items:baseline}",
     ".finding h3{margin:0;font-size:1.15rem}",
     ".cat{margin:0 0 .15rem;font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}",
-    ".status{margin:0;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;text-align:right}",
-    ".finding.pass .status{color:var(--pass)}",
-    ".finding.miss .status{color:var(--miss)}",
-    ".finding.na .status{color:var(--na)}",
+    ".key{margin:1rem 0 0}",
+    ".mark,.status{color:var(--ink);background:transparent;padding:.08em .28em;box-decoration-break:clone;-webkit-box-decoration-break:clone;-webkit-print-color-adjust:exact;print-color-adjust:exact}",
+    ".status{margin:0;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;text-align:right;display:inline-block}",
+    ".mark.pass,.finding.pass .status{background:var(--hl-pass)}",
+    ".mark.warn,.finding.warn .status{background:var(--hl-warn)}",
+    ".mark.miss,.finding.miss .status{background:var(--hl-miss)}",
     ".context p{margin:.45rem 0}",
     ".why,.evidence,.fix{margin:.35rem 0 0}",
     ".evidence span,.fix span{font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;display:block;color:var(--muted)}",
     ".evidence,.fix{overflow-wrap:anywhere}",
-    ".verdict-label{font-size:1.7rem;line-height:1.1;margin:0 0 .4rem}",
+    ".verdict-label{font-size:1.7rem;line-height:1.2;margin:0 0 .4rem;display:inline}",
     ".fix-list{margin:.2rem 0 0;padding-left:1.2rem}",
     ".fix-list li{margin:.45rem 0}",
     "footer{margin-top:2rem;color:var(--muted);font-size:.85rem}",
@@ -65,15 +67,17 @@
       .replace(/"/g, "&quot;");
   }
 
-  function statusLabel(status) {
-    if (status === "pass") return "In place";
+  function statusLabel(status, severity) {
+    if (status === "pass") return "Done";
     if (status === "not_applicable") return "Does not apply";
+    if (severity === "recommended") return "Warning";
     return "Missing";
   }
 
-  function statusClass(status) {
+  function statusClass(status, severity) {
     if (status === "pass") return "pass";
     if (status === "not_applicable") return "na";
+    if (severity === "recommended") return "warn";
     return "miss";
   }
 
@@ -126,22 +130,26 @@
     var recommendedOpen = 0;
     var counts = {};
     categories.forEach(function (category) {
-      counts[category.id] = { title: category.title, pass: 0, fail: 0, na: 0 };
+      counts[category.id] = { title: category.title, pass: 0, miss: 0, warn: 0, na: 0 };
     });
     findings.forEach(function (finding) {
       if (!counts[finding.category]) {
-        counts[finding.category] = { title: finding.category, pass: 0, fail: 0, na: 0 };
+        counts[finding.category] = { title: finding.category, pass: 0, miss: 0, warn: 0, na: 0 };
       }
-      if (finding.status === "pass") {
+      var bucket = statusClass(finding.status, finding.severity);
+      if (bucket === "pass") {
         pass += 1;
         counts[finding.category].pass += 1;
-      } else if (finding.status === "not_applicable") {
+      } else if (bucket === "na") {
         counts[finding.category].na += 1;
+      } else if (bucket === "warn") {
+        fail += 1;
+        recommendedOpen += 1;
+        counts[finding.category].warn += 1;
       } else {
         fail += 1;
-        counts[finding.category].fail += 1;
-        if (finding.severity === "required") requiredOpen += 1;
-        else recommendedOpen += 1;
+        requiredOpen += 1;
+        counts[finding.category].miss += 1;
       }
     });
     var applicable = pass + fail;
@@ -154,50 +162,53 @@
     findings.forEach(function (finding) { used[finding.category] = true; });
     var categoryRows = categories.filter(function (category) { return used[category.id]; }).map(function (category) {
       var row = counts[category.id];
-      return "<tr><td>" + escapeHtml(row.title) + "</td><td>" + row.pass + "</td><td>" + row.fail + "</td><td>" + row.na + "</td></tr>";
+      return "<tr><td>" + escapeHtml(row.title) + "</td><td>" + row.pass + "</td><td>" + row.miss + "</td><td>" + row.warn + "</td><td>" + row.na + "</td></tr>";
     }).join("");
     var title = options.sampleNote
       ? "Sample preflight report — Vibe Code Checklist"
       : "Preflight report — " + (options.projectName || "Workspace");
     var groups = [
-      ["fail", "Missing", "miss"],
-      ["pass", "In place", "pass"],
-      ["not_applicable", "Does not apply", "na"]
+      ["miss", "Missing"],
+      ["warn", "Warnings"],
+      ["pass", "Done"],
+      ["na", "Does not apply"]
     ];
     var sections = groups.map(function (group) {
       var items = findings.filter(function (finding) {
-        return group[0] === "fail" ? finding.status !== "pass" && finding.status !== "not_applicable" : finding.status === group[0];
+        return statusClass(finding.status, finding.severity) === group[0];
       });
       var body = items.length
         ? items.map(function (finding) {
           var categoryTitle = (counts[finding.category] && counts[finding.category].title) || finding.category;
-          var severity = finding.severity === "recommended" ? "Recommended" : "Required";
           var failed = finding.status !== "pass" && finding.status !== "not_applicable";
           var fix = failed && finding.howToFix
             ? "<p class=\"fix\"><span>How to fix</span>" + escapeHtml(finding.howToFix) + "</p>"
             : "";
-          return "<article class=\"finding " + statusClass(finding.status) + "\"><header><div><p class=\"cat\">" +
+          var mark = statusClass(finding.status, finding.severity);
+          return "<article class=\"finding " + mark + "\"><header><div><p class=\"cat\">" +
             escapeHtml(categoryTitle) + "</p><h3>" + escapeHtml(finding.title) + "</h3></div><p class=\"status\">" +
-            statusLabel(finding.status) + " · " + severity + "</p></header><p class=\"why\">" + escapeHtml(finding.why) +
+            statusLabel(finding.status, finding.severity) + "</p></header><p class=\"why\">" + escapeHtml(finding.why) +
             "</p><p class=\"evidence\"><span>Evidence</span>" + escapeHtml(finding.evidence || "Not recorded") + "</p>" + fix + "</article>";
         }).join("")
         : "<p>None.</p>";
       return "<section><h2>" + group[1] + "</h2>" + body + "</section>";
     }).join("");
+    var verdictMark = !applicable ? "" : requiredOpen ? "miss" : recommendedOpen ? "warn" : "pass";
     return "<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">" +
       "<title>" + escapeHtml(title) + "</title><style>" + REPORT_CSS + "</style></head><body><main>" +
       "<p class=\"kicker\">Vibe Code Checklist</p><h1>Preflight report</h1>" +
       (options.sampleNote ? "<p class=\"sample-banner\">" + escapeHtml(options.sampleNote) + "</p>" : "") +
+      "<p class=\"key\"><span class=\"mark pass\">Done</span> already works. <span class=\"mark warn\">Warning</span> can wait. <span class=\"mark miss\">Missing</span> needs a fix before you ship.</p>" +
       "<dl class=\"meta\"><div><dt>Project</dt><dd>" + escapeHtml(options.projectName || "Workspace") + "</dd></div>" +
       "<div><dt>Generated</dt><dd>" + escapeHtml(options.generatedOn || "") + "</dd></div>" +
       "<div><dt>Source</dt><dd>" + escapeHtml(options.source || "Workspace audit") + "</dd></div></dl>" +
       contextHtml(options.context) +
       "<section class=\"score\"><p class=\"fraction\">" + pass + "<span>/" + applicable + "</span></p><p>" + escapeHtml(summary) + "</p></section>" +
-      "<section class=\"verdict\"><h2>Overall</h2><p class=\"verdict-label\">" + escapeHtml(verdict.label) + "</p><p>" + escapeHtml(verdict.detail) + "</p></section>" +
+      "<section class=\"verdict\"><h2>Overall</h2><p class=\"verdict-label mark " + verdictMark + "\">" + escapeHtml(verdict.label) + "</p><p>" + escapeHtml(verdict.detail) + "</p></section>" +
       "<section><h2>Fix these first</h2>" + fixFirstHtml(findings, counts) + "</section>" +
-      "<section><h2>By category</h2><table><caption>Results by category</caption><thead><tr><th>Category</th><th>In place</th><th>Missing</th><th>Does not apply</th></tr></thead><tbody>" +
+      "<section><h2>By category</h2><table><caption>Results by category</caption><thead><tr><th>Category</th><th>Done</th><th>Missing</th><th>Warning</th><th>Does not apply</th></tr></thead><tbody>" +
       categoryRows + "</tbody></table></section>" + sections +
-      "<footer>Score is items in place divided by items that apply. A pass needs evidence. This file is the report; it leaves the app as it is.</footer>" +
+      "<footer>The score counts checks that are done, out of the checks that apply. A warning still counts. Something that does not apply does not. This file is the report. It does not change the app.</footer>" +
       "</main></body></html>";
   }
 

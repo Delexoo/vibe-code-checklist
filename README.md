@@ -41,8 +41,9 @@ Follow PROMPT.md exactly. Inspect THIS workspace, not the checklist repo. Write 
 
 - **Overall** — ready to ship, required checks in place, or not ready
 - **Fix these first** — the required gaps, each with a short instruction
-- **In place** — already done, with proof
-- **Missing** — still to do, with how to fix it
+- **Done** — already true, with proof. Green highlight.
+- **Warning** — worth doing, and it can wait. Yellow highlight.
+- **Missing** — fix this before you ship. Red highlight.
 - **Does not apply** — your app does not have that feature, so it is not a fail
 
 A real check lists every item. [This sample](https://delexoo.github.io/vibe-code-checklist/sample-report.html) only shows the shape. The results in it are made up.

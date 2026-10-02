@@ -87,9 +87,11 @@ For every failed item, write one or two sentences in **How to fix**. Start from 
 
 ## Report file
 
-Write one self-contained HTML document. Inline the CSS below. Do not load scripts, fonts, or images. Include every checklist item, in category order, under Missing, In place, or Does not apply.
+Write one self-contained HTML document. Inline the CSS below. Do not load scripts, fonts, or images. Include every checklist item, in category order, under Missing, Warnings, Done, or Does not apply.
 
 Use this document. Replace the bracketed fields. Repeat one `article` per item. Keep the class names.
+
+Highlight the status words. Leave the letters in the normal ink color. `Done` gets a green highlight, `Warning` gets yellow, and `Missing` gets red. A recommended miss is `Warning`, class `warn`. A required miss is `Missing`, class `miss`. The overall line uses the same highlight: red when a required item is open, yellow when only warnings are open, green when every check that applies is done.
 
 ```html
 <!DOCTYPE html>
@@ -99,7 +101,7 @@ Use this document. Replace the bracketed fields. Repeat one `article` per item. 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Preflight report — [Project name]</title>
   <style>
-    :root { --paper: #f3eadc; --ink: #1b1612; --muted: #4a433b; --line: #d9cbb6; --pass: #145c38; --miss: #8e2f2a; --na: #5c564e; }
+    :root { --paper: #f3eadc; --ink: #1b1612; --muted: #4a433b; --line: #d9cbb6; --hl-pass: #b7ebc6; --hl-warn: #ffe56a; --hl-miss: #ffb4ae; }
     * { box-sizing: border-box; }
     body { margin: 0; background: var(--paper); color: var(--ink); font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif; font-size: 1.05rem; line-height: 1.5; }
     main { width: min(820px, calc(100% - 2rem)); margin: 2rem auto 4rem; }
@@ -123,15 +125,17 @@ Use this document. Replace the bracketed fields. Repeat one `article` per item. 
     .finding header { display: flex; justify-content: space-between; gap: 1rem; align-items: baseline; }
     .finding h3 { margin: 0; font-size: 1.15rem; }
     .cat { margin: 0 0 .15rem; font-size: .68rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
-    .status { margin: 0; font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; text-align: right; }
-    .finding.pass .status { color: var(--pass); }
-    .finding.miss .status { color: var(--miss); }
-    .finding.na .status { color: var(--na); }
+    .key { margin: 1rem 0 0; }
+    .mark, .status { color: var(--ink); background: transparent; padding: .08em .28em; box-decoration-break: clone; -webkit-box-decoration-break: clone; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .status { margin: 0; font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; text-align: right; display: inline-block; }
+    .mark.pass, .finding.pass .status { background: var(--hl-pass); }
+    .mark.warn, .finding.warn .status { background: var(--hl-warn); }
+    .mark.miss, .finding.miss .status { background: var(--hl-miss); }
     .context p { margin: .45rem 0; }
     .why, .evidence, .fix { margin: .35rem 0 0; }
     .evidence span, .fix span { font-size: .68rem; letter-spacing: .08em; text-transform: uppercase; display: block; color: var(--muted); }
     .evidence, .fix { overflow-wrap: anywhere; }
-    .verdict-label { font-size: 1.7rem; line-height: 1.1; margin: 0 0 .4rem; }
+    .verdict-label { font-size: 1.7rem; line-height: 1.2; margin: 0 0 .4rem; display: inline; }
     .fix-list { margin: .2rem 0 0; padding-left: 1.2rem; }
     .fix-list li { margin: .45rem 0; }
     footer { margin-top: 2rem; color: var(--muted); font-size: .85rem; }
@@ -147,6 +151,7 @@ Use this document. Replace the bracketed fields. Repeat one `article` per item. 
   <main>
     <p class="kicker">Vibe Code Checklist</p>
     <h1>Preflight report</h1>
+    <p class="key"><span class="mark pass">Done</span> already works. <span class="mark warn">Warning</span> can wait. <span class="mark miss">Missing</span> needs a fix before you ship.</p>
     <dl class="meta">
       <div><dt>Project</dt><dd>[Project name from the package, app, or folder]</dd></div>
       <div><dt>Generated</dt><dd>[Date]</dd></div>
@@ -165,7 +170,7 @@ Use this document. Replace the bracketed fields. Repeat one `article` per item. 
     </section>
     <section class="verdict">
       <h2>Overall</h2>
-      <p class="verdict-label">[Ready to ship, Required checks are in place, or Not ready to ship]</p>
+      <p class="verdict-label mark [pass, warn, or miss]">[Ready to ship, Required checks are in place, or Not ready to ship]</p>
       <p>[How many required items are open, then how many recommended items are open.]</p>
     </section>
     <section>
@@ -179,10 +184,10 @@ Use this document. Replace the bracketed fields. Repeat one `article` per item. 
       <table>
         <caption>Results by category</caption>
         <thead>
-          <tr><th>Category</th><th>In place</th><th>Missing</th><th>Does not apply</th></tr>
+          <tr><th>Category</th><th>Done</th><th>Missing</th><th>Warning</th><th>Does not apply</th></tr>
         </thead>
         <tbody>
-          <tr><td>[Category]</td><td>[n]</td><td>[n]</td><td>[n]</td></tr>
+          <tr><td>[Category]</td><td>[n]</td><td>[n]</td><td>[n]</td><td>[n]</td></tr>
         </tbody>
       </table>
     </section>
@@ -194,7 +199,7 @@ Use this document. Replace the bracketed fields. Repeat one `article` per item. 
             <p class="cat">[Category title]</p>
             <h3>[Item title]</h3>
           </div>
-          <p class="status">Missing · Required</p>
+          <p class="status">Missing</p>
         </header>
         <p class="why">[why from the checklist]</p>
         <p class="evidence"><span>Evidence</span>[Where you looked and what you found]</p>
@@ -202,14 +207,29 @@ Use this document. Replace the bracketed fields. Repeat one `article` per item. 
       </article>
     </section>
     <section>
-      <h2>In place</h2>
+      <h2>Warnings</h2>
+      <article class="finding warn">
+        <header>
+          <div>
+            <p class="cat">[Category title]</p>
+            <h3>[Item title]</h3>
+          </div>
+          <p class="status">Warning</p>
+        </header>
+        <p class="why">[why from the checklist]</p>
+        <p class="evidence"><span>Evidence</span>[Where you looked and what you found]</p>
+        <p class="fix"><span>How to fix</span>[One or two sentences. Required on every warning.]</p>
+      </article>
+    </section>
+    <section>
+      <h2>Done</h2>
       <article class="finding pass">
         <header>
           <div>
             <p class="cat">[Category title]</p>
             <h3>[Item title]</h3>
           </div>
-          <p class="status">In place · Recommended</p>
+          <p class="status">Done</p>
         </header>
         <p class="why">[why]</p>
         <p class="evidence"><span>Evidence</span>[File path and what you found]</p>
@@ -223,13 +243,13 @@ Use this document. Replace the bracketed fields. Repeat one `article` per item. 
             <p class="cat">[Category title]</p>
             <h3>[Item title]</h3>
           </div>
-          <p class="status">Does not apply · Required</p>
+          <p class="status">Does not apply</p>
         </header>
         <p class="why">[why]</p>
         <p class="evidence"><span>Evidence</span>[Why the condition is absent]</p>
       </article>
     </section>
-    <footer>Score is items in place divided by items that apply. A pass needs evidence. This file is the report; it leaves the app as it is.</footer>
+    <footer>The score counts checks that are done, out of the checks that apply. A warning still counts. Something that does not apply does not. This file is the report. It does not change the app.</footer>
   </main>
 </body>
 </html>
