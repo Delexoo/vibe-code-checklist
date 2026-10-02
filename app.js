@@ -1,7 +1,6 @@
 (function () {
   var STORAGE_KEY = "vibe-code-checklist-v1";
-  var PROJECT_KEY = "vibe-code-checklist-project";
-  var GOAL_KEY = "vibe-code-checklist-goal";
+  var SURVEY_KEY = "vibe-code-checklist-survey";
   var APPLIES = {
     forms: "If the app has a form, checkout, or signup",
     accounts: "If the app has accounts",
@@ -393,22 +392,79 @@
     window.setTimeout(function () { button.textContent = "Copy prompt"; }, 2000);
   }
 
+  function readSurvey() {
+    try {
+      var parsed = JSON.parse(localStorage.getItem(SURVEY_KEY) || "null");
+      return parsed && parsed.done ? parsed : null;
+    } catch (error) {
+      return null;
+    }
+  }
+
+  function applySurvey(items, state, answers) {
+    var managed = ["accounts", "forms", "payments", "blog", "analytics", "uploads", "email", "claims"];
+    items.forEach(function (item) {
+      if (managed.indexOf(item.appliesWhen) === -1) return;
+      var active = item.appliesWhen === "forms" ? !!(answers.forms || answers.accounts) : !!answers[item.appliesWhen];
+      if (active) {
+        if (state[item.id] === "na") delete state[item.id];
+      } else {
+        state[item.id] = "na";
+      }
+    });
+    saveState(state);
+  }
+
+  function surveyContext(answers) {
+    var labels = {
+      accounts: "sign-in",
+      forms: "a form",
+      payments: "payments",
+      blog: "a blog",
+      analytics: "analytics",
+      uploads: "uploads",
+      email: "marketing email",
+      claims: "reviews or stats"
+    };
+    var picked = Object.keys(labels).filter(function (key) { return answers[key]; }).map(function (key) { return labels[key]; });
+    var goal = picked.length ? "It includes " + picked.join(", ") + "." : "It has none of the extra features.";
+    if (answers.accounts && !answers.forms) goal += " Sign-in keeps the form checks.";
+    return {
+      goal: goal,
+      audience: "Chosen in the short survey.",
+      needed: goal + " Anything left off is set aside.",
+      basis: "Multiple-choice answers on the check page, not a file inspection."
+    };
+  }
+
+  function collectSurvey() {
+    var answers = { done: true };
+    document.querySelectorAll("#survey input[name='survey']").forEach(function (box) {
+      answers[box.value] = box.checked;
+    });
+    return answers;
+  }
+
+  function fillSurvey(answers) {
+    document.querySelectorAll("#survey input[name='survey']").forEach(function (box) {
+      box.checked = !!answers[box.value];
+    });
+  }
+
+  function showSurvey() {
+    document.getElementById("survey").hidden = false;
+    document.getElementById("checklist").hidden = true;
+  }
+
+  function showList() {
+    document.getElementById("survey").hidden = true;
+    document.getElementById("checklist").hidden = false;
+  }
+
   function init() {
     var copy = document.getElementById("copy");
     if (copy) copy.addEventListener("click", onCopy);
     if (!document.getElementById("list")) return;
-    var project = document.getElementById("project-name");
-    var goal = document.getElementById("app-goal");
-    project.value = localStorage.getItem(PROJECT_KEY) || "";
-    project.addEventListener("input", function () {
-      localStorage.setItem(PROJECT_KEY, project.value);
-    });
-    if (goal) {
-      goal.value = localStorage.getItem(GOAL_KEY) || "";
-      goal.addEventListener("input", function () {
-        localStorage.setItem(GOAL_KEY, goal.value);
-      });
-    }
     fetch("checklist.json")
       .then(function (response) {
         if (!response.ok) throw new Error(String(response.status));
@@ -416,23 +472,34 @@
       })
       .then(function (data) {
         var state = loadState();
-        renderList(data, state);
-        renderScore(data.items, state);
+        var saved = readSurvey();
+        function refresh(answers) {
+          applySurvey(data.items, state, answers);
+          renderList(data, state);
+          renderScore(data.items, state);
+        }
+        if (saved) {
+          fillSurvey(saved);
+          refresh(saved);
+          showList();
+        }
         document.getElementById("download").disabled = false;
         document.getElementById("reset").disabled = false;
+        document.getElementById("survey-start").addEventListener("click", function () {
+          var answers = collectSurvey();
+          localStorage.setItem(SURVEY_KEY, JSON.stringify(answers));
+          refresh(answers);
+          showList();
+          document.getElementById("checklist-title").focus();
+        });
+        document.getElementById("survey-edit").addEventListener("click", showSurvey);
         document.getElementById("download").addEventListener("click", function () {
-          var name = project.value.trim() || "Manual review";
-          var described = goal && goal.value.trim();
+          var answers = readSurvey() || collectSurvey();
           var html = buildReportHtml({
-            projectName: name,
+            projectName: "Manual review",
             generatedOn: formatDate(new Date()),
             source: "Marked by hand in the browser",
-            context: {
-              goal: described || "Not described. Rows were set aside by hand.",
-              audience: "Set by the person checking.",
-              needed: "Rows were included or set aside by hand for this app.",
-              basis: "A manual review in the browser, not a file inspection."
-            },
+            context: surveyContext(answers),
             categories: data.categories,
             findings: findingsFromState(data, state)
           });
@@ -449,13 +516,8 @@
         document.getElementById("reset").addEventListener("click", function () {
           if (!window.confirm("Clear every check in this browser?")) return;
           Object.keys(state).forEach(function (key) { delete state[key]; });
-          saveState(state);
-          document.querySelectorAll(".item").forEach(function (row) {
-            var id = row.querySelector("input").id.replace(/^check-/, "");
-            var item = data.items.find(function (entry) { return entry.id === id; });
-            if (item) paintRow(row, item, state);
-          });
-          renderScore(data.items, state);
+          var answers = readSurvey() || collectSurvey();
+          refresh(answers);
         });
       })
       .catch(showLoadError);

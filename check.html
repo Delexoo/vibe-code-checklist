@@ -30,14 +30,28 @@
   </header>
   <main id="main" class="page">
     <div class="wrap">
-      <p class="kicker">By hand</p>
-      <h1>Check the list</h1>
-      <p class="lede">Tick what your app already has. If a check is not part of what you are building, press Doesn't apply.</p>
-      <label class="project-label goal-label" for="app-goal">What are you building?
-        <input id="app-goal" type="text" maxlength="160" placeholder="Optional. A shop, a members' app, a brochure site…" autocomplete="off">
-      </label>
-      <section id="checklist" aria-labelledby="checklist-title">
-        <h2 id="checklist-title" class="sr-only">Checklist</h2>
+      <section id="survey" class="survey">
+        <p class="kicker">By hand</p>
+        <h1>What does your app have?</h1>
+        <p class="lede">Select all that apply. Anything you leave off is set aside.</p>
+        <div class="chips" role="group" aria-label="What the app includes">
+          <label class="chip"><input type="checkbox" name="survey" value="accounts"> Sign-in</label>
+          <label class="chip"><input type="checkbox" name="survey" value="forms"> A form</label>
+          <label class="chip"><input type="checkbox" name="survey" value="payments"> Payments</label>
+          <label class="chip"><input type="checkbox" name="survey" value="blog"> A blog</label>
+          <label class="chip"><input type="checkbox" name="survey" value="analytics"> Analytics</label>
+          <label class="chip"><input type="checkbox" name="survey" value="uploads"> Uploads</label>
+          <label class="chip"><input type="checkbox" name="survey" value="email"> Marketing email</label>
+          <label class="chip"><input type="checkbox" name="survey" value="claims"> Reviews or stats</label>
+        </div>
+        <button type="button" class="primary" id="survey-start">Show the list</button>
+        <noscript>
+          <p class="load-error">Choosing what the app includes needs JavaScript.</p>
+        </noscript>
+      </section>
+      <section id="checklist" aria-labelledby="checklist-title" hidden>
+        <p class="kicker">By hand</p>
+        <h1 id="checklist-title" tabindex="-1">Check the list</h1>
         <div class="scorebar">
           <div>
             <p class="kicker">Score</p>
@@ -46,14 +60,12 @@
             <p id="score-required"></p>
           </div>
           <div class="actions">
-            <label class="project-label" for="project-name">Project name
-              <input id="project-name" type="text" maxlength="80" placeholder="Manual review" autocomplete="off">
-            </label>
             <button type="button" class="primary" id="download" disabled>Download HTML report</button>
             <button type="button" class="ghost" id="reset" disabled>Clear checks</button>
+            <button type="button" class="ghost" id="survey-edit">Change answers</button>
           </div>
         </div>
-        <p class="legend">Your ticks stay in this browser. Download the report when you want a file.</p>
+        <p class="legend">Tick what is already true. Your answers stay in this browser.</p>
         <div id="list">
           <p id="loading">Loading the checklist…</p>
         </div>
