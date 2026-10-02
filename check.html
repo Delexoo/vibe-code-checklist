@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Check by hand — Vibe Code Checklist</title>
+  <meta name="description" content="Tick what your vibe-coded app already has. Set aside what does not apply, then download an HTML report.">
+  <link rel="canonical" href="https://delexoo.github.io/vibe-code-checklist/check.html">
+  <meta property="og:title" content="Check by hand — Vibe Code Checklist">
+  <meta property="og:description" content="Tick what your app already has, then download an HTML report.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://delexoo.github.io/vibe-code-checklist/check.html">
+  <meta name="theme-color" content="#1b1612">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="wrap bar">
+      <a class="brand" href="index.html">Vibe Code Checklist</a>
+      <nav aria-label="Ways to check">
+        <a href="check.html" aria-current="page">Check by hand</a>
+        <a href="prompt.html">Paste the prompt</a>
+      </nav>
+    </div>
+  </header>
+  <main id="main" class="page">
+    <div class="wrap">
+      <p class="kicker">By hand</p>
+      <h1>Check the list</h1>
+      <p class="lede">Tick what your app already has. If a row is not about your app, press Doesn't apply.</p>
+      <section id="checklist" aria-labelledby="checklist-title">
+        <h2 id="checklist-title" class="sr-only">Checklist</h2>
+        <div class="scorebar">
+          <div>
+            <p class="kicker">Score</p>
+            <p class="score-line"><strong id="score-pass">0</strong><span id="score-of">/0</span></p>
+            <p id="score-note">Loading the checklist…</p>
+            <p id="score-required"></p>
+          </div>
+          <div class="actions">
+            <label class="project-label" for="project-name">Project name
+              <input id="project-name" type="text" maxlength="80" placeholder="Manual review" autocomplete="off">
+            </label>
+            <button type="button" class="primary" id="download" disabled>Download HTML report</button>
+            <button type="button" class="ghost" id="reset" disabled>Clear checks</button>
+          </div>
+        </div>
+        <p class="legend">Your ticks stay in this browser. Download the report when you want a file.</p>
+        <div id="list">
+          <p id="loading">Loading the checklist…</p>
+        </div>
+        <noscript>
+          <p class="load-error">Ticking items needs JavaScript. You can still use the paste-the-prompt page.</p>
+        </noscript>
+      </section>
+    </div>
+  </main>
+  <footer class="site-footer">
+    <div class="wrap foot">
+      <p>A shipping guide. Not a legal opinion or a security guarantee.</p>
+      <nav aria-label="Site">
+        <a href="index.html">Home</a>
+        <a href="sample-report.html">Sample report</a>
+        <a href="privacy.html">Privacy policy</a>
+        <a href="terms.html">Terms of service</a>
+      </nav>
+    </div>
+  </footer>
+  <script src="app.js"></script>
+</body>
+</html>

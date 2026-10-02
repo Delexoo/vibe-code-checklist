@@ -10,7 +10,7 @@ A vibe-coded demo can look done and still be missing a real 404 page, its own pa
 
 ### 1. Check it yourself
 
-1. Open the site.
+1. Open the site and choose **Check by hand**.
 2. Tick what your app already has.
 3. If a row is only for forms, accounts, cookies, payments, or a blog, and your app does not have that, press **Doesn't apply**.
 4. Press **Download HTML report**.
@@ -20,7 +20,7 @@ Your ticks stay in this browser. The report is a file on your computer named `vi
 ### 2. Let your editor check the app
 
 1. Open **your app** in Cursor or another AI editor. Leave this repo closed.
-2. Paste the prompt below into the chat.
+2. On the site, choose **Paste the prompt**, or copy the prompt below.
 3. Open `vibe-audit.html` in your project folder.
 
 The editor writes that report and leaves the rest of your app alone.

@@ -382,7 +382,9 @@
   }
 
   function init() {
-    document.getElementById("copy").addEventListener("click", onCopy);
+    var copy = document.getElementById("copy");
+    if (copy) copy.addEventListener("click", onCopy);
+    if (!document.getElementById("list")) return;
     var project = document.getElementById("project-name");
     project.value = localStorage.getItem(PROJECT_KEY) || "";
     project.addEventListener("input", function () {

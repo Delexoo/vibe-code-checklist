@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Paste the prompt — Vibe Code Checklist</title>
+  <meta name="description" content="Copy one prompt into the editor that has your app open. It writes vibe-audit.html and leaves the app alone.">
+  <link rel="canonical" href="https://delexoo.github.io/vibe-code-checklist/prompt.html">
+  <meta property="og:title" content="Paste the prompt — Vibe Code Checklist">
+  <meta property="og:description" content="Copy one prompt into the editor that has your app open. It writes vibe-audit.html and leaves the app alone.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://delexoo.github.io/vibe-code-checklist/prompt.html">
+  <meta name="theme-color" content="#1b1612">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="wrap bar">
+      <a class="brand" href="index.html">Vibe Code Checklist</a>
+      <nav aria-label="Ways to check">
+        <a href="check.html">Check by hand</a>
+        <a href="prompt.html" aria-current="page">Paste the prompt</a>
+      </nav>
+    </div>
+  </header>
+  <main id="main" class="page">
+    <div class="wrap">
+      <p class="kicker">In your editor</p>
+      <h1>Paste the prompt</h1>
+      <ol class="steps">
+        <li>Open your app in your editor. Leave this repo closed.</li>
+        <li>Copy the prompt and paste it into the chat.</li>
+        <li>Open <code>vibe-audit.html</code> in your project when it finishes.</li>
+      </ol>
+      <section class="audit" id="audit" aria-labelledby="audit-title">
+        <div class="audit-head">
+          <h2 id="audit-title">The prompt</h2>
+          <button type="button" class="primary" id="copy" aria-live="polite">Copy prompt</button>
+        </div>
+        <pre id="prompt-text">Audit this workspace against the Vibe Code Checklist.
+
+Source of truth (read these before judging anything):
+https://github.com/Delexoo/vibe-code-checklist/blob/main/PROMPT.md
+https://github.com/Delexoo/vibe-code-checklist/blob/main/checklist.json
+
+Follow PROMPT.md exactly. Inspect THIS workspace, not the checklist repo. Write a self-contained vanilla HTML report at vibe-audit.html showing what passed, what is missing, and what does not apply. Do not change application code.</pre>
+      </section>
+      <p class="after">The editor writes that one file and leaves the rest of the app alone. <a href="sample-report.html">See a sample report</a>. The results in it are made up.</p>
+    </div>
+  </main>
+  <footer class="site-footer">
+    <div class="wrap foot">
+      <p>A shipping guide. Not a legal opinion or a security guarantee.</p>
+      <nav aria-label="Site">
+        <a href="index.html">Home</a>
+        <a href="privacy.html">Privacy policy</a>
+        <a href="terms.html">Terms of service</a>
+      </nav>
+    </div>
+  </footer>
+  <script src="app.js"></script>
+</body>
+</html>
