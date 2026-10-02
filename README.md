@@ -1,6 +1,6 @@
 # Vibe Code Checklist
 
-**Is the app actually finished?**
+**Is your app actually finished?**
 
 A vibe-coded demo can look done and still be missing a real 404 page, its own page titles, a privacy policy, or a loading state. This list catches that before you ship.
 

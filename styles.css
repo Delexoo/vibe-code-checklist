@@ -592,8 +592,13 @@ nav a[aria-current="page"] {
   padding: 8vh 0 10vh;
 }
 
+.home .kicker,
 .home h1 {
-  max-width: 10ch;
+  text-align: center;
+}
+
+.home h1 {
+  max-width: none;
 }
 
 .choices {
@@ -642,10 +647,6 @@ nav a[aria-current="page"] {
 
   .home {
     padding-top: 3.5rem;
-  }
-
-  .home h1 {
-    max-width: none;
   }
 }
 
