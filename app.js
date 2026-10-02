@@ -498,9 +498,48 @@
     document.getElementById("checklist").hidden = false;
   }
 
+  function relativeUpdated(date) {
+    var seconds = Math.max(0, (Date.now() - date.getTime()) / 1000);
+    var steps = [
+      [31557600, "Year"],
+      [2592000, "Month"],
+      [604800, "Week"],
+      [86400, "Day"],
+      [3600, "Hour"],
+      [60, "Minute"]
+    ];
+    for (var i = 0; i < steps.length; i++) {
+      var count = Math.floor(seconds / steps[i][0]);
+      if (count >= 1) return count + " " + steps[i][1] + "(s) ago";
+    }
+    return "1 Minute(s) ago";
+  }
+
+  function showUpdated() {
+    var node = document.getElementById("updated");
+    var time = document.getElementById("updated-time");
+    if (!node || !time) return;
+    fetch("https://api.github.com/repos/Delexoo/vibe-code-checklist/commits/main", {
+      headers: { Accept: "application/vnd.github+json" }
+    }).then(function (response) {
+      if (!response.ok) throw new Error(String(response.status));
+      return response.json();
+    }).then(function (data) {
+      var stamp = data && data.commit && data.commit.committer && data.commit.committer.date;
+      var date = stamp ? new Date(stamp) : new Date(NaN);
+      if (isNaN(date.getTime())) return;
+      time.dateTime = date.toISOString();
+      time.textContent = relativeUpdated(date);
+      node.hidden = false;
+    }).catch(function () {
+      node.hidden = true;
+    });
+  }
+
   function init() {
     var copy = document.getElementById("copy");
     if (copy) copy.addEventListener("click", onCopy);
+    showUpdated();
     if (!document.getElementById("list")) return;
     fetch("checklist.json")
       .then(function (response) {
