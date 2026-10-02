@@ -31,19 +31,42 @@
   <main id="main" class="page">
     <div class="wrap">
       <section id="survey" class="survey">
-        <p class="kicker">By hand</p>
-        <h1>What does your app have?</h1>
-        <p class="lede">Select all that apply. Anything you leave off is set aside.</p>
-        <div class="chips" role="group" aria-label="What the app includes">
-          <label class="chip"><input type="checkbox" name="survey" value="accounts"> Sign-in</label>
-          <label class="chip"><input type="checkbox" name="survey" value="forms"> A form</label>
-          <label class="chip"><input type="checkbox" name="survey" value="payments"> Payments</label>
-          <label class="chip"><input type="checkbox" name="survey" value="blog"> A blog</label>
-          <label class="chip"><input type="checkbox" name="survey" value="analytics"> Analytics</label>
-          <label class="chip"><input type="checkbox" name="survey" value="uploads"> Uploads</label>
-          <label class="chip"><input type="checkbox" name="survey" value="email"> Marketing email</label>
-          <label class="chip"><input type="checkbox" name="survey" value="claims"> Reviews or stats</label>
-        </div>
+        <h1>What is the app?</h1>
+        <fieldset class="ask">
+          <legend>Who uses it?</legend>
+          <p class="hint">Pick one</p>
+          <div class="chips">
+            <label class="chip"><input type="radio" name="who" value="public" checked> Anyone</label>
+            <label class="chip"><input type="radio" name="who" value="accounts"> People sign in</label>
+            <label class="chip"><input type="radio" name="who" value="private"> Only me</label>
+          </div>
+        </fieldset>
+        <fieldset class="ask">
+          <legend>Does it take payment?</legend>
+          <p class="hint">Pick one</p>
+          <div class="chips">
+            <label class="chip"><input type="radio" name="pay" value="yes"> Yes</label>
+            <label class="chip"><input type="radio" name="pay" value="no" checked> No</label>
+          </div>
+        </fieldset>
+        <fieldset class="ask">
+          <legend>People can</legend>
+          <p class="hint">Select all that apply</p>
+          <div class="chips">
+            <label class="chip"><input type="checkbox" name="extra" value="forms"> Send a form</label>
+            <label class="chip"><input type="checkbox" name="extra" value="uploads"> Upload a file</label>
+            <label class="chip"><input type="checkbox" name="extra" value="email"> Get email updates</label>
+          </div>
+        </fieldset>
+        <fieldset class="ask">
+          <legend>It also has</legend>
+          <p class="hint">Select all that apply</p>
+          <div class="chips">
+            <label class="chip"><input type="checkbox" name="extra" value="blog"> A blog</label>
+            <label class="chip"><input type="checkbox" name="extra" value="analytics"> Analytics</label>
+            <label class="chip"><input type="checkbox" name="extra" value="claims"> Reviews or stats</label>
+          </div>
+        </fieldset>
         <button type="button" class="primary" id="survey-start">Show the list</button>
         <noscript>
           <p class="load-error">Choosing what the app includes needs JavaScript.</p>

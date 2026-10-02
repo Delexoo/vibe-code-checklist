@@ -300,8 +300,37 @@ input[type="text"] {
   border-radius: 0;
 }
 
-.survey .lede {
-  max-width: 28rem;
+.survey h1 {
+  margin-bottom: 0.25rem;
+}
+
+.ask {
+  border: 0;
+  margin: 1.35rem 0 0;
+  padding: 0;
+  min-width: 0;
+}
+
+.ask legend {
+  padding: 0;
+  font-size: 1.35rem;
+}
+
+.ask .hint {
+  margin: 0.15rem 0 0;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.ask .chips {
+  margin: 0.7rem 0 0;
+}
+
+.survey .primary {
+  margin-top: 1.5rem;
 }
 
 .chips {

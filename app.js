@@ -428,36 +428,55 @@
 
   function surveyContext(answers) {
     var labels = {
-      accounts: "sign-in",
       forms: "a form",
       payments: "payments",
       blog: "a blog",
       analytics: "analytics",
       uploads: "uploads",
-      email: "marketing email",
+      email: "email updates",
       claims: "reviews or stats"
     };
+    var audience = {
+      public: "Anyone on the web.",
+      accounts: "People who sign in.",
+      private: "Only the person who built it."
+    }[answers.who] || "Chosen in the short survey.";
     var picked = Object.keys(labels).filter(function (key) { return answers[key]; }).map(function (key) { return labels[key]; });
+    if (answers.accounts) picked.unshift("sign-in");
     var goal = picked.length ? "It includes " + picked.join(", ") + "." : "It has none of the extra features.";
     if (answers.accounts && !answers.forms) goal += " Sign-in keeps the form checks.";
     return {
       goal: goal,
-      audience: "Chosen in the short survey.",
+      audience: audience,
       needed: goal + " Anything left off is set aside.",
-      basis: "Multiple-choice answers on the check page, not a file inspection."
+      basis: "Short answers on the check page, not a file inspection."
     };
   }
 
   function collectSurvey() {
-    var answers = { done: true };
-    document.querySelectorAll("#survey input[name='survey']").forEach(function (box) {
+    var who = document.querySelector("#survey input[name='who']:checked");
+    var pay = document.querySelector("#survey input[name='pay']:checked");
+    var answers = {
+      done: true,
+      who: who ? who.value : "public",
+      pay: pay ? pay.value : "no",
+      accounts: !!(who && who.value === "accounts"),
+      payments: !!(pay && pay.value === "yes")
+    };
+    document.querySelectorAll("#survey input[name='extra']").forEach(function (box) {
       answers[box.value] = box.checked;
     });
     return answers;
   }
 
   function fillSurvey(answers) {
-    document.querySelectorAll("#survey input[name='survey']").forEach(function (box) {
+    var who = answers.who || (answers.accounts ? "accounts" : "public");
+    var pay = answers.pay || (answers.payments ? "yes" : "no");
+    var whoInput = document.querySelector("#survey input[name='who'][value='" + who + "']");
+    var payInput = document.querySelector("#survey input[name='pay'][value='" + pay + "']");
+    if (whoInput) whoInput.checked = true;
+    if (payInput) payInput.checked = true;
+    document.querySelectorAll("#survey input[name='extra']").forEach(function (box) {
       box.checked = !!answers[box.value];
     });
   }
