@@ -1,6 +1,6 @@
 {
   "name": "Vibe Code Checklist",
-  "version": 9,
+  "version": 14,
   "categories": [
     {
       "id": "pages",
@@ -31,6 +31,16 @@
       "id": "identity",
       "title": "Identity and appearance",
       "summary": "The app looks intentional on a phone, a desktop, and a browser tab."
+    },
+    {
+      "id": "design",
+      "title": "Looks designed",
+      "summary": "The screen looks like this product. Color, spacing, icons, and copy are chosen. Adapted from unslop by Damir Sokolovsky, CC BY 4.0."
+    },
+    {
+      "id": "details",
+      "title": "Interface details",
+      "summary": "Loading, keyboard, touch, and type behave the way a finished product does."
     },
     {
       "id": "a11y",
@@ -91,7 +101,7 @@
       "severity": "required",
       "appliesWhen": "always",
       "why": "Waits should look intentional, so people do not click twice or assume the app froze.",
-      "howToVerify": "Find views that wait on a network or computation. Pass if they show a skeleton, spinner, or progress text. A blank region or a control with no feedback does not pass.",
+      "howToVerify": "Find views that wait on a network or computation. Pass if they show a skeleton, spinner, or progress text. A skeleton shaped like the loaded layout is the stronger pass. A blank region or a control with no feedback does not pass.",
       "howToFix": "Wherever the screen waits on data, show a skeleton, a spinner, or the words Loading."
     },
     {
@@ -425,6 +435,256 @@
       "howToFix": "Turn off non-essential animation when the system asks for reduced motion."
     },
     {
+      "id": "skeleton-shape",
+      "category": "details",
+      "title": "Skeletons match the loaded layout",
+      "severity": "recommended",
+      "appliesWhen": "always",
+      "why": "A spinner on a blank screen jumps when the real layout arrives. A skeleton that flashes on a fast load feels broken too.",
+      "howToVerify": "Find views that wait on data. Pass if they show gray blocks in the shape of the real layout, from the same structure as the loaded state, and those blocks stay hidden until the wait is longer than about 300ms. Pass if the app never waits after first paint. A skeleton that changes size when the content lands does not pass.",
+      "howToFix": "Build the skeleton from the same component as the loaded state. Show it only after about 300ms."
+    },
+    {
+      "id": "optimistic-ui",
+      "category": "details",
+      "title": "Small actions update before the request returns",
+      "severity": "recommended",
+      "appliesWhen": "daily",
+      "why": "A like, a checkbox, or a rename that waits on the network feels stuck when the request almost always works.",
+      "howToVerify": "Find likes, toggles, and renames that save in the background. Pass if the screen updates immediately and rolls back with an error when the request fails. A payment, or anything that moves money, waits for the server. Mark not applicable when the app has no small action like that.",
+      "howToFix": "Update the screen first for likes, toggles, and renames, and put the old value back if the request fails. Leave payments until the server answers."
+    },
+    {
+      "id": "command-menu",
+      "category": "details",
+      "title": "A keyboard command menu",
+      "severity": "recommended",
+      "appliesWhen": "daily",
+      "why": "People who use an app every day should not have to remember which menu holds an action.",
+      "howToVerify": "Pass if Command+K on Mac and Ctrl+K elsewhere opens a search of the real pages and actions, and a result can be chosen from the keyboard alone. Mark not applicable when people do not use this product every day.",
+      "howToFix": "Add a command menu of the real pages and actions. Open it with Command+K on Mac and Ctrl+K elsewhere, and make every result work without a pointer."
+    },
+    {
+      "id": "shortcut-hints",
+      "category": "details",
+      "title": "Shortcuts are visible where the action is",
+      "severity": "recommended",
+      "appliesWhen": "daily",
+      "why": "A shortcut nobody can see never gets learned.",
+      "howToVerify": "Pass if menus, tooltips, or the command menu show each shortcut, using the Mac command symbol on Mac and Ctrl elsewhere. Shortcuts do not fire while focus is in a text field. Mark not applicable when the app has no keyboard shortcuts.",
+      "howToFix": "Show each shortcut beside its action. Ignore shortcuts while the person is typing in a field."
+    },
+    {
+      "id": "undo-toast",
+      "category": "details",
+      "title": "Reversible actions offer undo",
+      "severity": "recommended",
+      "appliesWhen": "daily",
+      "why": "A confirm dialog gets accepted without reading. Undo is the confirmation people actually use.",
+      "howToVerify": "Find delete, archive, and other reversible actions. Pass if the action happens immediately and an Undo notice stays for about 5 to 10 seconds, with role=status. The permanent change waits until that notice closes. A confirm dialog as the only gate does not pass. Mark not applicable when the app has no reversible destructive action.",
+      "howToFix": "Do the action right away, show an Undo notice with role=status for 5 to 10 seconds, and delay the permanent change until the notice closes."
+    },
+    {
+      "id": "stale-data",
+      "category": "details",
+      "title": "Cached screens show, then refresh",
+      "severity": "recommended",
+      "appliesWhen": "daily",
+      "why": "Going back to a screen you just left should not show a spinner.",
+      "howToVerify": "Pass if cached data paints immediately and a refresh runs in the background, including when the window regains focus or the network returns. Balances, stock counts, and anything where an old number costs money stay fresh. Mark not applicable when the app has no data worth caching.",
+      "howToFix": "Show the last result immediately, refetch in the background, and refetch again on focus and when the network returns. Do not cache balances or stock counts."
+    },
+    {
+      "id": "prerender-links",
+      "category": "details",
+      "title": "Same-site links are ready before the click",
+      "severity": "recommended",
+      "appliesWhen": "always",
+      "why": "The next page can be ready while the pointer is still on the link.",
+      "howToVerify": "Pass if same-site links are prefetched by the router or prerendered, and logout plus any link that changes data are left out. Speculation rules with moderate eagerness pass. Pass if the app has no same-site navigation. Mark not applicable for a native app.",
+      "howToFix": "Prefetch same-site links with the router, or with speculation rules set to moderate eagerness. Leave out logout and links that change data."
+    },
+    {
+      "id": "image-blur",
+      "category": "details",
+      "title": "Uploaded images show a blur first",
+      "severity": "recommended",
+      "appliesWhen": "uploads",
+      "why": "A photo that pops in from an empty box shifts the page and shows the wrong colors first.",
+      "howToVerify": "Pass if each uploaded image stores a tiny blur placeholder and shows it at the image's exact size until the file loads. Mark not applicable when nobody uploads an image. Reserving the box is a separate check.",
+      "howToFix": "Store a BlurHash or ThumbHash with each uploaded image and show that blur in the image box while the file loads."
+    },
+    {
+      "id": "view-transitions",
+      "category": "details",
+      "title": "View changes move instead of swapping",
+      "severity": "recommended",
+      "appliesWhen": "always",
+      "why": "A sudden swap between two views is harder to follow than a short move.",
+      "howToVerify": "Pass if a same-page update can animate with a view transition, route changes can animate, and an element that moves between them shares one view-transition-name. The motion stays under 300ms. A browser without support may switch instantly. Pass if the app has no view change worth animating. Reduced motion is a separate check.",
+      "howToFix": "Use a view transition for same-page updates and for navigation. Give a shared element the same view-transition-name on both screens, and keep the motion under 300ms."
+    },
+    {
+      "id": "swipe-sheet",
+      "category": "details",
+      "title": "Sheets follow the finger",
+      "severity": "recommended",
+      "appliesWhen": "daily",
+      "why": "A sheet that only closes from a button feels stuck when the person is already dragging it.",
+      "howToVerify": "Find bottom sheets. Pass if the sheet follows the finger and closes on distance or a quick flick, and a close button remains. Mark not applicable when the app has no bottom sheet.",
+      "howToFix": "Make the sheet follow the drag and close on a flick. Keep a visible close button."
+    },
+    {
+      "id": "interruptible-motion",
+      "category": "details",
+      "title": "Motion can be interrupted",
+      "severity": "recommended",
+      "appliesWhen": "always",
+      "why": "An animation that has to finish before it listens makes the interface feel late.",
+      "howToVerify": "Pass if motion the person can interrupt turns around from its current position and speed, and input is never blocked while something animates. A CSS keyframe on a control the person can grab does not pass. Pass if nothing on screen can be interrupted. Reduced motion is a separate check.",
+      "howToFix": "Use a spring that can reverse mid-way. Remove keyframe animations from anything the person can interrupt, and do not block input during motion."
+    },
+    {
+      "id": "predictive-back",
+      "category": "details",
+      "title": "Back can preview the previous screen",
+      "severity": "recommended",
+      "appliesWhen": "native",
+      "why": "A back swipe that shows the previous screen lets the person change their mind before they leave.",
+      "howToVerify": "Pass if back handling can preview the previous screen, including the platform default when the app does not override the back button. An override that swallows the back gesture does not pass. Mark not applicable when the app does not target Android or React Native.",
+      "howToFix": "Use the platform's predictive back callback. Leave the system default in place when you do not need custom back behavior."
+    },
+    {
+      "id": "hit-targets",
+      "category": "details",
+      "title": "Tap targets are larger than the icon",
+      "severity": "recommended",
+      "appliesWhen": "always",
+      "why": "A small icon is hard to hit when the touch area is only as big as the pixels you see.",
+      "howToVerify": "Pass if every control is at least 44 by 44 points on iOS and the web, and 48 by 48 dp on Android, even when the icon is smaller. Padding or a hit slop may make up the size. Overlapping targets do not pass.",
+      "howToFix": "Pad each control, or set a hit slop, so the touch area meets that minimum without covering the control beside it."
+    },
+    {
+      "id": "safe-area",
+      "category": "details",
+      "title": "Fixed bars clear the notch and the home indicator",
+      "severity": "recommended",
+      "appliesWhen": "always",
+      "why": "A header under a notch, or a tab bar under the home indicator, cannot be tapped.",
+      "howToVerify": "Pass if a full-bleed layout sets viewport-fit=cover and pads fixed edges with safe-area insets, or the native app pads for the safe area. A fixed bar that can sit under the notch, the Dynamic Island, or the home indicator does not pass. Pass if the app has no full-bleed fixed bar.",
+      "howToFix": "Set viewport-fit=cover and pad the header and the bottom bar with the safe-area inset. In React Native, use the safe area insets."
+    },
+    {
+      "id": "one-time-code",
+      "category": "details",
+      "title": "A texted code fills in with one tap",
+      "severity": "recommended",
+      "appliesWhen": "accounts",
+      "why": "A login code from a text should land in the field without retyping.",
+      "howToVerify": "Find the code field. Pass if it is one input with autocomplete=one-time-code and inputmode=numeric, and the message ends with a line the platform can read, such as @yourdomain.com #123456. On iOS, a one-time-code content type passes. Mark not applicable when the app never asks for a code from a text or an email.",
+      "howToFix": "Use one input with autocomplete=one-time-code and inputmode=numeric. End the message with @yourdomain.com and the code."
+    },
+    {
+      "id": "tabular-nums",
+      "category": "details",
+      "title": "Changing numbers stay the same width",
+      "severity": "recommended",
+      "appliesWhen": "always",
+      "why": "A price or a timer shifts sideways when a 1 is narrower than an 8.",
+      "howToVerify": "Pass if timers, prices, counters, and numeric columns use tabular-nums. Pass if the screen has none of those.",
+      "howToFix": "Set font-variant-numeric: tabular-nums on timers, prices, counters, and numeric columns."
+    },
+    {
+      "id": "balanced-text",
+      "category": "details",
+      "title": "Headlines do not leave one word alone",
+      "severity": "recommended",
+      "appliesWhen": "always",
+      "why": "A heading with one word on the last line looks unfinished.",
+      "howToVerify": "Pass if headings and short titles use text-wrap: balance, and paragraphs use text-wrap: pretty.",
+      "howToFix": "Set text-wrap: balance on headings and text-wrap: pretty on paragraphs."
+    },
+    {
+      "id": "smooth-corners",
+      "category": "details",
+      "title": "Large corners are smooth",
+      "severity": "recommended",
+      "appliesWhen": "always",
+      "why": "A large radius drawn as a quarter circle looks tighter than a smooth corner on a big panel.",
+      "howToVerify": "Pass if a large rounded panel sets corner-shape: squircle next to its border-radius. Pass if the interface does not use large rounded corners. Browsers that ignore corner-shape keep the radius.",
+      "howToFix": "Add corner-shape: squircle beside the border-radius on large rounded panels."
+    },
+    {
+      "id": "safe-triangle",
+      "category": "details",
+      "title": "Hover menus stay open on the way to a submenu",
+      "severity": "recommended",
+      "appliesWhen": "daily",
+      "why": "A submenu that switches while the pointer moves toward it makes the menu feel broken.",
+      "howToVerify": "Find hover menus that open a submenu. Pass if the open panel stays open while the pointer moves diagonally toward it. Mark not applicable when the app has no hover submenu.",
+      "howToFix": "Use a safe polygon, or the menu library's own version, so the submenu stays open while the pointer travels toward it."
+    },
+    {
+      "id": "quiet-surfaces",
+      "category": "design",
+      "title": "Surfaces stay neutral",
+      "severity": "recommended",
+      "appliesWhen": "always",
+      "why": "A hue-to-hue gradient, a glow, and gradient text on every card is the default look of a generated screen, so the product never gets a color of its own.",
+      "howToVerify": "Review backgrounds, cards, buttons, headings, and charts on the main screen. Pass if surfaces come from one neutral ramp, text is a solid color, and a single accent appears only where it means something, such as the primary action, the selected row, or one key figure. A real brand color used as that flat accent passes, including purple when the brand is actually purple. A violet-to-blue or other hue-to-hue gradient, gradient text, a colored glow or glowing shadow, a radial color blob, a neon border, or a chart that paints every series in the accent does not pass. If the workspace has no visual screen, mark not applicable and say what it is instead.",
+      "howToFix": "Remove decorative gradients, glows, and gradient text. Keep one neutral surface and one solid accent on the primary action or the one figure that matters."
+    },
+    {
+      "id": "icon-set",
+      "category": "design",
+      "title": "Icons come from one set",
+      "severity": "recommended",
+      "appliesWhen": "always",
+      "why": "Emoji in the navigation, on badges, and beside labels read as decoration a model added.",
+      "howToVerify": "Review navigation, buttons, badges, empty states, and status labels. Pass if the screen uses one line-icon set at one size and one stroke, or uses no icons. An emoji used as an icon does not pass, including a sparkle on a New, Beta, or AI badge, or an emoji inside a count. Emoji inside a message a person wrote can stay. If the workspace has no interface, mark not applicable and say what it is instead.",
+      "howToFix": "Remove emoji from labels, navigation, and badges. Use one line-icon set at one size, in the same color as the nearby text, or leave the icon out."
+    },
+    {
+      "id": "even-spacing",
+      "category": "design",
+      "title": "Spacing is on one scale",
+      "severity": "recommended",
+      "appliesWhen": "always",
+      "why": "A 13px gap beside a 7px gap makes sibling rows and cards look accidental.",
+      "howToVerify": "Compare padding, gaps, and row heights in the main layout. Pass if spacing sits on a 4px scale, sibling cards share one padding, and rows in one list share one height and one gap. Space inside a group is smaller than the space between groups. A 2px nudge inside a small control can pass. One-off values such as 7px, 11px, or 13px, or a list whose rows differ in height for no reason, do not pass. If the workspace has no laid-out screen, mark not applicable and say what it is instead.",
+      "howToFix": "Move margins, padding, and gaps onto a 4px scale. Give sibling cards the same padding, and give the rows in one list the same height and gap."
+    },
+    {
+      "id": "plain-copy",
+      "category": "design",
+      "title": "Interface copy is plain",
+      "severity": "recommended",
+      "appliesWhen": "always",
+      "why": "A greeting with an exclamation mark, or a headline like Supercharge your workflow, could sit on any generated page.",
+      "howToVerify": "Read the headings, buttons, labels, and stat captions on the main screen. Pass if the headline says what this product does, labels are sentence case, and a change names its comparison, such as +12% vs last month. An exclamation mark, a Welcome back headline, a hype word such as supercharge, seamless, unlock, magic, or revolutionize, a label in widely tracked capitals, a heading at a weight of 800 or 900, or a trailing period on a button does not pass. A statistic or testimonial is judged on the reviews check. If the screen has almost no interface copy, mark not applicable and say so.",
+      "howToFix": "Rewrite the headline so it says what this product does for the people it is for. Remove exclamation marks and hype words, set labels in sentence case, and say what a percentage compares to."
+    },
+    {
+      "id": "product-visual",
+      "category": "design",
+      "title": "The first screen shows this product",
+      "severity": "recommended",
+      "appliesWhen": "always",
+      "why": "A glossy blob, a glowing brain, or a centered stack of buttons does not show what the product does.",
+      "howToVerify": "Look at the hero or the main app view. Pass if a landing page shows the product, or one concrete image of what it does, with one primary action and at most one secondary action. Pass if an app or dashboard is that product, with the accent used on one thing that matters. A glossy blob, orb, stock robot, glowing brain, circuit hologram, gradient logo tile with a sparkle, or a hero that is only a centered headline and several buttons does not pass. A headline that would still fit after swapping in another product name does not pass. A short working screen with no marketing hero can pass. If there is no visual interface, mark not applicable and say what it is instead.",
+      "howToFix": "Remove filler art. Show the product, or one object from what it does, and keep one primary action with at most one secondary action beside it."
+    },
+    {
+      "id": "quiet-motion",
+      "category": "design",
+      "title": "Motion explains a change",
+      "severity": "recommended",
+      "appliesWhen": "always",
+      "why": "A pulsing glow, a card that grows on hover, and blocks flying in from every side are motion with nothing to say.",
+      "howToVerify": "Search the styles for pulse, ping, bounce, hover scale, and load-in animation. Pass if motion is a short color or surface change, a small press, a menu that fades in, or the screen has no decorative motion. A looping pulse or ping on something that is not live, a card that scales up on hover, a bouncy spring, parallax, or a load animation that sends each block in from a different direction does not pass. Honoring reduced motion is a separate check. If the workspace has no interface, mark not applicable and say what it is instead.",
+      "howToFix": "Remove looping pulse, glow, and hover-grow. On hover, change the color or the surface. If something enters, use one short fade."
+    },
+    {
       "id": "html-lang",
       "category": "a11y",
       "title": "Language of the page",
@@ -510,9 +770,19 @@
       "title": "No secrets in the repo or client bundle",
       "severity": "required",
       "appliesWhen": "always",
-      "why": "A service key in the client, or in git history people can clone, is already public.",
-      "howToVerify": "Search tracked files and client source for private keys, service-role tokens, and secret API keys. Pass if none are present. A publishable client key that is designed to be public is not a secret. Do not copy any secret you find into the report; name the file and the kind of secret only.",
-      "howToFix": "Remove private keys and secret tokens from the repo and the client code. Rotate any secret that was committed."
+      "why": "A service key in the client, in a source file, or in git history people can clone, is already public.",
+      "howToVerify": "Search tracked files, git history, and the frontend bundle for private keys, database passwords, connection strings, service-role tokens, and secret API keys. Pass if none are present. A secret that remains only in an old commit does not pass. A publishable client key that is designed to be public is not a secret. Do not copy any secret you find into the report; name the file and the kind of secret only.",
+      "howToFix": "Remove private keys, database passwords, and secret tokens from the repo, its history, and the client bundle. Rotate any secret that was committed."
+    },
+    {
+      "id": "build-log-secrets",
+      "category": "security",
+      "title": "Build logs do not print secrets",
+      "severity": "required",
+      "appliesWhen": "always",
+      "why": "A build or deploy log that prints the environment publishes every key to anyone who can open that log.",
+      "howToVerify": "Read the CI config, the deploy config, and the build scripts. Pass if they do not print environment variables, connection strings, or the contents of .env. Pass if the project has no build or deploy log. A step that echoes the environment does not pass. Do not copy a secret from a log into the report.",
+      "howToFix": "Stop printing environment values in the build and deploy logs. Rotate any key that already appeared there."
     },
     {
       "id": "env-gitignored",
@@ -525,6 +795,16 @@
       "howToFix": "Add .env to .gitignore. If a real env file was committed, stop tracking it and rotate the values."
     },
     {
+      "id": "no-git-exposed",
+      "category": "security",
+      "title": "Production does not serve .git or .env",
+      "severity": "required",
+      "appliesWhen": "always",
+      "why": "A live site that serves its .git folder or a .env file hands out history and keys.",
+      "howToVerify": "Find what the host deploys, and whether a request for /.git/config or /.env is blocked. Pass if production serves the built output and the repository folder is not on the public site. If there is no deployment, mark it missing and say that no production host config was found. A static host that publishes the project folder does not pass.",
+      "howToFix": "Deploy the built output. Block requests for /.git and /.env on the host. Rotate any key that was ever committed."
+    },
+    {
       "id": "https",
       "category": "security",
       "title": "HTTPS in production",
@@ -535,14 +815,34 @@
       "howToFix": "Serve the public site on https and redirect plain http to it."
     },
     {
+      "id": "dangling-dns",
+      "category": "security",
+      "title": "DNS records still point at live services",
+      "severity": "recommended",
+      "appliesWhen": "always",
+      "why": "A record left behind after you delete a host or a project lets someone else claim that name.",
+      "howToVerify": "Look for DNS config in the repo, or a list of the public hostnames this app uses. Pass if each name still points at a service you control. A record for a removed project does not pass. If DNS is not in the repo, mark it missing and name the DNS host's record list as the setting to review. Do not claim a dashboard was checked when it is not in the workspace.",
+      "howToFix": "In the DNS host, delete any record that still points at a project, host, or service you removed."
+    },
+    {
       "id": "security-headers",
       "category": "security",
       "title": "Security headers",
       "severity": "recommended",
       "appliesWhen": "always",
       "why": "Headers such as Content-Security-Policy, nosniff, Referrer-Policy, and a frame policy close common browser abuses.",
-      "howToVerify": "Check the deployed response headers, or the host config that sets them. Pass if a content security policy, X-Content-Type-Options: nosniff, a Referrer-Policy, and a framing control are set. Say if the app is not deployed yet.",
-      "howToFix": "On the host, set Content-Security-Policy, X-Content-Type-Options: nosniff, a Referrer-Policy, and a frame rule."
+      "howToVerify": "Check the deployed response headers, or the host config that sets them. Pass if a content security policy, X-Content-Type-Options: nosniff, a Referrer-Policy, and a framing control are set. The framing control is X-Frame-Options or a CSP frame-ancestors rule. Say if the app is not deployed yet.",
+      "howToFix": "On the host, set Content-Security-Policy, X-Content-Type-Options: nosniff, a Referrer-Policy, and either X-Frame-Options or a CSP frame-ancestors rule."
+    },
+    {
+      "id": "third-party-scripts",
+      "category": "security",
+      "title": "Scripts you did not write are pinned or self-hosted",
+      "severity": "recommended",
+      "appliesWhen": "always",
+      "why": "A script loaded from someone else's domain can be changed under you and then run for every visitor.",
+      "howToVerify": "List script tags and loaders that fetch JavaScript from another host. Pass if each one is served from this app, or it is pinned with an integrity hash. A payment or auth script loaded from that provider's own domain can pass. A script from a CDN you do not control, with no integrity hash, does not pass. Fonts are a separate check. If the app loads no third-party script, pass and say so.",
+      "howToFix": "Host those scripts yourself, or pin them with an integrity hash. Remove a script whose domain you no longer trust. A payment or auth script can stay on that provider's domain."
     },
     {
       "id": "protected-routes",
@@ -551,8 +851,8 @@
       "severity": "required",
       "appliesWhen": "accounts",
       "why": "Account data, settings, and admin tools must not render for a signed-out visitor.",
-      "howToVerify": "Open a private route, including any admin path, while signed out. Pass if the app redirects or refuses before private data is shown. A page that is only hidden by an unlisted URL does not pass. Mark not applicable when the app has no accounts or private areas.",
-      "howToFix": "Send signed-out visitors away from private pages, including admin pages, before any private data is shown."
+      "howToVerify": "Open a private route, including any admin path, while signed out. Pass if the page, route handler, or server action checks authorization itself and refuses before private data is shown. A page that is only hidden by an unlisted URL does not pass. A check that lives only in framework middleware does not pass. If this app is Next.js, the installed release is 12.3.5, 13.5.9, 14.2.25, 15.2.3, or later on that line. Mark not applicable when the app has no accounts or private areas.",
+      "howToFix": "Check authorization inside the route or server action, and keep signed-out visitors away from private pages. On Next.js, upgrade to a release that fixes the middleware bypass, and keep the check in the route as well."
     },
     {
       "id": "ownership-check",
@@ -605,6 +905,16 @@
       "howToFix": "End the session after a period of inactivity. A day is a reasonable starting point."
     },
     {
+      "id": "token-secret",
+      "category": "security",
+      "title": "Login tokens use a strong secret and a checked signature",
+      "severity": "required",
+      "appliesWhen": "accounts",
+      "why": "A short or well-known signing secret lets someone mint a token that claims to be any account.",
+      "howToVerify": "Find where session tokens or JWTs are signed and checked. Pass if an auth provider issues and verifies them, or the app reads a long random secret from the environment and verifies the signature on every request. A secret in source, a short or well-known secret, or a token accepted without a signature check does not pass. Mark not applicable when the app has no accounts.",
+      "howToFix": "Read a long random signing secret from the environment. Verify the signature on every request. Remove any secret that was written into the code, and rotate it."
+    },
+    {
       "id": "server-validation",
       "category": "security",
       "title": "Server-side validation on public forms",
@@ -630,9 +940,29 @@
       "title": "Visitor input is not glued into a query or command",
       "severity": "required",
       "appliesWhen": "database",
-      "why": "Text from a visitor, pasted into SQL or a shell command, lets them change what the server runs.",
-      "howToVerify": "Find database queries and shell commands that include visitor input. Pass if queries use parameters or a query builder, and commands do not insert that text. Mark not applicable when the app has no database and builds no command from visitor input.",
-      "howToFix": "Pass visitor values as parameters. Do not concatenate them into SQL or a shell command."
+      "why": "Text from a visitor, pasted into SQL, a NoSQL query, or a shell command, lets them change what the server runs.",
+      "howToVerify": "Find database queries and shell commands that include visitor input. Pass if SQL uses parameters or a query builder, and commands do not insert that text. For a document database, pass if operator keys from the visitor, such as a field starting with $, are stripped before the query runs. Passing the request body straight into a query does not pass. Mark not applicable when the app has no database and builds no command from visitor input.",
+      "howToFix": "Pass visitor values as parameters. Strip operator keys from document queries. Do not concatenate visitor text into SQL or a shell command."
+    },
+    {
+      "id": "no-ssrf",
+      "category": "security",
+      "title": "The server does not fetch a URL from the visitor",
+      "severity": "required",
+      "appliesWhen": "api",
+      "why": "A feature that requests an address the visitor chose can be aimed at a private service, or at the cloud metadata address that hands out the server's credentials.",
+      "howToVerify": "Find server-side fetches whose URL comes from a request, a form, or stored visitor input. Pass if no such fetch exists. If one must exist, pass only when it allows hosts you listed and refuses private, link-local, and metadata addresses. On AWS, the instance metadata setting requires IMDSv2. Mark not applicable when the server never requests a URL that came from a visitor. If the app is not on AWS, the IMDSv2 part does not apply and you should say so.",
+      "howToFix": "Stop requesting addresses a visitor supplied. If a fetch has to stay, allow only hosts you listed and refuse private and metadata addresses. On AWS, set the instance metadata service to require IMDSv2."
+    },
+    {
+      "id": "path-traversal",
+      "category": "security",
+      "title": "Visitor input never becomes a file path",
+      "severity": "required",
+      "appliesWhen": "api",
+      "why": "A filename or path taken from a visitor can step outside the folder you meant to open, and read the server's own files.",
+      "howToVerify": "Find file reads, writes, and deletes whose path, name, or template includes visitor input. Pass if the server never builds a path that way, or it maps the request to an id it issued and rejects a path that leaves the folder. Mark not applicable when the server does not touch the filesystem with visitor input. Package and server updates are still the dependency checks.",
+      "howToFix": "Keep visitor input out of file paths. If you must open a file the person named, map it to an id you issued and reject a path that leaves the folder. Keep the server and its packages patched."
     },
     {
       "id": "explicit-fields",
@@ -643,6 +973,36 @@
       "why": "Saving the whole request body lets a person set their own role, price, or admin flag.",
       "howToVerify": "Find writes that take visitor input. Pass if the code lists the fields it saves. Writing the raw body onto a row does not pass. Mark not applicable when the app has no database.",
       "howToFix": "Copy only the fields you meant to store. Ignore role, price, and ownership fields sent by the visitor."
+    },
+    {
+      "id": "server-price",
+      "category": "security",
+      "title": "The server looks up the price",
+      "severity": "required",
+      "appliesWhen": "payments",
+      "why": "An amount that comes from the browser can be changed before it reaches the charge.",
+      "howToVerify": "Find the code that creates a charge or a checkout session. Pass if the server looks up the amount from a product id it trusts. An amount, total, or discount taken from the request body does not pass. Mark not applicable when the app does not take payment.",
+      "howToFix": "Have the browser send a product id. Look up the price on the server, and create the charge there."
+    },
+    {
+      "id": "idempotency-key",
+      "category": "security",
+      "title": "A retry cannot create a second charge",
+      "severity": "required",
+      "appliesWhen": "payments",
+      "why": "A second tap on a slow connection can create a second charge, or a second record.",
+      "howToVerify": "Find the payment request. Pass if the client makes one id when the person starts the action, sends it as an Idempotency-Key on every retry, and the button stays disabled while the request runs. Routes that create a record use the same key. A retry that can charge twice does not pass. Mark not applicable when the app does not take payment.",
+      "howToFix": "Create one id at the start, send it as the Idempotency-Key on every retry, and keep the button disabled until the request finishes."
+    },
+    {
+      "id": "atomic-limits",
+      "category": "security",
+      "title": "A limit and its update happen together",
+      "severity": "required",
+      "appliesWhen": "balances",
+      "why": "Two requests at the same moment can each pass a check you make first and write second, and spend a one-time code, a balance, or a quota twice.",
+      "howToVerify": "Find one-time codes, balances, inventory counts, and usage quotas. Pass if the check and the update are one atomic step in the database, such as a conditional update or a transaction that fails when the value was already spent. A read, a decision in the app, and a later write do not pass. Mark not applicable when the app has no code, balance, inventory count, or quota a second request could spend twice.",
+      "howToFix": "Make the check and the update one conditional write or transaction. Reject the second request when the code, balance, or quota is already spent."
     },
     {
       "id": "form-labels",
@@ -721,8 +1081,8 @@
       "severity": "required",
       "appliesWhen": "accounts",
       "why": "A signup that trusts a typed email can lock a real person out, or open an account they never asked for.",
-      "howToVerify": "Find signup. Pass if the person proves they control the email, with a link or code, before the account can be used. A magic link, a provider sign-in, or an auth setting that confirms email first also passes. Mark not applicable when the app has no accounts, or the account has no email.",
-      "howToFix": "Send a verification link or code and wait for it before the account is active. A magic link or provider sign-in can be the proof."
+      "howToVerify": "Find signup. Pass if the person proves they control the email, with a link or code, before the account can be used. A magic link, a provider sign-in, or an auth setting that confirms email first also passes. A later sign-in with Google or another provider attaches only to an account that already proved it owns that email. Joining a provider sign-in to an unconfirmed account does not pass. Mark not applicable when the app has no accounts, or the account has no email.",
+      "howToFix": "Send a verification link or code and wait for it before the account is active. A magic link or provider sign-in can be the proof. Attach a provider sign-in only to an account that already owns that email."
     },
     {
       "id": "password-reset",
@@ -731,8 +1091,8 @@
       "severity": "required",
       "appliesWhen": "accounts",
       "why": "Password accounts need a recovery path. Passwordless accounts need a way back in if the email or device changes.",
-      "howToVerify": "Find the reset, magic-link, or recovery flow. Pass if a locked-out person has a real way back. A reset link or code expires and stops working after it is used. A provider-owned magic link passes when that provider expires it. Mark not applicable when there are no accounts.",
-      "howToFix": "Add a reset link, magic link, or another real way back in. Make a reset link or code expire, and accept it only once."
+      "howToVerify": "Find the reset, magic-link, or recovery flow. Pass if a locked-out person has a real way back. A reset link or code expires and stops working after it is used. The link is built from a site URL in config. A link that changes when the request Host header changes does not pass. A provider-owned magic link passes when that provider expires it and builds it from the provider's site URL. Mark not applicable when there are no accounts.",
+      "howToFix": "Add a reset link, magic link, or another real way back in. Build that link from the site URL in config. Make a reset link or code expire, and accept it only once."
     },
     {
       "id": "data-rights",
@@ -785,6 +1145,26 @@
       "howToFix": "Write the install, setup, and run commands in the README."
     },
     {
+      "id": "project-map",
+      "category": "hygiene",
+      "title": "A map of where things live",
+      "severity": "recommended",
+      "appliesWhen": "always",
+      "why": "The next session should not have to open every file to learn where a feature lives.",
+      "howToVerify": "Read the README or another short doc in the repo. Pass if it names the main parts of the project and where a feature lives. Pass if the project is a single file. A README that only lists install commands does not pass this check.",
+      "howToFix": "Add a short map of the main folders or modules, and what each one is for."
+    },
+    {
+      "id": "behavior-tested",
+      "category": "hygiene",
+      "title": "A test covers a behavior that matters",
+      "severity": "recommended",
+      "appliesWhen": "always",
+      "why": "A path nobody has run since the last change is how an app breaks after it ships.",
+      "howToVerify": "Find the project's test command and at least one test of a behavior the product would break without, such as a permission check, a price, a form handler, or a calculation. Pass if that test is real and the command runs it. A test file that is never run does not pass. Pass if the project is static pages with no behavior to test.",
+      "howToFix": "Add one automated test for a behavior that matters, and write the command that runs it."
+    },
+    {
       "id": "env-example",
       "category": "hygiene",
       "title": ".env.example without secrets",
@@ -825,14 +1205,24 @@
       "howToFix": "Upgrade the framework and runtime to a supported version, follow that project's upgrade notes, and reinstall from the lockfile."
     },
     {
+      "id": "platform-first",
+      "category": "hygiene",
+      "title": "A package earns its place",
+      "severity": "recommended",
+      "appliesWhen": "dependencies",
+      "why": "A package that only wraps the standard library is more code to trust, update, and ship.",
+      "howToVerify": "Read the dependency manifest. Pass if each package does work the language or framework does not already do. A thin wrapper around a built-in does not pass. Mark not applicable when the app installs no packages.",
+      "howToFix": "Remove a package that only wraps the standard library or the framework, and call the built-in instead."
+    },
+    {
       "id": "database-backups",
       "category": "hygiene",
       "title": "Database backups",
       "severity": "recommended",
       "appliesWhen": "database",
       "why": "A database with no backup can lose people's data from one bad command.",
-      "howToVerify": "Find a backup schedule, a host backup setting, or a documented restore step. Mark not applicable when the app has no database.",
-      "howToFix": "Turn on automatic backups at the host, or schedule a dump, and write down how to restore one."
+      "howToVerify": "Find a backup schedule, a host backup setting, or a documented restore step. A restore you have tried is part of a full pass. A backup with no written restore does not pass. Mark not applicable when the app has no database.",
+      "howToFix": "Turn on automatic backups at the host, or schedule a dump, write down how to restore one, and try that restore on a copy."
     },
     {
       "id": "escaped-output",
@@ -871,8 +1261,18 @@
       "severity": "required",
       "appliesWhen": "always",
       "why": "A stack trace, SQL error, or debug screen tells a stranger your paths, versions, and queries.",
-      "howToVerify": "Find the production error response. Pass if visitors see a generic message. Fail if production can render a stack trace, SQL error, or framework debug page.",
-      "howToFix": "Turn off debug mode in production and show the friendly error page instead."
+      "howToVerify": "Find the production error response and any debug route. Pass if visitors see a generic message. A stack trace, a SQL error, a framework debug page, a database admin screen, a GraphQL playground, or a debug toolbar left on in production does not pass.",
+      "howToFix": "Turn off debug mode in production, remove debug routes, and show the friendly error page instead."
+    },
+    {
+      "id": "no-source-maps",
+      "category": "security",
+      "title": "Production source maps stay unpublished",
+      "severity": "recommended",
+      "appliesWhen": "dependencies",
+      "why": "A source map shipped with the live build lets someone rebuild the original code.",
+      "howToVerify": "Check the production build settings and the files a publish would include. Pass if production source maps are off, or they are not deployed and not inside a published package. A setting that emits source maps for the production browser build does not pass. Mark not applicable when the app ships no JavaScript build and publishes no package.",
+      "howToFix": "Turn off source maps for the production build. Before you publish a package, confirm the archive contains no source map of your original code."
     },
     {
       "id": "database-private",
@@ -881,8 +1281,18 @@
       "severity": "recommended",
       "appliesWhen": "database",
       "why": "A database that accepts connections from any address can be guessed at by the whole internet.",
-      "howToVerify": "Find the database host settings. Pass if only the app can connect, or the host limits which addresses are allowed. A port open to every address does not pass. Mark not applicable when the app has no database.",
-      "howToFix": "Turn on the host's network allow-list or private networking so only the app can reach the database."
+      "howToVerify": "Find the database host settings. Pass if only the app can connect, the database requires a password, and the host limits which addresses are allowed. A port open to every address, or a database with no password, does not pass. Mark not applicable when the app has no database.",
+      "howToFix": "Turn on the host's network allow-list or private networking, and require a password, so only the app can reach the database."
+    },
+    {
+      "id": "closed-data-access",
+      "category": "security",
+      "title": "The database and file store are not wide open",
+      "severity": "required",
+      "appliesWhen": "database",
+      "why": "Rules left open, or a public file bucket, let anyone read what you stored.",
+      "howToVerify": "Find client-side database or storage rules, such as Firebase, Supabase, or S3. Pass if the client cannot read or write unless a rule allows that person, or only the server talks to the store and its key is not in the browser. A public bucket of private files, or a rule that allows every read and write, does not pass. Files that are meant to be public pass when the rule is limited to those files. Per-person ownership is a separate check. Mark not applicable when the app has no database and no hosted file store.",
+      "howToFix": "Keep storage private. Scope each rule to the owner, or serve private files with a signed URL, before you deploy. Leave the service key on the server."
     },
     {
       "id": "security-logs",
@@ -911,8 +1321,28 @@
       "severity": "required",
       "appliesWhen": "accounts",
       "why": "Unlimited password guesses are how accounts get broken into.",
-      "howToVerify": "Find the sign-in handler. Pass if a run of failed attempts is delayed or blocked for a while, for that account or that client. The auth provider's own limit counts. Mark not applicable when the app has no accounts.",
-      "howToFix": "After repeated failed sign-ins, block or delay further tries for a while, and tell the person to try again later."
+      "howToVerify": "Find the sign-in handler. Pass if a run of failed attempts is delayed or blocked for a while, both for that account and for that client or IP. The auth provider's own limit counts when it covers both. Mark not applicable when the app has no accounts.",
+      "howToFix": "After repeated failed sign-ins, block or delay further tries for that account and for that IP, and tell the person to try again later."
+    },
+    {
+      "id": "no-enumeration",
+      "category": "security",
+      "title": "Login, signup, and reset hide which emails exist",
+      "severity": "required",
+      "appliesWhen": "accounts",
+      "why": "A different message for a real email than for a fake one lets someone test a list and learn who has an account.",
+      "howToVerify": "Read the responses for login, signup, and password reset. Pass if each one says the same thing whether or not that email has an account, in the page and in the HTTP response. A message such as no account for that email, or email already registered, does not pass. A magic-link sign-in that always says to check email passes. Mark not applicable when the app has no accounts.",
+      "howToFix": "Use one generic message for login, signup, and reset, whether or not that email has an account. Do the same in the HTTP response."
+    },
+    {
+      "id": "stolen-passwords",
+      "category": "security",
+      "title": "Sign-in resists passwords leaked elsewhere",
+      "severity": "recommended",
+      "appliesWhen": "accounts",
+      "why": "Bots try email and password pairs from other sites' breaches against this login.",
+      "howToVerify": "Find password sign-in and password choice. Pass if new or attempted passwords are checked against known breaches, or the account can turn on a second factor. Both belong in a full pass. The auth provider's own breached-password check counts. Mark not applicable when the app has no accounts, or it never handles passwords.",
+      "howToFix": "Turn on the auth provider's breached-password check, or reject passwords known from public breaches. Offer a second factor on the account."
     },
     {
       "id": "request-ceiling",
@@ -947,12 +1377,32 @@
     {
       "id": "outbound-limits",
       "category": "security",
-      "title": "Email, paid APIs, and uploads have a ceiling",
+      "title": "Email, text messages, paid APIs, and uploads have a ceiling",
       "severity": "recommended",
       "appliesWhen": "outbound",
-      "why": "Hosts suspend apps that send unlimited email, call a paid API with no cap, or accept unlimited uploads.",
-      "howToVerify": "Find email sending, paid API calls, and uploads. Pass if each one that exists has a per-user or per-day cap, or the provider already enforces a quota. Mark not applicable when the app sends no email, calls no paid API, and nobody can upload a file.",
-      "howToFix": "Cap emails per day, paid API calls per user, and uploads per account. A quota from the email, AI, or host provider counts."
+      "why": "Hosts suspend apps that send unlimited email or text messages, call a paid API with no cap, or accept unlimited uploads. You pay for every text a script can trigger.",
+      "howToVerify": "Find email sending, SMS sending, paid API calls, and uploads. Pass if each one that exists has a per-user or per-day cap, or the provider already enforces a quota. Text messages also stay inside the countries this product serves. Mark not applicable when the app sends no email, sends no SMS, calls no paid API, and nobody can upload a file.",
+      "howToFix": "Cap emails and text messages per day, paid API calls per user, and uploads per account. Limit text messages to the countries you serve. A quota from the provider counts."
+    },
+    {
+      "id": "ai-least-privilege",
+      "category": "security",
+      "title": "An AI feature has the least access it needs",
+      "severity": "required",
+      "appliesWhen": "ai",
+      "why": "Text a person types, or text on a page the model reads, can change what that feature does, including leaking its instructions or calling a tool it should not have.",
+      "howToVerify": "Find features that send visitor text or page content to a model, and any tool the model can call. Pass if the tools are only what that feature needs, the instructions contain no secret, and an action that cannot be undone waits for a person to confirm it. A model that can read secrets, run arbitrary queries, or delete data on its own does not pass. Mark not applicable when the app has no such feature.",
+      "howToFix": "Give the model only the tools that feature needs. Keep secrets out of its instructions. Ask a person to confirm any action that cannot be undone."
+    },
+    {
+      "id": "model-outage",
+      "category": "security",
+      "title": "A model limit does not hang the page",
+      "severity": "recommended",
+      "appliesWhen": "ai",
+      "why": "When the model provider hits a limit or goes down, a spinner that never ends looks like the app froze.",
+      "howToVerify": "Find the call to a model provider. Pass if a rate limit, a quota error, or an outage shows a clear message and a next step. A second provider you already configured is part of a full pass. A request that hangs with no message does not pass. Mark not applicable when the app does not call a model.",
+      "howToFix": "Catch a rate limit or an outage from the model provider and show a clear message. Send the request to another provider you already trust if you have one."
     },
     {
       "id": "csrf-or-origin",
@@ -971,8 +1421,8 @@
       "severity": "recommended",
       "appliesWhen": "always",
       "why": "A redirect that trusts a URL from the query string can send people to a lookalike site.",
-      "howToVerify": "Search for redirects built from a query parameter or form field. Pass if those targets stay on your own paths, or if no such redirect exists.",
-      "howToFix": "Redirect only to relative paths you control. Ignore a full URL supplied by the visitor."
+      "howToVerify": "Search for redirects built from a query parameter, a form field, or a return URL after login. Pass if those targets stay on your own paths, or if no such redirect exists. A destination on another host does not pass unless it is on an allowlist written in the code.",
+      "howToFix": "Redirect only to relative paths you control, or to a host on an allowlist. Ignore a full URL supplied by the visitor."
     },
     {
       "id": "webhook-signature",

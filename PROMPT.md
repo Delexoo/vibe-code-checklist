@@ -1,14 +1,18 @@
 # Vibe Code Checklist audit procedure
 
-You are auditing the workspace that is open in the editor. You are not auditing the Vibe Code Checklist repository.
+You are auditing the project that is open, the app the person asked you to check. You are not auditing the Vibe Code Checklist repository.
+
+These steps are the same for Claude, Claude Code, Cursor, Codex, and any other coding agent. Read files, and fetch a URL when you need the checklist. Do not install a package, plugin, skill, or extension. Do not depend on an editor-only command.
 
 ## Stop if this is the checklist repo
 
-If the workspace root contains `checklist.json` whose `name` is `Vibe Code Checklist` and this `PROMPT.md` file, stop. Tell the person to open their own app and paste the prompt there. Do not grade this checklist as if it were their product.
+If the project root contains `checklist.json` whose `name` is `Vibe Code Checklist` and this `PROMPT.md` file, stop. Tell the person to open their own app and paste the prompt there. Do not grade this checklist as if it were their product.
+
+If you cannot read both `PROMPT.md` and `checklist.json`, stop. Name the address that failed. Do not invent checklist items.
 
 ## Read first
 
-Read every item in `checklist.json` before you judge anything. Each item has `id`, `category`, `title`, `why`, `howToVerify`, `howToFix`, `severity` (`required` or `recommended`), and `appliesWhen` (`always`, `forms`, `accounts`, `analytics`, `payments`, `blog`, `dependencies`, `database`, `email`, `api`, `uploads`, `ugc`, `outbound`, or `claims`).
+Read every item in `checklist.json` before you judge anything. Each item has `id`, `category`, `title`, `why`, `howToVerify`, `howToFix`, `severity` (`required` or `recommended`), and `appliesWhen` (`always`, `forms`, `accounts`, `analytics`, `payments`, `blog`, `dependencies`, `database`, `email`, `api`, `uploads`, `ugc`, `outbound`, `claims`, `ai`, `balances`, `daily`, or `native`).
 
 `sample-report.html` shows the report shape with fictional results. Do not copy those results.
 
@@ -20,10 +24,12 @@ Read the README, the app name, the homepage or main screen, the routes, and any 
 
 1. **Goal.** What the person is trying to ship, in one or two sentences. If the README and the screens disagree, say so.
 2. **Who it is for.**
-3. **What this product includes.** Say which of these are present, started, or clearly promised by the UI, routes, or copy: public pages, forms, accounts, payments, analytics or non-essential cookies, articles, installed packages, a database, marketing email, an API, file uploads, posts or other content visitors publish, outbound email or a paid API, reviews or statistics. A library that is installed and never used is not a feature.
+3. **What this product includes.** Say which of these are present, started, or clearly promised by the UI, routes, or copy: public pages, forms, accounts, payments, analytics or non-essential cookies, articles, installed packages, a database, marketing email, an API, file uploads, posts or other content visitors publish, outbound email, SMS, or a paid API, an AI feature, one-time codes or balances or quotas, an interface people use every day, a native Android or React Native app, reviews or statistics. A library that is installed and never used is not a feature.
 4. **What this product will not need.** Name the checklist areas that do not fit the goal.
 
 Put that picture in the report under **What this app is**, with the file paths you used. Do not invent a business the files do not support. If the goal is unclear, say what you found and what is still unclear.
+
+Use that picture for the design checks. A screen passes when the color, the headline, and the main visual could belong to this product. A screen that would still fit after swapping in another product name does not.
 
 ## How to judge
 
@@ -35,40 +41,50 @@ Give every item exactly one status: `pass`, `fail`, or `not_applicable`.
 
 Use `appliesWhen` as the usual signal, then check it against the product:
 
-- `always`: judge it for a website or web app people open. Use `not_applicable` when `howToVerify` allows that, or when the workspace is a different kind of product and the check would not serve the goal. A private tool that should not be indexed does not fail for a missing sitemap. A library with no pages does not fail for a missing favicon. Say what the workspace is instead.
+- `always`: judge it for a website or web app people open. Use `not_applicable` when `howToVerify` allows that, or when the workspace is a different kind of product and the check would not serve the goal. A private tool that should not be indexed does not fail for a missing sitemap. A library with no pages does not fail for a missing favicon or for the design checks. Say what the workspace is instead.
 - `forms`: `not_applicable` only when this app has no form, checkout, or signup.
-- `accounts`: `not_applicable` only when this app has no accounts or private areas.
+- `accounts`: `not_applicable` only when this app has no accounts or private areas. `stolen-passwords` is also `not_applicable` when the app never handles passwords. `one-time-code` is also `not_applicable` when the app never asks for a code from a text or an email.
 - `analytics`: `not_applicable` only when this app uses no analytics and sets no non-essential cookies.
 - `payments`: `not_applicable` only when this app does not take payment.
 - `blog`: `not_applicable` only when this app does not publish articles or posts.
-- `dependencies`: `not_applicable` only when this app installs no packages.
-- `database`: `not_applicable` only when this app has no database.
+- `dependencies`: `not_applicable` only when this app installs no packages. `no-source-maps` is also `not_applicable` when the app ships no JavaScript build and publishes no package.
+- `database`: `not_applicable` only when this app has no database and no hosted file store.
 - `email`: `not_applicable` only when this app sends no marketing email. A receipt or password reset does not make this apply.
-- `api`: `not_applicable` only when this app has no API. Server actions and route handlers count as an API.
-- `uploads`: `not_applicable` only when nobody can upload a file.
+- `api`: `not_applicable` only when this app has no API. Server actions and route handlers count as an API. `no-ssrf` is also `not_applicable` when the server never requests a URL that came from a visitor. `path-traversal` is also `not_applicable` when the server never builds a file path from visitor input.
+- `uploads`: `not_applicable` only when nobody can upload a file. `image-blur` is also `not_applicable` when nobody uploads an image.
 - `ugc`: `not_applicable` only when visitors cannot publish text, images, or files that the app stores or shows. A contact form, login, or checkout does not count. A file the app keeps does count.
-- `outbound`: `not_applicable` only when the app sends no email, a visitor action calls no paid third-party API, and nobody can upload a file. A receipt or password reset does count. The provider's own quota can pass the ceiling check. Marketing consent stays on `email`.
+- `outbound`: `not_applicable` only when the app sends no email, sends no SMS, a visitor action calls no paid third-party API, and nobody can upload a file. A receipt or password reset does count. The provider's own quota can pass the ceiling check. Marketing consent stays on `email`.
 - `claims`: `not_applicable` only when this app shows no reviews, testimonials, or statistics.
+- `ai`: `not_applicable` only when this app never sends visitor text or page content to a model and the model can call no tool.
+- `balances`: `not_applicable` only when this app has no one-time code, balance, inventory count, or usage quota a second request could spend twice.
+- `daily`: `not_applicable` only when people do not use this product every day. A brochure, a landing page, or a one-time checkout does not count. `optimistic-ui` is also `not_applicable` when there is no like, toggle, or rename that saves in the background. `shortcut-hints` is also `not_applicable` when there are no keyboard shortcuts. `undo-toast` is also `not_applicable` when there is no reversible destructive action. `stale-data` is also `not_applicable` when there is no cacheable data. `swipe-sheet` is also `not_applicable` when there is no bottom sheet. `safe-triangle` is also `not_applicable` when there is no hover submenu.
+- `native`: `not_applicable` only when this app does not target Android or React Native.
 
 Do not drop a security check that matches a feature the app has. A small app with accounts still needs protected routes. A form that shows visitor text still needs that text escaped. A public page still needs its own title.
 
 Examples:
 
 - A brochure site with a contact form needs the form checks and a privacy policy. It does not need accounts, payments, or a way to remove user posts.
-- An app where people post or upload needs a way to report and remove that content. Email, a paid API, or uploads need a ceiling, and the provider's own quota can satisfy it.
+- An app where people post or upload needs a way to report and remove that content. Email, SMS, a paid API, or uploads need a ceiling, and the provider's own quota can satisfy it. Text messages also stay inside the countries the product serves.
+- An app with logins needs the route itself to check the session, the same reply whether or not the email exists, and a reset link built from config. An app that charges needs the server to look up the price, and a retry of that charge needs one idempotency key. An app that spends a code, a balance, or a quota needs that spend to be one database step. A database query does not paste visitor text into SQL or accept operator keys from the visitor.
+- A product people open every day needs the daily interface checks. A brochure does not. A website does not need predictive back. A native app does not need speculation rules.
 - A members' app needs the account checks. It does not need article dates unless it has posts.
 - An internal dashboard that is not meant to be found in search does not need a sitemap, `llms.txt`, or social cards. It does need login and private routes if people sign in.
-- A script or library with no website does not need page, search, or favicon checks. Secrets and dependency checks still apply when it holds keys or installs packages.
+- A script or library with no website does not need page, search, favicon, or design checks. Secrets and dependency checks still apply when it holds keys or installs packages.
+- Packages should do work the platform does not already do. An AI feature should say what happened when the model provider is down or rate-limited. A project with behavior worth breaking needs a test that actually runs, and a short map of where that behavior lives.
+- Design checks apply to any website or app with a screen. Judge the main screen from the styles and the copy. A solid brand color passes. A hue-to-hue gradient, a glow, gradient text, emoji used as icons, one-off spacing, and shouty copy do not.
 
 Severity changes the label, not the status. A recommended item can fail.
 
-If the dev server is off, judge the source. Say that the evidence is from source. Do not fail a check only because you did not click a running page when the source implements it. HTTPS and security headers need a deployment or host config; if neither exists, mark them missing and say that no production URL or header config was found.
+If the dev server is off, judge the source. Say that the evidence is from source. Do not fail a check only because you did not click a running page when the source implements it. HTTPS, security headers, a public `.git` folder, and dangling DNS need a deployment, host, or DNS config. If that config is not in the workspace, mark the item missing and name the setting to review. Do not claim you checked a dashboard you cannot see.
 
 Never invent a file. Never paste a secret value into the report. Name the file and the kind of secret only.
 
 ## What you may change
 
-Create or overwrite `vibe-audit.html` at the workspace root. Do not create, edit, or delete any other file. Do not install packages. Do not change application data. Read-only inspection, that one report, and opening it is the whole job.
+Create or overwrite `vibe-audit.html` at the root of the project you are auditing, next to the README or the manifest. Do not create, edit, or delete any other file. Do not install packages. Do not change application code or data. Read-only inspection and that one report are the whole job.
+
+If this session cannot write a file, put the full HTML in the reply and tell the person to save it as `vibe-audit.html`. That reply is the report.
 
 ## Score
 
@@ -262,12 +278,12 @@ Escape any HTML characters that came from the workspace so the report stays a do
 
 ## When you finish
 
-Open `vibe-audit.html` in the default browser yourself, from the workspace root. The assessment results should appear on their own. Do not ask the person to find or open the file.
-
-Run the command for this operating system, and wait until it starts:
+If this session can open a local browser, open `vibe-audit.html` from the project root. The assessment results should appear on their own. Use the command for this operating system, and wait until it starts:
 
 - Windows PowerShell: `Start-Process (Resolve-Path .\vibe-audit.html)`
 - macOS: `open vibe-audit.html`
 - Linux: `xdg-open vibe-audit.html`
 
-If the command fails, say the full path and that the file is ready. Then reply with what the app is, the overall result, the required items still open, and the path `vibe-audit.html`. Do not start fixing the app.
+A missing desktop, a missing shell, or a failed command is not a failed audit. Say the full path and that the file is ready. If the HTML is only in the reply, say to save it as `vibe-audit.html`. When you did open the file, do not also ask the person to find it.
+
+Then reply with what the app is, the overall result, the required items still open, and the path `vibe-audit.html`. Do not start fixing the app.

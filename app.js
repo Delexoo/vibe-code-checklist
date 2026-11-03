@@ -13,8 +13,12 @@
     api: "If the app has an API",
     uploads: "If people can upload files",
     ugc: "If people can post, or upload a file the app keeps",
-    outbound: "If the app sends email, calls a paid API, or accepts uploads",
-    claims: "If the app shows reviews, testimonials, or statistics"
+    outbound: "If the app sends email or a text message, calls a paid API, or accepts uploads",
+    claims: "If the app shows reviews, testimonials, or statistics",
+    ai: "If the app sends text to a model or lets a model call a tool",
+    balances: "If the app has a one-time code, a balance, or a quota",
+    daily: "If people use the app every day",
+    native: "If the app targets Android or React Native"
   };
 
   var REPORT_CSS = [
@@ -415,7 +419,7 @@
   }
 
   function applySurvey(items, state, answers) {
-    var managed = ["accounts", "forms", "payments", "blog", "analytics", "uploads", "email", "ugc", "outbound", "claims"];
+    var managed = ["accounts", "forms", "payments", "blog", "analytics", "uploads", "email", "ugc", "outbound", "claims", "ai", "balances", "daily"];
     items.forEach(function (item) {
       if (managed.indexOf(item.appliesWhen) === -1) return;
       var active = !!answers[item.appliesWhen];
@@ -441,7 +445,10 @@
       email: "email updates",
       ugc: "posts",
       outbound: "a paid API",
-      claims: "reviews or stats"
+      claims: "reviews or stats",
+      ai: "an AI feature",
+      balances: "credits, codes, or a balance",
+      daily: "daily use"
     };
     var audience = {
       public: "Anyone on the web.",
