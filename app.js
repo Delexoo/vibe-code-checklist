@@ -1,6 +1,34 @@
 (function () {
+  "use strict";
+
   var STORAGE_KEY = "vibe-code-checklist-v1";
   var SURVEY_KEY = "vibe-code-checklist-survey";
+  var COMMIT_CACHE_KEY = "vibe-code-checklist-commit-cache";
+  var COMMIT_MIN_INTERVAL_MS = 10 * 60 * 1000;
+  var CHECKLIST_MAX_CHARS = 2000000;
+  var COMMIT_MAX_CHARS = 500000;
+  var ITEM_ID = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+
+  function isItemId(value) {
+    return typeof value === "string" && ITEM_ID.test(value) && value !== "constructor" && value !== "prototype";
+  }
+  var COMMIT_STAMP = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?Z$/;
+  var SURVEY_WHO = { public: true, accounts: true, private: true };
+  var SURVEY_PAY = { yes: true, no: true };
+  var SURVEY_EXTRAS = {
+    forms: true,
+    uploads: true,
+    ugc: true,
+    email: true,
+    blog: true,
+    analytics: true,
+    claims: true,
+    outbound: true,
+    ai: true,
+    balances: true,
+    daily: true
+  };
+  var REPORT_CSP = "default-src 'none'; script-src 'none'; style-src 'unsafe-inline'; img-src 'none'; font-src 'none'; connect-src 'none'; base-uri 'none'; form-action 'none'; object-src 'none'; frame-src 'none'; worker-src 'none'";
   var APPLIES = {
     forms: "If the app has a form, checkout, or signup",
     accounts: "If the app has accounts",
@@ -70,7 +98,78 @@
       .replace(/&/g, "&amp;")
       .replace(/</g, "&lt;")
       .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;");
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
+  }
+
+  function isPlainObject(value) {
+    return !!value && typeof value === "object" && !Array.isArray(value);
+  }
+
+  function sanitizeState(parsed) {
+    var clean = {};
+    if (!isPlainObject(parsed)) return clean;
+    Object.keys(parsed).forEach(function (key) {
+      if (!isItemId(key)) return;
+      if (parsed[key] === "pass" || parsed[key] === "na") clean[key] = parsed[key];
+    });
+    return clean;
+  }
+
+  function sanitizeSurvey(parsed) {
+    if (!isPlainObject(parsed) || parsed.done !== true) return null;
+    var who = SURVEY_WHO[parsed.who] ? parsed.who : "public";
+    var pay = SURVEY_PAY[parsed.pay] ? parsed.pay : "no";
+    var answers = {
+      done: true,
+      who: who,
+      pay: pay,
+      accounts: who === "accounts",
+      payments: pay === "yes"
+    };
+    Object.keys(SURVEY_EXTRAS).forEach(function (key) {
+      answers[key] = parsed[key] === true;
+    });
+    return answers;
+  }
+
+  function isChecklist(data) {
+    if (!isPlainObject(data) || !Array.isArray(data.categories) || !Array.isArray(data.items)) return false;
+    var categoryIds = {};
+    var index;
+    for (index = 0; index < data.categories.length; index += 1) {
+      var category = data.categories[index];
+      if (!isPlainObject(category) || !isItemId(category.id)) return false;
+      if (typeof category.title !== "string" || typeof category.summary !== "string") return false;
+      categoryIds[category.id] = true;
+    }
+    for (index = 0; index < data.items.length; index += 1) {
+      var item = data.items[index];
+      if (!isPlainObject(item) || !isItemId(item.id)) return false;
+      if (!categoryIds[item.category]) return false;
+      if (typeof item.title !== "string" || typeof item.why !== "string") return false;
+      if (item.severity !== "required" && item.severity !== "recommended") return false;
+      if (typeof item.appliesWhen !== "string" || item.appliesWhen.length > 40) return false;
+      if (item.howToVerify != null && typeof item.howToVerify !== "string") return false;
+      if (item.howToFix != null && typeof item.howToFix !== "string") return false;
+    }
+    return true;
+  }
+
+  function commitStamp(data) {
+    var stamp = data && data.commit && data.commit.committer && data.commit.committer.date;
+    if (typeof stamp !== "string" || !COMMIT_STAMP.test(stamp)) return "";
+    var date = new Date(stamp);
+    if (isNaN(date.getTime())) return "";
+    return date.toISOString();
+  }
+
+  function readJsonResponse(response, maxChars) {
+    if (!response.ok) throw new Error("status");
+    return response.text().then(function (text) {
+      if (text.length > maxChars) throw new Error("size");
+      return JSON.parse(text);
+    });
   }
 
   function statusLabel(status, severity) {
@@ -200,7 +299,10 @@
       return "<section><h2>" + group[1] + "</h2>" + body + "</section>";
     }).join("");
     var verdictMark = !applicable ? "" : requiredOpen ? "miss" : recommendedOpen ? "warn" : "pass";
-    return "<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">" +
+    return "<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"utf-8\">" +
+      "<meta http-equiv=\"Content-Security-Policy\" content=\"" + REPORT_CSP + "\">" +
+      "<meta name=\"referrer\" content=\"no-referrer\">" +
+      "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">" +
       "<title>" + escapeHtml(title) + "</title><style>" + REPORT_CSS + "</style></head><body><main>" +
       "<p class=\"kicker\">Vibe Code Checklist</p><h1>Preflight report</h1>" +
       (options.sampleNote ? "<p class=\"sample-banner\">" + escapeHtml(options.sampleNote) + "</p>" : "") +
@@ -219,10 +321,20 @@
   }
 
   function loadState() {
+    var raw = null;
     try {
-      var parsed = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
-      return parsed && typeof parsed === "object" ? parsed : {};
+      raw = localStorage.getItem(STORAGE_KEY);
     } catch (error) {
+      return {};
+    }
+    if (raw == null) return {};
+    try {
+      var clean = sanitizeState(JSON.parse(raw));
+      var encoded = JSON.stringify(clean);
+      if (raw !== encoded) localStorage.setItem(STORAGE_KEY, encoded);
+      return clean;
+    } catch (error) {
+      try { localStorage.removeItem(STORAGE_KEY); } catch (ignore) { /* storage may be blocked */ }
       return {};
     }
   }
@@ -410,22 +522,37 @@
   }
 
   function readSurvey() {
+    var raw = null;
     try {
-      var parsed = JSON.parse(localStorage.getItem(SURVEY_KEY) || "null");
-      return parsed && parsed.done ? parsed : null;
+      raw = localStorage.getItem(SURVEY_KEY);
     } catch (error) {
+      return null;
+    }
+    if (raw == null) return null;
+    try {
+      var clean = sanitizeSurvey(JSON.parse(raw));
+      if (!clean) {
+        localStorage.removeItem(SURVEY_KEY);
+        return null;
+      }
+      var encoded = JSON.stringify(clean);
+      if (raw !== encoded) localStorage.setItem(SURVEY_KEY, encoded);
+      return clean;
+    } catch (error) {
+      try { localStorage.removeItem(SURVEY_KEY); } catch (ignore) { /* storage may be blocked */ }
       return null;
     }
   }
 
   function applySurvey(items, state, answers) {
+    var safe = sanitizeSurvey(answers) || sanitizeSurvey({ done: true });
     var managed = ["accounts", "forms", "payments", "blog", "analytics", "uploads", "email", "ugc", "outbound", "claims", "ai", "balances", "daily"];
     items.forEach(function (item) {
       if (managed.indexOf(item.appliesWhen) === -1) return;
-      var active = !!answers[item.appliesWhen];
-      if (item.appliesWhen === "forms") active = !!(answers.forms || answers.accounts);
-      if (item.appliesWhen === "ugc") active = !!(answers.ugc || answers.uploads);
-      if (item.appliesWhen === "outbound") active = !!(answers.outbound || answers.email || answers.uploads);
+      var active = !!safe[item.appliesWhen];
+      if (item.appliesWhen === "forms") active = !!(safe.forms || safe.accounts);
+      if (item.appliesWhen === "ugc") active = !!(safe.ugc || safe.uploads);
+      if (item.appliesWhen === "outbound") active = !!(safe.outbound || safe.email || safe.uploads);
       if (active) {
         if (state[item.id] === "na") delete state[item.id];
       } else {
@@ -436,6 +563,7 @@
   }
 
   function surveyContext(answers) {
+    var safe = sanitizeSurvey(answers) || sanitizeSurvey({ done: true });
     var labels = {
       forms: "a form",
       payments: "payments",
@@ -454,11 +582,11 @@
       public: "Anyone on the web.",
       accounts: "People who sign in.",
       private: "Only the person who built it."
-    }[answers.who] || "Chosen in the short survey.";
-    var picked = Object.keys(labels).filter(function (key) { return answers[key]; }).map(function (key) { return labels[key]; });
-    if (answers.accounts) picked.unshift("sign-in");
+    }[safe.who] || "Chosen in the short survey.";
+    var picked = Object.keys(labels).filter(function (key) { return safe[key]; }).map(function (key) { return labels[key]; });
+    if (safe.accounts) picked.unshift("sign-in");
     var goal = picked.length ? "It includes " + picked.join(", ") + "." : "It has none of the extra features.";
-    if (answers.accounts && !answers.forms) goal += " Sign-in keeps the form checks.";
+    if (safe.accounts && !safe.forms) goal += " Sign-in keeps the form checks.";
     return {
       goal: goal,
       audience: audience,
@@ -470,28 +598,31 @@
   function collectSurvey() {
     var who = document.querySelector("#survey input[name='who']:checked");
     var pay = document.querySelector("#survey input[name='pay']:checked");
+    var whoValue = who && SURVEY_WHO[who.value] ? who.value : "public";
+    var payValue = pay && SURVEY_PAY[pay.value] ? pay.value : "no";
     var answers = {
       done: true,
-      who: who ? who.value : "public",
-      pay: pay ? pay.value : "no",
-      accounts: !!(who && who.value === "accounts"),
-      payments: !!(pay && pay.value === "yes")
+      who: whoValue,
+      pay: payValue,
+      accounts: whoValue === "accounts",
+      payments: payValue === "yes"
     };
     document.querySelectorAll("#survey input[name='extra']").forEach(function (box) {
-      answers[box.value] = box.checked;
+      if (SURVEY_EXTRAS[box.value]) answers[box.value] = box.checked;
     });
     return answers;
   }
 
   function fillSurvey(answers) {
-    var who = answers.who || (answers.accounts ? "accounts" : "public");
-    var pay = answers.pay || (answers.payments ? "yes" : "no");
-    var whoInput = document.querySelector("#survey input[name='who'][value='" + who + "']");
-    var payInput = document.querySelector("#survey input[name='pay'][value='" + pay + "']");
-    if (whoInput) whoInput.checked = true;
-    if (payInput) payInput.checked = true;
+    var safe = sanitizeSurvey(answers) || sanitizeSurvey({ done: true });
+    document.querySelectorAll("#survey input[name='who']").forEach(function (input) {
+      input.checked = input.value === safe.who;
+    });
+    document.querySelectorAll("#survey input[name='pay']").forEach(function (input) {
+      input.checked = input.value === safe.pay;
+    });
     document.querySelectorAll("#survey input[name='extra']").forEach(function (box) {
-      box.checked = !!answers[box.value];
+      box.checked = !!safe[box.value];
     });
   }
 
@@ -522,24 +653,54 @@
     return "1 Minute(s) ago";
   }
 
+  function readCommitCache() {
+    try {
+      var parsed = JSON.parse(sessionStorage.getItem(COMMIT_CACHE_KEY) || "null");
+      if (!isPlainObject(parsed) || typeof parsed.at !== "number") return null;
+      var stamp = commitStamp({ commit: { committer: { date: parsed.stamp } } });
+      if (!stamp) return null;
+      return { at: parsed.at, stamp: stamp };
+    } catch (error) {
+      return null;
+    }
+  }
+
+  function paintUpdated(stamp) {
+    var node = document.getElementById("updated");
+    var time = document.getElementById("updated-time");
+    var date = new Date(stamp);
+    if (!node || !time || isNaN(date.getTime())) return;
+    time.dateTime = date.toISOString();
+    time.textContent = relativeUpdated(date);
+    node.hidden = false;
+  }
+
   function showUpdated() {
     var node = document.getElementById("updated");
     var time = document.getElementById("updated-time");
     if (!node || !time) return;
+    var cached = readCommitCache();
+    if (cached && Date.now() - cached.at < COMMIT_MIN_INTERVAL_MS) {
+      paintUpdated(cached.stamp);
+      return;
+    }
     fetch("https://api.github.com/repos/Delexoo/vibe-code-checklist/commits/main", {
-      headers: { Accept: "application/vnd.github+json" }
+      headers: { Accept: "application/vnd.github+json" },
+      credentials: "omit",
+      cache: "no-store",
+      referrerPolicy: "no-referrer"
     }).then(function (response) {
-      if (!response.ok) throw new Error(String(response.status));
-      return response.json();
+      return readJsonResponse(response, COMMIT_MAX_CHARS);
     }).then(function (data) {
-      var stamp = data && data.commit && data.commit.committer && data.commit.committer.date;
-      var date = stamp ? new Date(stamp) : new Date(NaN);
-      if (isNaN(date.getTime())) return;
-      time.dateTime = date.toISOString();
-      time.textContent = relativeUpdated(date);
-      node.hidden = false;
+      var stamp = commitStamp(data);
+      if (!stamp) throw new Error("shape");
+      try {
+        sessionStorage.setItem(COMMIT_CACHE_KEY, JSON.stringify({ at: Date.now(), stamp: stamp }));
+      } catch (error) { /* a blocked cache still leaves the date on screen */ }
+      paintUpdated(stamp);
     }).catch(function () {
-      node.hidden = true;
+      if (cached) paintUpdated(cached.stamp);
+      else node.hidden = true;
     });
   }
 
@@ -548,12 +709,12 @@
     if (copy) copy.addEventListener("click", onCopy);
     showUpdated();
     if (!document.getElementById("list")) return;
-    fetch("checklist.json")
+    fetch("checklist.json", { credentials: "omit", cache: "no-store", referrerPolicy: "no-referrer" })
       .then(function (response) {
-        if (!response.ok) throw new Error(String(response.status));
-        return response.json();
+        return readJsonResponse(response, CHECKLIST_MAX_CHARS);
       })
       .then(function (data) {
+        if (!isChecklist(data)) throw new Error("shape");
         var state = loadState();
         var saved = readSurvey();
         function refresh(answers) {
@@ -607,7 +768,13 @@
   }
 
   if (typeof module !== "undefined" && module.exports) {
-    module.exports = { buildReportHtml: buildReportHtml };
+    module.exports = {
+      buildReportHtml: buildReportHtml,
+      sanitizeState: sanitizeState,
+      sanitizeSurvey: sanitizeSurvey,
+      isChecklist: isChecklist,
+      commitStamp: commitStamp
+    };
   }
 
   if (typeof document !== "undefined") init();

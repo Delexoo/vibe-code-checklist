@@ -2,6 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'none'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'none'; manifest-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'; frame-src 'none'; worker-src 'none'; upgrade-insecure-requests">
+  <meta name="referrer" content="no-referrer">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Privacy policy — Vibe Code Checklist</title>
   <meta name="description" content="The Vibe Code Checklist site stores your ticks in this browser only. It sets no cookies and runs no analytics.">
@@ -34,14 +36,15 @@
       <h1>Privacy policy</h1>
       <p>This policy describes the Vibe Code Checklist website. It does not describe an app you audit with the checklist.</p>
       <h2>What stays on your device</h2>
-      <p>When you tick items or type a project name, the site saves that progress in local storage in your browser. The keys are <code>vibe-code-checklist-v1</code> and <code>vibe-code-checklist-project</code>. Those values are not sent to a server operated by this project.</p>
+      <p>When you tick items or answer the short questions, the site saves that progress in local storage in this browser. The keys are <code>vibe-code-checklist-v1</code> and <code>vibe-code-checklist-survey</code>. Those values stay on this device and are not sent to a server operated by this project.</p>
+      <p>The prompt page asks GitHub for the public date of the latest commit on this repository, so it can show when the checklist was last updated. That request does not include your ticks or survey answers. The date is remembered in session storage under <code>vibe-code-checklist-commit-cache</code> so a refresh does not ask again right away.</p>
       <p>Copying the audit prompt uses your device clipboard. Downloading a report builds the file in your browser.</p>
       <h2>Cookies and analytics</h2>
       <p>This site sets no cookies and runs no analytics. There is no cookie banner because there is no non-essential cookie to accept or refuse.</p>
       <h2>Pages you leave</h2>
       <p>Source and contact links go to GitHub. GitHub's own policy applies there. Your coding agent, if you paste the prompt into one, is also outside this site.</p>
       <h2>Contact</h2>
-      <p>Questions about this policy can go to <a href="https://github.com/Delexoo/vibe-code-checklist/issues">the repository issues</a>.</p>
+      <p>Questions about this policy can go to <a href="https://github.com/Delexoo/vibe-code-checklist/issues" rel="noreferrer">the repository issues</a>.</p>
     </div>
   </main>
   <footer class="site-footer">
