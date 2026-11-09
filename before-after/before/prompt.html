@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self' https://api.github.com; manifest-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'; frame-src 'none'; worker-src 'none'; upgrade-insecure-requests">
+  <meta name="referrer" content="no-referrer">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Paste the prompt — Vibe Code Checklist</title>
+  <meta name="description" content="Copy one prompt into Claude, Claude Code, Cursor, or any coding agent that has your app open. It writes vibe-audit.html and leaves the app alone.">
+  <link rel="canonical" href="https://delexoo.github.io/vibe-code-checklist/prompt.html">
+  <meta property="og:title" content="Paste the prompt — Vibe Code Checklist">
+  <meta property="og:description" content="Copy one prompt into Claude, Claude Code, Cursor, or any coding agent that has your app open. It writes vibe-audit.html and leaves the app alone.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://delexoo.github.io/vibe-code-checklist/prompt.html">
+  <meta name="theme-color" content="#1b1612">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="wrap bar">
+      <nav aria-label="Pages">
+        <a href="index.html">Home</a>
+        <a href="check.html">Check by hand</a>
+        <a href="prompt.html" aria-current="page">Paste the prompt</a>
+      </nav>
+    </div>
+  </header>
+  <main id="main" class="page">
+    <div class="wrap">
+      <h1>Paste the prompt</h1>
+      <p class="lede">Open your app in Claude, Claude Code, Cursor, or any other coding agent. Copy the prompt below. Paste it into the chat that can read that project.</p>
+      <section class="audit" id="audit" aria-labelledby="audit-title">
+        <div class="audit-head">
+          <h2 id="audit-title">The prompt</h2>
+          <button type="button" class="primary" id="copy" aria-live="polite">Copy prompt</button>
+        </div>
+        <pre id="prompt-text">Audit the project that is open right now against the Vibe Code Checklist.
+
+You can be any coding agent. Use ordinary file reads and, if you have them, a web fetch. Do not install packages, plugins, or skills. Do not change application code.
+
+First read this project and say what the app is for: the end goal, who it is for, and which features it actually has. Then judge only the checks that fit that app. A check the product does not need is not a failure.
+
+Before you judge anything, read the procedure and the checklist from the raw files, not the GitHub web page:
+https://raw.githubusercontent.com/Delexoo/vibe-code-checklist/main/PROMPT.md
+https://raw.githubusercontent.com/Delexoo/vibe-code-checklist/main/checklist.json
+
+If a raw address fails, try the same file name on https://delexoo.github.io/vibe-code-checklist/
+
+Follow PROMPT.md exactly. Inspect this project, not the checklist repository. If you cannot read both files, stop and name the address that failed. Do not invent checks.
+
+Write one self-contained HTML file named vibe-audit.html at the root of this project. If you cannot write a file, put that same HTML in your reply and say to save it as vibe-audit.html.
+
+After the file exists, open it in the default browser if this machine has a desktop. If you cannot, say the full path and that the file is ready. Then reply with what the app is, the overall result, and the required items still open.</pre>
+      </section>
+      <p class="updated" id="updated" hidden>Last updated: <time id="updated-time"></time></p>
+      <section class="checks" aria-labelledby="checks-title">
+        <h2 id="checks-title">What it checks</h2>
+        <p>A check the product does not need is set aside. These are the kinds the agent looks for.</p>
+        <ul>
+          <li>
+            <h3>Pages and flows</h3>
+            <p>A missing page, an empty screen, a loading state, an error, and a confirmation after a form or a payment. The price is shown before anyone is charged.</p>
+          </li>
+          <li>
+            <h3>Search</h3>
+            <p>Each public page has its own title and description, one clear heading, alt text, a canonical address, social cards, a sitemap, and robots.txt. Articles show a date.</p>
+          </li>
+          <li>
+            <h3>Assistants</h3>
+            <p>A short account of who this is, what it does, and who it is for, with facts that are safe to quote and structured data for the main thing the site is about.</p>
+          </li>
+          <li>
+            <h3>Answers</h3>
+            <p>The first screen answers what this is. The name and the facts stay the same from page to page. Question-style headings are there when the page is answering something.</p>
+          </li>
+          <li>
+            <h3>Legal and consent</h3>
+            <p>Privacy, terms, a cookie choice, a way to reach a person, licensed images and fonts, real reviews, a refund rule if you charge, and a way to report posts or uploads.</p>
+          </li>
+          <li>
+            <h3>Identity</h3>
+            <p>A favicon, a theme color, a phone layout, readable contrast, a visible keyboard focus, and reduced motion when someone asks for it.</p>
+          </li>
+          <li>
+            <h3>Looks designed</h3>
+            <p>Neutral surfaces, one set of icons, spacing on one scale, and plain copy. The first view looks like this product, not a generic template.</p>
+          </li>
+          <li>
+            <h3>Interface details</h3>
+            <p>Loading that matches the layout, tap targets larger than the icon, safe areas, stable numbers, and, in an app used every day, undo, shortcuts, and a command menu.</p>
+          </li>
+          <li>
+            <h3>Accessibility</h3>
+            <p>A language, a skip link, keyboard access, links that say where they go, and a meaning that is not carried by color alone.</p>
+          </li>
+          <li>
+            <h3>Performance</h3>
+            <p>Compressed images that reserve their space, a first page that is not a huge script, and text that stays visible while a font loads.</p>
+          </li>
+          <li>
+            <h3>Security</h3>
+            <p>No secrets in the repo, HTTPS, private routes, escaped visitor text, hashed passwords, a price the server looks up, and limits on sign-in, uploads, and paid calls.</p>
+          </li>
+          <li>
+            <h3>Forms</h3>
+            <p>Every field has a label. An error sits with the field that failed. A slow submit cannot be sent twice. A success is confirmed in words.</p>
+          </li>
+          <li>
+            <h3>Accounts</h3>
+            <p>Settings, a way to sign out, an age check, a verified email, a reset link that expires, a minimum password length, and a way to delete personal data.</p>
+          </li>
+          <li>
+            <h3>Project hygiene</h3>
+            <p>A README that says how to run the app, a test for a behavior that matters, packages on a supported version, and backups if there is a database.</p>
+          </li>
+        </ul>
+      </section>
+    </div>
+  </main>
+  <footer class="site-footer">
+    <div class="wrap foot">
+      <p>A shipping guide. Not a legal opinion or a security guarantee.</p>
+      <nav aria-label="Site">
+        <a href="index.html">Home</a>
+        <a href="privacy.html">Privacy policy</a>
+        <a href="terms.html">Terms of service</a>
+      </nav>
+    </div>
+  </footer>
+  <script src="app.js"></script>
+</body>
+</html>

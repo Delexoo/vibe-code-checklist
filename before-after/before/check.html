@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'; frame-src 'none'; worker-src 'none'; upgrade-insecure-requests">
+  <meta name="referrer" content="no-referrer">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Check by hand — Vibe Code Checklist</title>
+  <meta name="description" content="Tick what your vibe-coded app already has. Set aside what does not apply, then download an HTML report.">
+  <link rel="canonical" href="https://delexoo.github.io/vibe-code-checklist/check.html">
+  <meta property="og:title" content="Check by hand — Vibe Code Checklist">
+  <meta property="og:description" content="Tick what your app already has, then download an HTML report.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://delexoo.github.io/vibe-code-checklist/check.html">
+  <meta name="theme-color" content="#1b1612">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="wrap bar">
+      <nav aria-label="Pages">
+        <a href="index.html">Home</a>
+        <a href="check.html" aria-current="page">Check by hand</a>
+        <a href="prompt.html">Paste the prompt</a>
+      </nav>
+    </div>
+  </header>
+  <main id="main" class="page">
+    <div class="wrap">
+      <section id="survey" class="survey">
+        <h1>What is the app?</h1>
+        <fieldset class="ask">
+          <legend>Who uses it?</legend>
+          <p class="hint">Pick one</p>
+          <div class="chips">
+            <label class="chip"><input type="radio" name="who" value="public" checked> Anyone</label>
+            <label class="chip"><input type="radio" name="who" value="accounts"> People sign in</label>
+            <label class="chip"><input type="radio" name="who" value="private"> Only me</label>
+          </div>
+        </fieldset>
+        <fieldset class="ask">
+          <legend>Does it take payment?</legend>
+          <p class="hint">Pick one</p>
+          <div class="chips">
+            <label class="chip"><input type="radio" name="pay" value="yes"> Yes</label>
+            <label class="chip"><input type="radio" name="pay" value="no" checked> No</label>
+          </div>
+        </fieldset>
+        <fieldset class="ask">
+          <legend>People can</legend>
+          <p class="hint">Select all that apply</p>
+          <div class="chips">
+            <label class="chip"><input type="checkbox" name="extra" value="forms"> Send a form</label>
+            <label class="chip"><input type="checkbox" name="extra" value="uploads"> Upload a file</label>
+            <label class="chip"><input type="checkbox" name="extra" value="ugc"> Post content</label>
+            <label class="chip"><input type="checkbox" name="extra" value="email"> Get email updates</label>
+          </div>
+        </fieldset>
+        <fieldset class="ask">
+          <legend>It also has</legend>
+          <p class="hint">Select all that apply</p>
+          <div class="chips">
+            <label class="chip"><input type="checkbox" name="extra" value="blog"> A blog</label>
+            <label class="chip"><input type="checkbox" name="extra" value="analytics"> Analytics</label>
+            <label class="chip"><input type="checkbox" name="extra" value="claims"> Reviews or stats</label>
+            <label class="chip"><input type="checkbox" name="extra" value="outbound"> A paid API</label>
+            <label class="chip"><input type="checkbox" name="extra" value="ai"> An AI feature</label>
+            <label class="chip"><input type="checkbox" name="extra" value="balances"> Credits, codes, or a balance</label>
+            <label class="chip"><input type="checkbox" name="extra" value="daily"> Used every day</label>
+          </div>
+        </fieldset>
+        <button type="button" class="primary" id="survey-start">Show the list</button>
+        <noscript>
+          <p class="load-error">Choosing what the app includes needs JavaScript.</p>
+        </noscript>
+      </section>
+      <section id="checklist" aria-labelledby="checklist-title" hidden>
+        <p class="kicker">By hand</p>
+        <h1 id="checklist-title" tabindex="-1">Check the list</h1>
+        <div class="scorebar">
+          <div>
+            <p class="kicker">Score</p>
+            <p class="score-line"><strong id="score-pass">0</strong><span id="score-of">/0</span></p>
+            <p id="score-note">Loading the checklist…</p>
+            <p id="score-required"></p>
+          </div>
+          <div class="actions">
+            <button type="button" class="primary" id="download" disabled>Download HTML report</button>
+            <button type="button" class="ghost" id="reset" disabled>Clear checks</button>
+            <button type="button" class="ghost" id="survey-edit">Change answers</button>
+          </div>
+        </div>
+        <p class="legend">Tick what is already true. Your answers stay in this browser.</p>
+        <div id="list">
+          <p id="loading">Loading the checklist…</p>
+        </div>
+        <noscript>
+          <p class="load-error">Ticking items needs JavaScript. You can still use the paste-the-prompt page.</p>
+        </noscript>
+      </section>
+    </div>
+  </main>
+  <footer class="site-footer">
+    <div class="wrap foot">
+      <p>A shipping guide. Not a legal opinion or a security guarantee.</p>
+      <nav aria-label="Site">
+        <a href="index.html">Home</a>
+        <a href="sample-report.html">Sample report</a>
+        <a href="privacy.html">Privacy policy</a>
+        <a href="terms.html">Terms of service</a>
+      </nav>
+    </div>
+  </footer>
+  <script src="app.js"></script>
+</body>
+</html>

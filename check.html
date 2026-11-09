@@ -12,22 +12,25 @@
   <meta property="og:description" content="Tick what your app already has, then download an HTML report.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://delexoo.github.io/vibe-code-checklist/check.html">
-  <meta name="theme-color" content="#1b1612">
+  <meta name="theme-color" content="#f7f7f8">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <link rel="manifest" href="site.webmanifest">
   <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body class="dt-page">
   <a class="skip" href="#main">Skip to content</a>
   <header class="site-header">
-    <div class="wrap bar">
-      <nav aria-label="Pages">
-        <a href="index.html">Home</a>
-        <a href="check.html" aria-current="page">Check by hand</a>
-        <a href="prompt.html">Paste the prompt</a>
-      </nav>
+    <div class="wrap">
+      <div class="lx-row site-nav">
+        <a class="word" href="index.html">Vibe Code Checklist</a>
+        <nav aria-label="Pages">
+          <a href="index.html">Home</a>
+          <a href="check.html" aria-current="page">Check by hand</a>
+          <a href="prompt.html">Paste the prompt</a>
+        </nav>
+      </div>
     </div>
   </header>
   <main id="main" class="page">
@@ -74,29 +77,28 @@
             <label class="chip"><input type="checkbox" name="extra" value="daily"> Used every day</label>
           </div>
         </fieldset>
-        <button type="button" class="primary" id="survey-start">Show the list</button>
+        <button type="button" class="dt-btn dt-btn-primary" id="survey-start">Show the list</button>
         <noscript>
           <p class="load-error">Choosing what the app includes needs JavaScript.</p>
         </noscript>
       </section>
       <section id="checklist" aria-labelledby="checklist-title" hidden>
-        <p class="kicker">By hand</p>
         <h1 id="checklist-title" tabindex="-1">Check the list</h1>
         <div class="scorebar">
           <div>
-            <p class="kicker">Score</p>
+            <p class="caption">Score</p>
             <p class="score-line"><strong id="score-pass">0</strong><span id="score-of">/0</span></p>
             <p id="score-note">Loading the checklist…</p>
             <p id="score-required"></p>
           </div>
           <div class="actions">
-            <button type="button" class="primary" id="download" disabled>Download HTML report</button>
-            <button type="button" class="ghost" id="reset" disabled>Clear checks</button>
-            <button type="button" class="ghost" id="survey-edit">Change answers</button>
+            <button type="button" class="dt-btn dt-btn-primary" id="download" disabled>Download HTML report</button>
+            <button type="button" class="dt-btn dt-btn-danger" id="reset" disabled>Clear checks</button>
+            <button type="button" class="dt-btn dt-btn-ghost" id="survey-edit">Change answers</button>
           </div>
         </div>
         <p class="legend">Tick what is already true. Your answers stay in this browser.</p>
-        <div id="list">
+        <div id="list" aria-busy="true">
           <p id="loading">Loading the checklist…</p>
         </div>
         <noscript>
@@ -106,14 +108,16 @@
     </div>
   </main>
   <footer class="site-footer">
-    <div class="wrap foot">
-      <p>A shipping guide. Not a legal opinion or a security guarantee.</p>
-      <nav aria-label="Site">
-        <a href="index.html">Home</a>
-        <a href="sample-report.html">Sample report</a>
-        <a href="privacy.html">Privacy policy</a>
-        <a href="terms.html">Terms of service</a>
-      </nav>
+    <div class="wrap">
+      <div class="lx-row site-foot">
+        <p>A shipping guide. Not a legal opinion or a security guarantee.</p>
+        <nav aria-label="Site">
+          <a href="index.html">Home</a>
+          <a href="sample-report.html">Sample report</a>
+          <a href="privacy.html">Privacy policy</a>
+          <a href="terms.html">Terms of service</a>
+        </nav>
+      </div>
     </div>
   </footer>
   <script src="app.js"></script>

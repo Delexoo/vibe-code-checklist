@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Type — Vibe Code Checklist</title>
+<style>
+  body { margin: 0; background: #f7f7f8; color: #111; font-family: "Segoe UI", ui-sans-serif, system-ui, sans-serif; font-size: 16px; line-height: 1.5; }
+  header, main, footer { width: min(960px, calc(100% - 32px)); margin: 0 auto; }
+  header, footer { display: flex; justify-content: space-between; gap: 16px; align-items: center; }
+  header { border-bottom: 1px solid #ebebeb; }
+  footer { border-top: 1px solid #ebebeb; }
+  nav { display: flex; gap: 16px; }
+  a { color: inherit; text-decoration: none; display: inline-flex; align-items: center; min-height: 44px; }
+  h1 { margin: 48px 0 16px; max-width: 16ch; font-size: clamp(2.75rem, 7vw, 4.5rem); font-weight: 500; line-height: 1.05; letter-spacing: -0.03em; }
+  .lede, li p, footer p { color: #5c5c5c; }
+  .lede { margin: 0 0 24px; max-width: 36rem; }
+  .cta { display: flex; gap: 12px; flex-wrap: wrap; }
+  .cta a { padding: 0 1.2rem; border-radius: 8px; font-weight: 500; }
+  .pri { background: #1f6fed; color: #fff; }
+  .sec { background: #fff; box-shadow: inset 0 0 0 1px #cfcfcf; }
+  ol { list-style: none; margin: 48px 0 0; padding: 0; max-width: 40rem; }
+  li { display: flex; gap: 16px; padding: 16px 0; border-bottom: 1px solid #ebebeb; }
+  span { font-family: ui-monospace, Consolas, monospace; font-variant-numeric: tabular-nums; font-size: 1.25rem; }
+  strong { display: block; font-size: 1.25rem; font-weight: 500; }
+  li p { margin: 4px 0 0; }
+  footer p { margin: 0; font-size: 0.75rem; }
+</style>
+</head>
+<body>
+<header>
+  <strong>Vibe Code Checklist</strong>
+  <nav><a>Home</a><a>Check by hand</a><a>Paste the prompt</a></nav>
+</header>
+<main>
+  <h1>Is your app actually finished?</h1>
+  <p class="lede">Tick the list in this browser, or paste one prompt into the coding agent that has the app open.</p>
+  <div class="cta"><a class="pri">Paste the prompt</a><a class="sec">Check by hand</a></div>
+  <ol>
+    <li><span>01</span><div><strong>Paste the prompt</strong><p>Copy one prompt into any coding agent.</p></div></li>
+    <li><span>02</span><div><strong>Check by hand</strong><p>Tick the list in this browser.</p></div></li>
+  </ol>
+</main>
+<footer><p>A shipping guide. Not a legal opinion or a security guarantee.</p></footer>
+</body>
+</html>

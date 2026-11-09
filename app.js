@@ -399,6 +399,7 @@
 
   function renderList(data, state) {
     var list = document.getElementById("list");
+    list.setAttribute("aria-busy", "false");
     list.replaceChildren();
     if (!data.items.length) {
       list.appendChild(el("p", "load-error", "This edition of the checklist has no items."));
@@ -494,6 +495,7 @@
 
   function showLoadError() {
     var list = document.getElementById("list");
+    list.setAttribute("aria-busy", "false");
     list.replaceChildren();
     list.appendChild(el("p", "load-error", "The checklist did not load. Refresh the page. If you opened the file directly, serve this folder over HTTP so checklist.json can be read."));
     document.getElementById("score-note").textContent = "The checklist did not load.";
@@ -506,19 +508,31 @@
 
   async function onCopy() {
     var button = document.getElementById("copy");
+    var label = button.querySelector(".dt-btn-morph-label");
     var text = promptText();
+    button.setAttribute("aria-busy", "true");
+    button.classList.add("is-loading");
+    button.classList.remove("is-done");
     try {
       await navigator.clipboard.writeText(text);
-      button.textContent = "Copied";
+      button.classList.remove("is-loading");
+      button.classList.add("is-done");
+      button.setAttribute("aria-label", "Copied");
     } catch (error) {
       var range = document.createRange();
       range.selectNodeContents(document.getElementById("prompt-text"));
       var selection = window.getSelection();
       selection.removeAllRanges();
       selection.addRange(range);
-      button.textContent = "Selected — press Ctrl+C";
+      button.classList.remove("is-loading");
+      if (label) label.textContent = "Selected — press Ctrl+C";
     }
-    window.setTimeout(function () { button.textContent = "Copy prompt"; }, 2000);
+    button.removeAttribute("aria-busy");
+    window.setTimeout(function () {
+      button.classList.remove("is-done");
+      button.removeAttribute("aria-label");
+      if (label) label.textContent = "Copy prompt";
+    }, 2000);
   }
 
   function readSurvey() {

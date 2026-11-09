@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Before and after</title>
+<style>
+  :root {
+    --ink: #111111;
+    --muted: #5c5c5c;
+    --quiet: #8a8a8a;
+    --line: #ebebeb;
+    --fill: #f4f4f5;
+    --surface: #ffffff;
+    --stage: #f7f7f8;
+    --radius: 16px;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: var(--stage);
+    color: var(--ink);
+    font: 16px/1.45 ui-sans-serif, system-ui, sans-serif;
+    letter-spacing: -0.011em;
+  }
+  .wrap {
+    width: min(960px, calc(100% - 32px));
+    margin: 0 auto;
+    padding: 32px 0 48px;
+  }
+  .kicker {
+    margin: 0 0 8px;
+    color: var(--quiet);
+    font-size: 0.75rem;
+    font-weight: 650;
+  }
+  h1 {
+    margin: 0;
+    font-size: 1.75rem;
+    font-weight: 650;
+    letter-spacing: -0.03em;
+  }
+  .lead {
+    margin: 8px 0 0;
+    max-width: 38rem;
+    color: var(--muted);
+    font-size: 0.95rem;
+  }
+  .stage {
+    position: relative;
+    margin-top: 24px;
+    height: min(62vh, 540px);
+    min-height: 320px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--surface);
+    overflow: hidden;
+  }
+  .stage iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    background: #fff;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.28s ease, transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .stage iframe.is-in {
+    opacity: 1;
+    transform: none;
+  }
+  .caption { margin: 14px 0 0; }
+  .caption strong {
+    display: inline-block;
+    margin-right: 8px;
+    padding: 4px 8px;
+    border-radius: 999px;
+    background: var(--ink);
+    color: #fff;
+    font-size: 0.75rem;
+    font-weight: 650;
+  }
+  .caption strong.is-mid {
+    background: var(--surface);
+    color: var(--ink);
+    box-shadow: inset 0 0 0 1px var(--line);
+  }
+  .caption span { color: var(--muted); }
+  .transport {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin-top: 16px;
+  }
+  button {
+    appearance: none;
+    border: 0;
+    min-height: 40px;
+    padding: 0 14px;
+    border-radius: 10px;
+    background: var(--ink);
+    color: #fff;
+    font: inherit;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  button.quiet {
+    background: var(--surface);
+    color: var(--ink);
+    box-shadow: inset 0 0 0 1px #e0e0e0;
+  }
+  button:hover { transform: translateY(-1px); }
+  button:active { transform: none; }
+  .time {
+    margin-left: auto;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+    font-size: 0.85rem;
+  }
+  .scrub {
+    display: block;
+    margin-top: 14px;
+  }
+  .scrub input {
+    width: 100%;
+    margin: 0;
+    accent-color: var(--ink);
+    cursor: pointer;
+  }
+  .ticks {
+    position: relative;
+    height: 2.4rem;
+    margin-top: 4px;
+  }
+  .ticks button {
+    position: absolute;
+    top: 0;
+    transform: translateX(-50%);
+    min-height: 28px;
+    padding: 0 8px;
+    background: transparent;
+    color: var(--quiet);
+    font-size: 0.72rem;
+    font-weight: 600;
+    box-shadow: none;
+  }
+  .ticks button:first-child { transform: none; }
+  .ticks button:last-child { transform: translateX(-100%); }
+  .ticks button.is-on { color: var(--ink); }
+  .sr {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .stage iframe { transition: none; transform: none; }
+    button { transition: none; }
+    button:hover { transform: none; }
+  }
+</style>
+</head>
+<body>
+  <main class="wrap">
+    <p class="kicker">Moonrise</p>
+    <h1>Before and after</h1>
+    <p class="lead">A short playback of the work. Drag the timeline, or play it through. The first frame is the original. The last frame is the result.</p>
+
+    <div class="stage">
+      <iframe id="frame" title="Screen at this step"></iframe>
+    </div>
+    <p class="caption"><strong id="step-title">Before</strong> <span id="step-note"></span></p>
+
+    <div class="transport">
+      <button type="button" id="play" aria-pressed="false">Play</button>
+      <button type="button" class="quiet" id="back">Back 15s</button>
+      <button type="button" class="quiet" id="fwd">Forward 15s</button>
+      <p class="time"><span id="now">0:00</span> / <span id="end">0:00</span></p>
+    </div>
+
+    <label class="scrub">
+      <span class="sr">Timeline</span>
+      <input id="scrub" type="range" min="0" value="0" step="0.1" aria-valuemin="0" aria-label="Timeline">
+    </label>
+    <div class="ticks" id="ticks"></div>
+  </main>
+
+<script>
+(function () {
+  "use strict";
+
+  /* Replace STEPS with the real work.
+     First step is Before at t: 0. Last step is After.
+     Each step holds 15 seconds. Use src for a saved file, or html for inline markup.
+     Example: { t: 0, mark: "Before", title: "Before", note: "Original files.", src: "before-after/before/index.html" }
+  */
+  var HOLD = 15;
+
+  function page(css, body) {
+    return "<!DOCTYPE html><html><head><meta charset='utf-8'><style>" +
+      "body{margin:0;font:16px/1.4 ui-sans-serif,system-ui,sans-serif}" + css +
+      "</style></head><body>" + body + "</body></html>";
+  }
+
+  var STEPS = [
+    {
+      t: 0,
+      mark: "Before",
+      title: "Before",
+      note: "Original home. Cream paper, serif, centered choice cards.",
+      src: "before-after/before/index.html"
+    },
+    {
+      t: 15,
+      mark: "Spacing",
+      title: "Spacing",
+      note: "Left-aligned type-first stack. Padding and gaps on a 4px grid.",
+      src: "before-after/steps/spacing.html"
+    },
+    {
+      t: 30,
+      mark: "Color",
+      title: "Color",
+      note: "Quiet grey surfaces. One blue action. Hairline rules.",
+      src: "before-after/steps/color.html"
+    },
+    {
+      t: 45,
+      mark: "Type",
+      title: "Type",
+      note: "Grotesk, sentence case, tabular 01 and 02.",
+      src: "before-after/steps/type.html"
+    },
+    {
+      t: 60,
+      mark: "After",
+      title: "After",
+      note: "The finished home.",
+      src: "index.html"
+    }
+  ];
+
+  var duration = STEPS[STEPS.length - 1].t + HOLD;
+  var frame = document.getElementById("frame");
+  var title = document.getElementById("step-title");
+  var note = document.getElementById("step-note");
+  var playBtn = document.getElementById("play");
+  var scrub = document.getElementById("scrub");
+  var nowEl = document.getElementById("now");
+  var endEl = document.getElementById("end");
+  var ticks = document.getElementById("ticks");
+  var time = 0;
+  var playing = false;
+  var shown = null;
+  var last = 0;
+  var reduce = false;
+  try {
+    reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  } catch (err) {
+    reduce = false;
+  }
+
+  scrub.max = String(duration);
+  scrub.setAttribute("aria-valuemax", String(duration));
+  endEl.textContent = clock(duration);
+
+  STEPS.forEach(function (step, index) {
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.textContent = step.mark;
+    var x = duration === 0 ? 0 : (step.t / duration) * 100;
+    if (index === 0) btn.style.left = "0";
+    else if (index === STEPS.length - 1) btn.style.left = "100%";
+    else btn.style.left = x + "%";
+    btn.addEventListener("click", function () { seek(step.t); });
+    ticks.appendChild(btn);
+  });
+
+  function clock(value) {
+    var s = Math.max(0, Math.round(value));
+    var m = Math.floor(s / 60);
+    var r = s % 60;
+    return m + ":" + (r < 10 ? "0" : "") + r;
+  }
+
+  function stepAt(value) {
+    var current = STEPS[0];
+    STEPS.forEach(function (step) {
+      if (step.t <= value + 0.001) current = step;
+    });
+    return current;
+  }
+
+  function show(step) {
+    if (shown === step) return;
+    shown = step;
+    frame.classList.remove("is-in");
+    frame.title = step.title;
+    if (step.src) {
+      frame.removeAttribute("srcdoc");
+      frame.src = step.src;
+    } else {
+      frame.srcdoc = step.html;
+    }
+    title.textContent = step.mark;
+    title.classList.toggle("is-mid", step.mark !== "Before" && step.mark !== "After");
+    note.textContent = step.note;
+    Array.prototype.forEach.call(ticks.children, function (btn) {
+      btn.classList.toggle("is-on", btn.textContent === step.mark);
+    });
+    if (reduce) {
+      frame.classList.add("is-in");
+      return;
+    }
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () { frame.classList.add("is-in"); });
+    });
+  }
+
+  function paint(value) {
+    time = Math.max(0, Math.min(duration, value));
+    scrub.value = String(time);
+    scrub.setAttribute("aria-valuenow", String(Math.round(time)));
+    nowEl.textContent = clock(time);
+    show(stepAt(time));
+    if (time >= duration && playing) setPlaying(false);
+  }
+
+  function seek(value) { paint(value); }
+
+  function setPlaying(next) {
+    playing = next;
+    playBtn.textContent = playing ? "Pause" : "Play";
+    playBtn.setAttribute("aria-pressed", playing ? "true" : "false");
+    if (!playing) return;
+    if (time >= duration) paint(0);
+    last = performance.now();
+    requestAnimationFrame(loop);
+  }
+
+  function loop(now) {
+    if (!playing) return;
+    var dt = Math.min(0.05, (now - last) / 1000);
+    last = now;
+    paint(time + dt);
+    if (playing) requestAnimationFrame(loop);
+  }
+
+  playBtn.addEventListener("click", function () { setPlaying(!playing); });
+  document.getElementById("back").addEventListener("click", function () { seek(time - HOLD); });
+  document.getElementById("fwd").addEventListener("click", function () { seek(time + HOLD); });
+  scrub.addEventListener("input", function () { seek(Number(scrub.value)); });
+  document.addEventListener("keydown", function (event) {
+    var tag = event.target && event.target.tagName;
+    if (tag === "INPUT" || tag === "TEXTAREA") return;
+    if (event.key === " " || event.code === "Space") {
+      event.preventDefault();
+      setPlaying(!playing);
+    } else if (event.key === "ArrowLeft") {
+      seek(time - HOLD);
+    } else if (event.key === "ArrowRight") {
+      seek(time + HOLD);
+    }
+  });
+
+  paint(0);
+})();
+</script>
+</body>
+</html>
