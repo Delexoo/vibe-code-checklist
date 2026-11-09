@@ -58,6 +58,44 @@ Write one self-contained HTML file named vibe-audit.html at the root of this pro
 After the file exists, open it in the default browser if this machine has a desktop. If you cannot, say the full path and that the file is ready. Then reply with what the app is, the overall result, and the required items still open.</pre>
       </section>
       <p class="updated" id="updated" hidden>Last updated: <time id="updated-time"></time></p>
+      <section class="steps" aria-labelledby="steps-title">
+        <h2 id="steps-title">What the agent will do</h2>
+        <p>The box above is the whole instruction. It points at the procedure file. These are the steps that file makes the agent follow, in order.</p>
+        <ol>
+          <li>
+            <h3>Stay in the project that is open</h3>
+            <p>It audits your app, not this checklist. If the open folder is the checklist itself, it stops and tells you to open your own app.</p>
+          </li>
+          <li>
+            <h3>Read files, and leave the app alone</h3>
+            <p>It may read files and fetch a URL. It does not install packages, plugins, or skills. It does not change application code, and it does not depend on an editor-only command.</p>
+          </li>
+          <li>
+            <h3>Load the real checklist</h3>
+            <p>Before it judges anything, it reads the procedure and the checklist from the raw files, not the GitHub web page. If a raw address fails, it tries the same file name on this site. If it still cannot read both files, it stops and names the address that failed. It does not invent checks.</p>
+          </li>
+          <li>
+            <h3>Say what the app is before it scores</h3>
+            <p>From the README, the name, the screens, and the routes, it writes four things: the goal, who it is for, which features the product actually has, and which checks do not fit. A check the product does not need is not a failure. Unfinished work the app does need still fails.</p>
+          </li>
+          <li>
+            <h3>Judge every item once</h3>
+            <p>Each check gets one status. Done means it saw the requirement in a file. Missing means this app needs it and it is absent, a placeholder, or only a default. Does not apply means the product has no such feature. A recommended miss is a warning. A required miss is a fix before you ship. It cites a path. It never pastes a secret, and it never invents a file.</p>
+          </li>
+          <li>
+            <h3>Score only the checks that fit</h3>
+            <p>The score is the passes, divided by the checks that apply. Ready to ship means every one of those passes. Required checks are in place means only warnings remain. Not ready to ship means a required item failed.</p>
+          </li>
+          <li>
+            <h3>Write one report, and nothing else</h3>
+            <p>It creates or overwrites <code>vibe-audit.html</code> at the project root. The file stands alone: no scripts, fonts, or images from elsewhere. It lists every item under Missing, Warnings, Done, or Does not apply, plus what the app is, the score, and how to fix the required gaps. If it cannot write a file, it puts that same HTML in the chat.</p>
+          </li>
+          <li>
+            <h3>Open the report, then stop</h3>
+            <p>If the machine has a desktop, it opens <code>vibe-audit.html</code>. Then it replies with what the app is, the overall result, and the required items still open. It does not start fixing the app.</p>
+          </li>
+        </ol>
+      </section>
     </div>
   </main>
   <footer class="site-footer">
