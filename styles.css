@@ -249,62 +249,47 @@ h1 {
   color: var(--muted);
 }
 
-.steps {
+.checks {
   margin: 0 0 1rem;
 }
 
-.steps h2 {
+.checks h2 {
   margin: 0 0 0.5rem;
   font-size: 1.45rem;
   font-weight: 560;
   line-height: 1.15;
 }
 
-.steps > p {
+.checks > p {
   margin: 0 0 0.5rem;
 }
 
-.steps ol {
+.checks ul {
   list-style: none;
   margin: 1rem 0 0;
   padding: 0;
-  counter-reset: step;
 }
 
-.steps li {
-  position: relative;
+.checks li {
   margin: 0;
-  padding: 1rem 0 1rem 2.75rem;
+  padding: 1rem 0;
   border-top: 1px solid var(--ink);
-  counter-increment: step;
-  max-width: none;
+  max-width: 40rem;
 }
 
-.steps li::before {
-  content: counter(step, decimal-leading-zero);
-  position: absolute;
-  left: 0;
-  top: 1.15rem;
+.checks h3 {
+  margin: 0 0 0.35rem;
   font-family: var(--mono);
   font-size: 0.72rem;
+  font-weight: 400;
   letter-spacing: 0.08em;
+  text-transform: uppercase;
   color: var(--muted);
 }
 
-.steps h3 {
-  margin: 0 0 0.35rem;
-  font-size: 1.15rem;
-  font-weight: 560;
-  line-height: 1.25;
-}
-
-.steps li p {
+.checks li p {
   margin: 0;
-}
-
-.steps code {
-  font-family: var(--mono);
-  font-size: 0.92em;
+  font-size: 1.05rem;
 }
 
 .fine {
